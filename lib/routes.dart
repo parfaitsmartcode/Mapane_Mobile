@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/screens/splash_screen.dart';
+import 'package:mapane/screens/walk.dart';
+import 'package:mapane/screens/numero_get.dart';
 
 
 class Routes {
@@ -7,8 +9,12 @@ class Routes {
 
   //static variables
   static const String splash = '/splash';
+  static const String walk = '/walk';
+  static const String numero_get = '/numero-get';
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
+    walk: (BuildContext context) => Walk(),
+    numero_get: (BuildContext context) => NumeroGet(),
 
   };
 }

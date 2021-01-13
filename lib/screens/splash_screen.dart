@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => Home(),
+    pageBuilder: (context, animation, secondaryAnimation) => Walk(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
