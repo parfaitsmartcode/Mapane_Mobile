@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Icare',
+      title: 'Mapane',
       theme: ThemeData(
-          fontFamily: "Raleway",
+          fontFamily: "Robotto",
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          primaryColor: Color.fromRGBO(245, 54, 21, 1),
+          primaryColor: Colors.black,
           primarySwatch: Colors.deepOrange
       ),
       home: SplashScreen(),
