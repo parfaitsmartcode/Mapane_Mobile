@@ -37,6 +37,8 @@ dependencies:
   sizer: ^1.1.8
   mobile_number: ^1.0.3
   phone_number: ^0.8.1
+  cool_alert: ^1.0.3
+  intl_phone_number_input: ^0.6.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_number/mobile_number.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -11,22 +11,26 @@ void main() {
         fontFamily: 'Robotto',
         accentColor: Colors.black,
         primaryColor: Colors.black),
-    home: new NumeroGet(),
+    home: new NumeroGetIos(),
     debugShowCheckedModeBanner: false,
   ));
 }
 
-class NumeroGet extends StatefulWidget {
+class NumeroGetIos extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
 }
 
-class _MyAppState extends State<NumeroGet> {
+class _MyAppState extends State<NumeroGetIos> {
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
   bool _loading = false;
   var isSelected = [false,false,false,false,false];
-  List<SimCard> _simCard = <SimCard>[];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  final TextEditingController controller = TextEditingController();
+  String initialCountry = 'CM';
+  PhoneNumber number = PhoneNumber(isoCode: 'CM');
 
   void takenumber(String value) {
     setState(() => _mobileNumberPhone = value);
@@ -35,37 +39,6 @@ class _MyAppState extends State<NumeroGet> {
   @override
   void initState() {
     super.initState();
-    MobileNumber.listenPhonePermission((isPermissionGranted) {
-      if (isPermissionGranted) {
-        initMobileNumberState();
-      } else {}
-    });
-
-    initMobileNumberState();
-  }
-
-  Future<void> initMobileNumberState() async {
-    if (!await MobileNumber.hasPhonePermission) {
-      await MobileNumber.requestPhonePermission;
-      return;
-    }
-    String mobileNumber = '';
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      mobileNumber = await MobileNumber.mobileNumber;
-      _simCard = await MobileNumber.getSimCards;
-    } on PlatformException catch (e) {
-      debugPrint("Failed to get mobile number because of '${e.message}'");
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _mobileNumber = mobileNumber;
-    });
   }
 
   @override
@@ -255,64 +228,36 @@ class _MyAppState extends State<NumeroGet> {
   }
 
   Widget fillCards() {
-    var taille = _simCard.length;
-    if (taille == 1) {
-        setState(() {
-          _mobileNumberPhone = _simCard.first.number;
-        });
-    }
-    List<Widget> widgets = _simCard
-        .map(
-          (SimCard sim) => Column(
-            children: [
-              ListTile(
-                  leading: Image.asset(
-                    'assets/images/Flag-CM.png',
-                    height: 25,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _mobileNumberPhone = sim.number;
-                      isSelected[0]=false;
-                      isSelected[1]=false;
-                      isSelected[2]=false;
-                      isSelected[3]=false;
-                      isSelected[4]=false;
-                      isSelected[_simCard.indexOf(sim)] = true;
-                      print(sim.number);
-                    });
-                  },
-                  title: Align(
-                    child: Text(
-                      sim.number == null ? "" : sim.number,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.black,
-                          letterSpacing: 2),
-                    ),
-                    alignment: Alignment(-0.3, 0),
-                  ),
-                  trailing: taille == 10 || isSelected[_simCard.indexOf(sim)] == true
-                      ? Icon(
-                          Icons.check_circle,
-                          size: 23.0,
-                          color: Color(0xFF25296A),
-                        )
-                      : Text('')),
-              _simCard.indexOf(sim) != taille - 1
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.5),
-                      child: Divider(thickness: 2, color: Colors.grey[200]),
-                    )
-                  : Row(),
-            ],
-          ),
-        )
-        .toList();
-    return Column(children: widgets);
+    return Form(
+      key: formKey,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            InternationalPhoneNumberInput(
+              onInputChanged: (PhoneNumber number) {
+                print(number.phoneNumber);
+              },
+              selectorConfig: SelectorConfig(
+                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              ),
+              ignoreBlank: false,
+              autoValidateMode: AutovalidateMode.disabled,
+              selectorTextStyle: TextStyle(color: Colors.black),
+              initialValue: number,
+              textFieldController: controller,
+              formatInput: false,
+              keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+              inputBorder: OutlineInputBorder(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
+
+
 
 class NumberSim extends StatelessWidget {
   const NumberSim({

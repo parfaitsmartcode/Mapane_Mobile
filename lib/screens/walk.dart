@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:mapane/models/slider_model.dart';
 import 'package:mapane/routes.dart';
+import 'dart:io' show Platform;
 
 
 class MyApp extends StatelessWidget {
@@ -214,7 +215,7 @@ class SliderTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 36),
                 child: RaisedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(Routes.numero_get);
+                    Platform.isAndroid ? Navigator.of(context).pushNamed(Routes.numero_get) : Navigator.of(context).pushNamed(Routes.numero_get_ios);
                   },
                   textColor: Colors.white,
                   color: Colors.transparent,
