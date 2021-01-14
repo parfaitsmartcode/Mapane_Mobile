@@ -30,9 +30,9 @@ Future<dynamic> getSchools() async{
   }
 }
 
-Future<dynamic> registerUser(phone) async{
+Future<dynamic> registerUser(phone,phonewrite) async{
   var data = {
-        "phone": phone,
+        "phone": phone==''?phonewrite:phone,
         "type": "user", 
         "password": "12345678", 
   };
