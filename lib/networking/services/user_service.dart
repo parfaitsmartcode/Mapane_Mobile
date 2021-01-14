@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:mapane/models/user.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapane/utils/shared_preference_helper.dart';
 
 
 Future<dynamic> getSchools() async{
@@ -49,9 +51,10 @@ Future<dynamic> registerUser(phone,phonewrite) async{
     );
 
     if(response.statusCode == 200){
+      Future<SharedPreferences> instance = SharedPreferences.getInstance();
+      SharedPreferenceHelper(instance).storeData("user_info",phone==''?phonewrite:phone);
       return response.data["message"];
     }else{
-      print('service');
       return response;
     }
   } on SocketException{

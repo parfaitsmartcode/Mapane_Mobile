@@ -82,4 +82,10 @@ class SharedPreferenceHelper {
       return prefs.setString(Preferences.current_language, language);
     });
   }
+
+  Future<void> storeData(String key, String value) {
+    return _sharedPreference.then((prefs) {
+      return prefs.setString(key, value);
+    });
+  }
 }
