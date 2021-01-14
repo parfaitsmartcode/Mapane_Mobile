@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:mapane/models/slider_model.dart';
+import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/routes.dart';
 import 'dart:io' show Platform;
 
@@ -54,6 +55,7 @@ class _WalkState extends State<Walk> {
 
   @override
   Widget build(BuildContext context) {
+    print(getSize(15,"height",context));
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageView.builder(

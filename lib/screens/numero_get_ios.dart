@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:mapane/routes.dart';
+import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -25,7 +27,7 @@ class _MyAppState extends State<NumeroGetIos> {
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
   bool _loading = false;
-  var isSelected = [false,false,false,false,false];
+  var isSelected = [false, false, false, false, false];
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController controller = TextEditingController();
@@ -104,8 +106,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.all(0.0),
-                                      child: fillCards()
-                                    ),
+                                      child: fillCards()),
                             ],
                           ),
                         ),
@@ -123,7 +124,9 @@ class _MyAppState extends State<NumeroGetIos> {
                           setState(() {
                             _loading = true;
                           });
-                          registerUser(_mobileNumberPhone).then((value) {
+                          registerUser(
+                                  _mobileNumberPhone,'')
+                              .then((value) {
                             setState(() {
                               _loading = false;
                             });
@@ -131,7 +134,9 @@ class _MyAppState extends State<NumeroGetIos> {
                               context: context,
                               type: CoolAlertType.success,
                               text: value,
+                              onConfirmBtnTap:() => Navigator.of(context).pushNamed(Routes.splash_welcome)
                             );
+                            Timer(Duration(seconds: 5), () => Navigator.of(context).pushNamed(Routes.splash_welcome));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;
@@ -140,7 +145,8 @@ class _MyAppState extends State<NumeroGetIos> {
                               context: context,
                               type: CoolAlertType.error,
                               title: "Oops...",
-                              text: onError.response == null || onError.response == ""
+                              text: onError.response == null ||
+                                      onError.response == ""
                                   ? 'Une erreur est survenue, verifier votre connexion.'
                                   : onError.response.data["message"],
                             );
@@ -168,18 +174,20 @@ class _MyAppState extends State<NumeroGetIos> {
                               child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              _loading?Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, top: 6, bottom: 6),
-                                child: SizedBox(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.white,
-                                    strokeWidth: 1,
-                                  ),
-                                  height: 18.0,
-                                  width: 18.0,
-                                ),
-                              ):Row(),
+                              _loading
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, top: 6, bottom: 6),
+                                      child: SizedBox(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.white,
+                                          strokeWidth: 1,
+                                        ),
+                                        height: 18.0,
+                                        width: 18.0,
+                                      ),
+                                    )
+                                  : Row(),
                               Text('Continuer', style: TextStyle(fontSize: 18)),
                             ],
                           )),
@@ -237,6 +245,9 @@ class _MyAppState extends State<NumeroGetIos> {
             InternationalPhoneNumberInput(
               onInputChanged: (PhoneNumber number) {
                 print(number.phoneNumber);
+                setState(() {
+                  _mobileNumberPhone = number.phoneNumber;
+                });
               },
               selectorConfig: SelectorConfig(
                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -247,7 +258,8 @@ class _MyAppState extends State<NumeroGetIos> {
               initialValue: number,
               textFieldController: controller,
               formatInput: false,
-              keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+              keyboardType:
+                  TextInputType.numberWithOptions(signed: true, decimal: true),
               inputBorder: OutlineInputBorder(),
             ),
           ],
@@ -256,8 +268,6 @@ class _MyAppState extends State<NumeroGetIos> {
     );
   }
 }
-
-
 
 class NumberSim extends StatelessWidget {
   const NumberSim({

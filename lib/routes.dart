@@ -3,6 +3,8 @@ import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/numero_get.dart';
 import 'package:mapane/screens/numero_get_ios.dart';
+import 'package:mapane/screens/splash_welcome.dart';
+import 'package:mapane/screens/welcome_map.dart';
 
 
 class Routes {
@@ -13,11 +15,15 @@ class Routes {
   static const String walk = '/walk';
   static const String numero_get = '/numero-get';
   static const String numero_get_ios = '/numero-get-ios';
+  static const String splash_welcome = '/splash-welcome';
+  static const String welcome_map = '/welcome-map';
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
     walk: (BuildContext context) => Walk(),
     numero_get: (BuildContext context) => NumeroGet(),
     numero_get_ios: (BuildContext context) => NumeroGetIos(),
+    splash_welcome: (BuildContext context) => SplashWelcome(),
+    welcome_map: (BuildContext context) => WelcomeMap(),
 
   };
 }

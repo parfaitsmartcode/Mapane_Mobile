@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Di{
 
-  final String apiUrl = "https://a80e507c574d.ngrok.io";
+  final String apiUrl = "https://ecbcf8ad241a.ngrok.io";
 
   Dio dio = new Dio();
 

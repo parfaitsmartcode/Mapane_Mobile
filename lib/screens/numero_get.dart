@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:mapane/routes.dart';
+import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -24,9 +27,15 @@ class NumeroGet extends StatefulWidget {
 class _MyAppState extends State<NumeroGet> {
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
+  String _mobileNumberPhoneWrite = '';
   bool _loading = false;
-  var isSelected = [false,false,false,false,false];
+  var isSelected = [false, false, false, false, false];
   List<SimCard> _simCard = <SimCard>[];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  final TextEditingController controller = TextEditingController();
+  String initialCountry = 'CM';
+  PhoneNumber number = PhoneNumber(isoCode: 'CM');
 
   void takenumber(String value) {
     setState(() => _mobileNumberPhone = value);
@@ -87,7 +96,7 @@ class _MyAppState extends State<NumeroGet> {
             children: <Widget>[
               Image.asset(
                 'assets/images/Logo-long-edited.png',
-                width: 350,
+                width: 302,
               ),
               SizedBox(
                 height: 0.01529 * deviceSize.height,
@@ -104,10 +113,12 @@ class _MyAppState extends State<NumeroGet> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 36),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: Color(0x26000000), width: 1),
+                    ),
                     child: Container(
-                      color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 12),
@@ -131,8 +142,9 @@ class _MyAppState extends State<NumeroGet> {
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.all(0.0),
-                                      child: fillCards()
-                                    ),
+                                      child: _mobileNumber.length <= 3
+                                          ? fillInput()
+                                          : fillCards()),
                             ],
                           ),
                         ),
@@ -150,7 +162,17 @@ class _MyAppState extends State<NumeroGet> {
                           setState(() {
                             _loading = true;
                           });
-                          registerUser(_mobileNumberPhone).then((value) {
+                          
+                            // CoolAlert.show(
+                            //   context: context,
+                            //   type: CoolAlertType.success,
+                            //   text: "Bienvenue",
+                            //   onConfirmBtnTap:() => Navigator.of(context).pushNamed(Routes.splash_welcome)
+                            // );
+                            // Timer(Duration(seconds: 5), () => Navigator.of(context).pushNamed(Routes.splash_welcome));
+                          registerUser(
+                                  _mobileNumberPhone,_mobileNumberPhoneWrite)
+                              .then((value) {
                             setState(() {
                               _loading = false;
                             });
@@ -158,7 +180,9 @@ class _MyAppState extends State<NumeroGet> {
                               context: context,
                               type: CoolAlertType.success,
                               text: value,
+                              onConfirmBtnTap:() => Navigator.of(context).pushNamed(Routes.splash_welcome)
                             );
+                            Timer(Duration(seconds: 5), () => Navigator.of(context).pushNamed(Routes.splash_welcome));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;
@@ -167,7 +191,8 @@ class _MyAppState extends State<NumeroGet> {
                               context: context,
                               type: CoolAlertType.error,
                               title: "Oops...",
-                              text: onError.response == null || onError.response == ""
+                              text: onError.response == null ||
+                                      onError.response == ""
                                   ? 'Une erreur est survenue, verifier votre connexion.'
                                   : onError.response.data["message"],
                             );
@@ -195,18 +220,20 @@ class _MyAppState extends State<NumeroGet> {
                               child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              _loading?Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, top: 6, bottom: 6),
-                                child: SizedBox(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.white,
-                                    strokeWidth: 1,
-                                  ),
-                                  height: 18.0,
-                                  width: 18.0,
-                                ),
-                              ):Row(),
+                              _loading
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, top: 6, bottom: 6),
+                                      child: SizedBox(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.white,
+                                          strokeWidth: 1,
+                                        ),
+                                        height: 18.0,
+                                        width: 18.0,
+                                      ),
+                                    )
+                                  : Row(),
                               Text('Continuer', style: TextStyle(fontSize: 18)),
                             ],
                           )),
@@ -257,9 +284,9 @@ class _MyAppState extends State<NumeroGet> {
   Widget fillCards() {
     var taille = _simCard.length;
     if (taille == 1) {
-        setState(() {
-          _mobileNumberPhone = _simCard.first.number;
-        });
+      setState(() {
+        _mobileNumberPhone = _simCard.first.number;
+      });
     }
     List<Widget> widgets = _simCard
         .map(
@@ -273,13 +300,8 @@ class _MyAppState extends State<NumeroGet> {
                   onTap: () {
                     setState(() {
                       _mobileNumberPhone = sim.number;
-                      isSelected[0]=false;
-                      isSelected[1]=false;
-                      isSelected[2]=false;
-                      isSelected[3]=false;
-                      isSelected[4]=false;
+                      isSelected = [false, false, false, false, false];
                       isSelected[_simCard.indexOf(sim)] = true;
-                      print(sim.number);
                     });
                   },
                   title: Align(
@@ -293,13 +315,14 @@ class _MyAppState extends State<NumeroGet> {
                     ),
                     alignment: Alignment(-0.3, 0),
                   ),
-                  trailing: taille == 10 || isSelected[_simCard.indexOf(sim)] == true
-                      ? Icon(
-                          Icons.check_circle,
-                          size: 23.0,
-                          color: Color(0xFF25296A),
-                        )
-                      : Text('')),
+                  trailing:
+                      taille == 1 || isSelected[_simCard.indexOf(sim)] == true
+                          ? Icon(
+                              Icons.check_circle,
+                              size: 23.0,
+                              color: Color(0xFF25296A),
+                            )
+                          : Text('')),
               _simCard.indexOf(sim) != taille - 1
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.5),
@@ -311,6 +334,41 @@ class _MyAppState extends State<NumeroGet> {
         )
         .toList();
     return Column(children: widgets);
+  }
+
+  Widget fillInput() {
+    return Form(
+      key: formKey,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+              child: InternationalPhoneNumberInput(
+                onInputChanged: (PhoneNumber number) {
+                  setState(() {
+                    _mobileNumberPhoneWrite = number.phoneNumber;
+                  });
+                },
+                selectorConfig: SelectorConfig(
+                  selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                ),
+                ignoreBlank: false,
+                autoValidateMode: AutovalidateMode.disabled,
+                selectorTextStyle: TextStyle(color: Colors.black),
+                initialValue: number,
+                textFieldController: controller,
+                formatInput: false,
+                keyboardType: TextInputType.numberWithOptions(
+                    signed: true, decimal: true),
+                inputBorder: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
