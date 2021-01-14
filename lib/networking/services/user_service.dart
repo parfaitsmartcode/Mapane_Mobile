@@ -29,3 +29,32 @@ Future<dynamic> getSchools() async{
     throw Exception("Verifiez votre connexion Internet");
   }
 }
+
+Future<dynamic> registerUser(phone) async{
+  var data = {
+        "phone": phone,
+        "type": "user", 
+        "password": "12345678", 
+  };
+  try{
+
+    Response response = await locator<Di>().dio.post(
+      locator<Di>().apiUrl+"/signup", 
+      options: Options(
+        headers: {
+          'Content-Type': "application/json",
+        }
+      ),
+      data: data
+    );
+
+    if(response.statusCode == 200){
+      return response.data["message"];
+    }else{
+      print('service');
+      return response;
+    }
+  } on SocketException{
+    return null;
+  }
+}
