@@ -55,7 +55,7 @@ class _WalkState extends State<Walk> {
 
   @override
   Widget build(BuildContext context) {
-    print(getSize(15,"height",context));
+    // print(getSize(17,"height",context));
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageView.builder(
