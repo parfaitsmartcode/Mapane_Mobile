@@ -4,6 +4,7 @@ import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/service_locator.dart';
 import './utils/theme_mapane.dart';
+import 'package:mapane/screens/welcome_map.dart';
 
 void main() {
   setupLocator();
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: MonCompte(),
+      home: WelcomeMap(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );
