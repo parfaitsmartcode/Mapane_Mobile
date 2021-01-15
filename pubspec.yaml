@@ -39,7 +39,8 @@ dependencies:
   phone_number: ^0.8.1
   cool_alert: ^1.0.3
   intl_phone_number_input: ^0.6.0
-
+  flutter_skeleton: ^0.1.0+1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
