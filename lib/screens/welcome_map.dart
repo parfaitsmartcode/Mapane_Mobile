@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/utils/size_config.dart';
-import 'package:flutter_skeleton/flutter_skeleton.dart';
+import 'package:skeleton_text/skeleton_text.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class WelcomeMap extends StatefulWidget {
 }
 
 class _MyAppState extends State<WelcomeMap> {
+  bool _isloading = false;
   @override
   void initState() {
     super.initState();
@@ -148,40 +150,152 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   width: getSize(56, "width", context),
                                   height: getSize(27, "height", context),
-                                  child: Tab(
-                                    text: "Autres",
+                                  child: GestureDetector(
+                                    child: Tab(
+                                      text: "Autres",
+                                    ),
+                                    onTap: () => {
+                                      showMaterialModalBottomSheet(
+                                        expand: false,
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) => Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 0,
+                                              horizontal:
+                                                  getSize(0, "width", context)),
+                                          child: Container(
+                                            height: 350,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15),
+                                                    topRight:
+                                                        Radius.circular(15)),
+                                                color: Colors.white),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 54,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 16, 0, 25),
+                                                    child: Divider(
+                                                        thickness: 4,
+                                                        color:
+                                                            Color(0x26000000)),
+                                                  ),
+                                                ),
+                                                ListTile(
+                                                    leading: Icon(
+                                                      Icons.map,
+                                                      color: Color(0xFF25296A),
+                                                    ),
+                                                    title: Text(
+                                                        'Controle routier',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black))),
+                                                ListTile(
+                                                    leading: Icon(
+                                                      Icons.add_location ,
+                                                      color: Color(0xFF25296A),
+                                                    ),
+                                                    title: Text(
+                                                        'Zone dangereuse',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black))),
+                                                ListTile(
+                                                    leading: Icon(
+                                                      Icons.airline_seat_recline_extra_rounded,
+                                                      color: Color(0xFF25296A),
+                                                    ),
+                                                    title: Text(
+                                                        'Accident de circulation',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black))),
+                                                ListTile(
+                                                    leading: Icon(
+                                                      Icons.local_taxi_sharp,
+                                                      color: Color(0xFF25296A),
+                                                    ),
+                                                    title: Text(
+                                                        'Route en chantier',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black))),
+                                                ListTile(
+                                                    leading: Icon(
+                                                      Icons.radio_sharp,
+                                                      color: Color(0xFF25296A),
+                                                    ),
+                                                    title: Text(
+                                                        'Radar',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black))),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    },
                                   ),
                                 ),
                               ]),
                         ),
                         Container(
                           //Add this to give height
-                          height: MediaQuery.of(context).size.height / 3,
+                          height: MediaQuery.of(context).size.height / 1.5,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0,
                                 horizontal: getSize(26, "width", context)),
                             child: TabBarView(children: [
+                              ListView(shrinkWrap: true, children: <Widget>[
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getSize(46, "height", context),
+                                        horizontal: 0),
+                                    child: Column(
+                                      children: [
+                                        _isloading == true
+                                            ? SkeletonColumn()
+                                            : AllAlerte()
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ]),
                               Container(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: getSize(46, "height", context),
                                       horizontal: 0),
-                                  child: ListSkeleton(
-                                    style: SkeletonStyle(
-                                      backgroundColor: Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 0),
-                                      theme: SkeletonTheme.Light,
-                                      isShowAvatar: false,
-                                      barCount: 2,
-                                      colors: [
-                                        Color(0x26A3A3A3),
-                                        Color(0x4007116E),
-                                        Color(0x4007116E)
-                                      ],
-                                      isAnimation: true,
-                                    ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [SkeletonColumn()],
                                   ),
                                 ),
                               ),
@@ -190,25 +304,31 @@ class _MyAppState extends State<WelcomeMap> {
                                   padding: EdgeInsets.symmetric(
                                       vertical: getSize(46, "height", context),
                                       horizontal: 0),
-                                  child: Text("Home Body 2"),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [SkeletonColumn()],
+                                  ),
                                 ),
                               ),
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(46, "height", context),
-                                      horizontal: 0),
-                                  child: Text("Home Body 3"),
+                              ListView(shrinkWrap: true, children: <Widget>[
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getSize(46, "height", context),
+                                        horizontal: 0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [AutreAlerte()],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(46, "height", context),
-                                      horizontal: 0),
-                                  child: Text("Home Body 4"),
-                                ),
-                              ),
+                              ])
                             ]),
                           ),
                         ),
@@ -219,6 +339,504 @@ class _MyAppState extends State<WelcomeMap> {
               ],
             )),
       ),
+    );
+  }
+}
+
+class SkeletonColumn extends StatelessWidget {
+  const SkeletonColumn({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SkeletonAnimation(
+          child: Container(
+            width: 215.0,
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 11,
+        ),
+        SkeletonAnimation(
+          child: Container(
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 12.5, 0, 30.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        SkeletonAnimation(
+          child: Container(
+            width: 215.0,
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 11,
+        ),
+        SkeletonAnimation(
+          child: Container(
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 12.5, 0, 30.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        SkeletonAnimation(
+          child: Container(
+            width: 215.0,
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 11,
+        ),
+        SkeletonAnimation(
+          child: Container(
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 12.5, 0, 30.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        SkeletonAnimation(
+          child: Container(
+            width: 215.0,
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 11,
+        ),
+        SkeletonAnimation(
+          child: Container(
+            height: 21.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x26A3A3A3),
+                  Color(0x4007116E),
+                  Color(0x4007116E),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class AllAlerte extends StatelessWidget {
+  const AllAlerte({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+            title: Text('Accident de circulation',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Bepanda, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                  Text('Il y a 5min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Route barrée',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Akwa Nord, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                  Text('Il y a 30min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Embouteillage',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Poste centrale, Yaoundé',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Hier',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Radar',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Entrée Yaoundé',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Avant-hier',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Accident de circulation',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Bepanda, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Il y a 5min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0))
+      ],
+    );
+  }
+}
+
+class AutreAlerte extends StatelessWidget {
+  const AutreAlerte({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+            title: Text('Accident de circulation',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Bepanda, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                  Text('Il y a 5min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Route barrée',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Akwa Nord, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                  Text('Il y a 30min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Embouteillage',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Poste centrale, Yaoundé',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Hier',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Radar',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Entrée Yaoundé',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Avant-hier',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+        ListTile(
+            title: Text('Accident de circulation',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Bepanda, Douala',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                  Text('Il y a 5min',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey)),
+                ],
+              ),
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0))
+      ],
     );
   }
 }
