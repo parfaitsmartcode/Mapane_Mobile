@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:mapane/constants/assets.dart';
 import 'package:mapane/screens/home_page.dart';
 
 
@@ -13,11 +15,14 @@ class TabNavigationItem {
     @required this.title,
     @required this.icon,
   });
-
+  static final Widget svg = SvgPicture.asset(
+      Assets.historyIcon,
+  );
   static List<TabNavigationItem> get items => [
     TabNavigationItem(
       page: HomePage(),
-      icon: Icon(Icons.explore,
+      icon: Icon(
+        Icons.navigation_outlined,
         size: 40.0,
       ),
       title: CircleAvatar(

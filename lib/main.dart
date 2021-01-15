@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/routes.dart';
-import 'package:mapane/screens/nav_page.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/tabs_page.dart';
 import 'package:mapane/service_locator.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create:(_) => BottomBarProvider())
+      ],
+      child:  MyApp(),
+    )
+
+  );
 }
 
 class MyApp extends StatelessWidget {

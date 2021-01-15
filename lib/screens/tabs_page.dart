@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/custom/widgets/tab_navigation_item.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class TabsPage extends StatefulWidget {
   @override
@@ -21,7 +24,7 @@ class _TabsPageState extends State<TabsPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
-        backgroundColor: Colors.white.withOpacity(0.3),
+        backgroundColor: context.watch<BottomBarProvider>().bottomBarColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),

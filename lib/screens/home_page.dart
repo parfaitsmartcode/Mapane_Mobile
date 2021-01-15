@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +17,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
+  Icon swiperIcon  = Icon(
+    Icons.keyboard_arrow_up,
+    color: Colors.grey,
+    size: 30.0,
+  );
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -103,16 +110,17 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Padding(
+              AnimatedPadding(
+                duration: Duration(seconds: 1),
                 padding: EdgeInsets.only(
-                    bottom: SizeConfig.blockSizeVertical * 15,
-                    right: SizeConfig.blockSizeHorizontal * 8),
+                    bottom: !isExpanded ? SizeConfig.blockSizeVertical * 15 : SizeConfig.blockSizeVertical * 45,
+                    right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: UtilButton(
-                    height: SizeConfig.blockSizeVertical * 6,
-                    width: SizeConfig.blockSizeHorizontal * 13,
-                    icon: Icon(Icons.search),
+                    height: SizeConfig.blockSizeVertical * 8,
+                    width: SizeConfig.blockSizeHorizontal * 17,
+                    icon: Icon(Icons.search,size: 35.0,),
                   ),
                 ),
               ),
@@ -146,16 +154,41 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 20.0),
-                        child: Icon(
-                          Icons.keyboard_arrow_up,
-                          color: Colors.grey,
-                          size: 30.0,
-                        ),
+                        child: swiperIcon,
                       ),
                     ),
+                    onEnd: (){
+                      setState(() {
+                        if(!isExpanded){
+                          swiperIcon = Icon(
+                            Icons.keyboard_arrow_up,
+                            color: Colors.grey,
+                            size: 30.0,
+                          );
+                          context.read()<BottomBarProvider>().modifyColor(Colors.white.withOpacity(0.3));
+                        }else {
+                          context.read()<BottomBarProvider>().modifyColor(Colors.white);
+                          swiperIcon = Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                            size: 30.0,
+                          );
+                        }
+                      });
+                    },
                   ),
                 ),
               ),
+              /*Align(
+                alignment: Alignment.bottomCenter,
+                child: Card(
+                  elevation: 10.0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: 200,
+                  ),
+                )
+              ),*/
             ],
           ),
         ));
