@@ -165,9 +165,9 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey,
                             size: 30.0,
                           );
-                          context.read()<BottomBarProvider>().modifyColor(Colors.white.withOpacity(0.3));
+                          context.read<BottomBarProvider>().modifyColor(Colors.white.withOpacity(0.3));
                         }else {
-                          context.read()<BottomBarProvider>().modifyColor(Colors.white);
+                          context.read<BottomBarProvider>().modifyColor(Colors.white);
                           swiperIcon = Icon(
                             Icons.keyboard_arrow_down,
                             color: Colors.grey,
