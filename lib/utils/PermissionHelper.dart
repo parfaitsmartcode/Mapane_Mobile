@@ -9,7 +9,7 @@ class PermissionHelper {
     if(status == PermissionStatus.granted){
       return true;
     }else{
-      status = await Permission.storage.request();
+      status = await permission.request();
       if(status == PermissionStatus.granted){
         return true;
       }else{

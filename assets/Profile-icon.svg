@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <g id="Profile-icon" opacity="0.15">
+    <path id="Tracé_19" data-name="Tracé 19" d="M0,0H40V40H0Z" fill="none"/>
+    <path id="Tracé_20" data-name="Tracé 20" d="M30.667,36H27.333V32.667a5,5,0,0,0-5-5h-10a5,5,0,0,0-5,5V36H4V32.667a8.333,8.333,0,0,1,8.333-8.333h10a8.333,8.333,0,0,1,8.333,8.333ZM17.333,21a10,10,0,1,1,10-10A10,10,0,0,1,17.333,21Zm0-3.333A6.667,6.667,0,1,0,10.667,11,6.667,6.667,0,0,0,17.333,17.667Z" transform="translate(2.667 0.667)"/>
+  </g>
+</svg>
