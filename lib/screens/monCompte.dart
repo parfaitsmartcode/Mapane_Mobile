@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/theme_mapane.dart';
+import '../utils/size_config.dart';
 
 class MonCompte extends StatefulWidget {
   @override
@@ -30,19 +31,19 @@ class _MyAppState extends State<MonCompte> {
                   1
                 ]),
           ),
-          padding: EdgeInsets.symmetric(vertical: 9, horizontal: 36),
+          padding: EdgeInsets.symmetric(vertical: getSize(9,"height",context), horizontal: getSize(36,"width",context)),
           child:
             Column(
               children: [
                 // SizedBox(
                 //     height: 8,
                 //   ),
-                Image.asset('assets/images/Logo-long-edited.png', height: 39,),
+                Image.asset('assets/images/Logo-long-edited.png', height: getSize(39,"height",context),),
                 SizedBox(
-                  height: 34,
+                  height: getSize(34,"height",context),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: getSize(20,"width",context)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -65,7 +66,7 @@ class _MyAppState extends State<MonCompte> {
                               Theme.of(context).textTheme.headline3.copyWith(
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.blackColor.withOpacity(0.46),
-                                  fontSize: 17,
+                                  fontSize: getSize(17,"height",context),
                                   letterSpacing: 0,
                                 ),
                             ),
@@ -75,91 +76,91 @@ class _MyAppState extends State<MonCompte> {
                         decoration: BoxDecoration(
                           boxShadow: Elevation.low,
                           color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(19),
+                          borderRadius: BorderRadius.circular(getSize(19,"height",context)),
                         ),
                         // padding: EdgeInsets.all(4),
-                        width: 38,
-                        height: 38,
+                        width: getSize(39,"width",context),
+                        height: getSize(38,"height",context),
                         child:Center(
-                          child:Image.asset('assets/images/Logo-small.png', height: 20,),
+                          child:Image.asset('assets/images/Logo-small.png', height: getSize(20,"height",context),),
                         ),
                       )
                     ],
                   ),
                 ),
                 SizedBox(
-                  height: 24,
+                  height: getSize(24,"height",context),
                 ),
-                Image.asset('assets/images/image-map.png', height: 118,),
+                Image.asset('assets/images/image-map.png', width: double.infinity),
                 SizedBox(
-                          height: 34,
+                  height: getSize(34,"height",context),
                 ),
                 Container(
                   decoration: BoxDecoration(
                     boxShadow: Elevation.low,
                     color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(getSize(30,"height",context)),
                   ),
-                  padding: EdgeInsets.only(left: 20, top: 9, right: 20, bottom: 18),
+                  padding: EdgeInsets.only(left: getSize(20,"width",context), top: getSize(9,"height",context), right: getSize(20,"width",context), bottom: getSize(28,"height",context)),
                   child: Column(                      
                     children: [
                       SizedBox(
-                        height: 37,
+                        height: getSize(37,"height",context),
                         child: ListTile(
-                            leading: Image.asset('assets/images/Tel-icon.png', height: 24,),
+                            leading: Image.asset('assets/images/Tel-icon.png', height: getSize(24,"height",context), width: getSize(24,"width",context),),
                             title: Align(
                               child: Text(
                                 'Modifier le numéro',
-                                style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                                style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: getSize(14,"height",context), fontWeight: FontWeight.w400),
                                 ),
-                              alignment: Alignment(-1.3,0),
+                              alignment: Alignment(getSize(-1.4,"width",context),0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                             dense:true,
                           ),
                       ),
                       SizedBox(
-                        height: 37,
+                        height: getSize(37,"height",context),
                         child: ListTile(
-                          leading: Image.asset('assets/images/Map-pin-icon-noir.png', height: 24,),
+                          leading: Image.asset('assets/images/Map-pin-icon-noir.png', height: getSize(24,"height",context), width: getSize(24,"width",context),),
                           title: Align(
                               child: Text(
                               'Enregistrer votre domicile',
-                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: getSize(14,"height",context), fontWeight: FontWeight.w400),
                               ),
-                              alignment: Alignment(-1.7,0),
+                              alignment: Alignment(getSize(-1.7,"width",context),0),
                           ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                           dense:true,
                         ),
                       ),
                       SizedBox(
-                        height: 37,
+                        height: getSize(37,"height",context),
                         child: ListTile(
-                          leading: Image.asset('assets/images/Settings-icon.png', height: 24,),
+                          leading: Image.asset('assets/images/Settings-icon.png', height: getSize(24,"height",context),),
                           title: Align(
                               child: Text(
                               'Paramètres de l\'application',
-                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: getSize(14,"height",context), fontWeight: FontWeight.w400),
                               ),
-                              alignment: Alignment(-2,0),
+                              alignment: Alignment(getSize(-1.8,"width",context),0),
                           ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                           dense:true,
                         ),
                       ),
                       SizedBox(
-                        height: 37,
+                        height: getSize(37,"height",context),
                           child: ListTile(
-                          leading: Image.asset('assets/images/Logout-icon.png', height: 24,),
+                          leading: Image.asset('assets/images/Logout-icon.png', height: getSize(24,"height",context),),
                           title: Align(
                               child: Text(
                               'Quitter l\'application',
-                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: getSize(14,"height",context), fontWeight: FontWeight.w400),
                               ),
-                              alignment: Alignment(-1.3,0),
+                              alignment: Alignment(getSize(-1.42,"width",context),0),
                           ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                           dense:true,  
                         ),
                       ),
