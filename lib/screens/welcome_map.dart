@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/utils/size_config.dart';
+import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'dart:io';
+import 'dart:ui';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -248,29 +249,20 @@ class MaterialModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          vertical: 0,
-          horizontal:
-              getSize(0, "width", context)),
+          vertical: 0, horizontal: getSize(0, "width", context)),
       child: Container(
         height: 350,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft:
-                    Radius.circular(15),
-                topRight:
-                    Radius.circular(15)),
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
             color: Colors.white),
         child: Column(
           children: [
             SizedBox(
               width: 54,
               child: Padding(
-                padding: const EdgeInsets
-                    .fromLTRB(0, 16, 0, 25),
-                child: Divider(
-                    thickness: 4,
-                    color:
-                        Color(0x26000000)),
+                padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
+                child: Divider(thickness: 4, color: Color(0x26000000)),
               ),
             ),
             ListTile(
@@ -278,66 +270,51 @@ class MaterialModal extends StatelessWidget {
                   Icons.map,
                   color: Color(0xFF25296A),
                 ),
-                title: Text(
-                    'Controle routier',
+                title: Text('Controle routier',
                     style: TextStyle(
-                        fontWeight:
-                            FontWeight.w400,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color:
-                            Colors.black))),
+                        color: Colors.black))),
             ListTile(
                 leading: Icon(
-                  Icons.add_location ,
+                  Icons.add_location,
                   color: Color(0xFF25296A),
                 ),
-                title: Text(
-                    'Zone dangereuse',
+                title: Text('Zone dangereuse',
                     style: TextStyle(
-                        fontWeight:
-                            FontWeight.w400,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color:
-                            Colors.black))),
+                        color: Colors.black))),
             ListTile(
                 leading: Icon(
                   Icons.airline_seat_recline_extra_rounded,
                   color: Color(0xFF25296A),
                 ),
-                title: Text(
-                    'Accident de circulation',
+                title: Text('Accident de circulation',
                     style: TextStyle(
-                        fontWeight:
-                            FontWeight.w400,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color:
-                            Colors.black))),
+                        color: Colors.black))),
             ListTile(
                 leading: Icon(
                   Icons.local_taxi_sharp,
                   color: Color(0xFF25296A),
                 ),
-                title: Text(
-                    'Route en chantier',
+                title: Text('Route en chantier',
                     style: TextStyle(
-                        fontWeight:
-                            FontWeight.w400,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color:
-                            Colors.black))),
+                        color: Colors.black))),
             ListTile(
                 leading: Icon(
                   Icons.radio_sharp,
                   color: Color(0xFF25296A),
                 ),
-                title: Text(
-                    'Radar',
+                title: Text('Radar',
                     style: TextStyle(
-                        fontWeight:
-                            FontWeight.w400,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color:
-                            Colors.black))),
+                        color: Colors.black))),
           ],
         ),
       ),
@@ -680,18 +657,20 @@ class AutreAlerte extends StatefulWidget {
   @override
   _AutreAlerteState createState() => _AutreAlerteState();
 }
+
 class _AutreAlerteState extends State<AutreAlerte> {
   void initState() {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => showMaterialModalBottomSheet(
-                                        expand: false,
-                                        context: context,
-                                        duration: const Duration(milliseconds: 500),
-                                        backgroundColor: Colors.transparent,
-                                        builder: (context) => MaterialModal(),
-                                      ));
+              expand: false,
+              context: context,
+              duration: const Duration(milliseconds: 500),
+              backgroundColor: Colors.transparent,
+              builder: (context) => MaterialModal(),
+            ));
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
