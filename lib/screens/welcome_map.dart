@@ -6,6 +6,7 @@ import '../utils/theme_mapane.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'dart:io';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -150,113 +151,8 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   width: getSize(56, "width", context),
                                   height: getSize(27, "height", context),
-                                  child: GestureDetector(
-                                    child: Tab(
-                                      text: "Autres",
-                                    ),
-                                    onTap: () => {
-                                      showMaterialModalBottomSheet(
-                                        expand: false,
-                                        context: context,
-                                        backgroundColor: Colors.transparent,
-                                        builder: (context) => Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal:
-                                                  getSize(0, "width", context)),
-                                          child: Container(
-                                            height: 350,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(15),
-                                                    topRight:
-                                                        Radius.circular(15)),
-                                                color: Colors.white),
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  width: 54,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(0, 16, 0, 25),
-                                                    child: Divider(
-                                                        thickness: 4,
-                                                        color:
-                                                            Color(0x26000000)),
-                                                  ),
-                                                ),
-                                                ListTile(
-                                                    leading: Icon(
-                                                      Icons.map,
-                                                      color: Color(0xFF25296A),
-                                                    ),
-                                                    title: Text(
-                                                        'Controle routier',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black))),
-                                                ListTile(
-                                                    leading: Icon(
-                                                      Icons.add_location ,
-                                                      color: Color(0xFF25296A),
-                                                    ),
-                                                    title: Text(
-                                                        'Zone dangereuse',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black))),
-                                                ListTile(
-                                                    leading: Icon(
-                                                      Icons.airline_seat_recline_extra_rounded,
-                                                      color: Color(0xFF25296A),
-                                                    ),
-                                                    title: Text(
-                                                        'Accident de circulation',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black))),
-                                                ListTile(
-                                                    leading: Icon(
-                                                      Icons.local_taxi_sharp,
-                                                      color: Color(0xFF25296A),
-                                                    ),
-                                                    title: Text(
-                                                        'Route en chantier',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black))),
-                                                ListTile(
-                                                    leading: Icon(
-                                                      Icons.radio_sharp,
-                                                      color: Color(0xFF25296A),
-                                                    ),
-                                                    title: Text(
-                                                        'Radar',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black))),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    },
+                                  child: Tab(
+                                    text: "Autres",
                                   ),
                                 ),
                               ]),
@@ -338,6 +234,112 @@ class _MyAppState extends State<WelcomeMap> {
                 )
               ],
             )),
+      ),
+    );
+  }
+}
+
+class MaterialModal extends StatelessWidget {
+  const MaterialModal({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: 0,
+          horizontal:
+              getSize(0, "width", context)),
+      child: Container(
+        height: 350,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft:
+                    Radius.circular(15),
+                topRight:
+                    Radius.circular(15)),
+            color: Colors.white),
+        child: Column(
+          children: [
+            SizedBox(
+              width: 54,
+              child: Padding(
+                padding: const EdgeInsets
+                    .fromLTRB(0, 16, 0, 25),
+                child: Divider(
+                    thickness: 4,
+                    color:
+                        Color(0x26000000)),
+              ),
+            ),
+            ListTile(
+                leading: Icon(
+                  Icons.map,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text(
+                    'Controle routier',
+                    style: TextStyle(
+                        fontWeight:
+                            FontWeight.w400,
+                        fontSize: 16,
+                        color:
+                            Colors.black))),
+            ListTile(
+                leading: Icon(
+                  Icons.add_location ,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text(
+                    'Zone dangereuse',
+                    style: TextStyle(
+                        fontWeight:
+                            FontWeight.w400,
+                        fontSize: 16,
+                        color:
+                            Colors.black))),
+            ListTile(
+                leading: Icon(
+                  Icons.airline_seat_recline_extra_rounded,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text(
+                    'Accident de circulation',
+                    style: TextStyle(
+                        fontWeight:
+                            FontWeight.w400,
+                        fontSize: 16,
+                        color:
+                            Colors.black))),
+            ListTile(
+                leading: Icon(
+                  Icons.local_taxi_sharp,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text(
+                    'Route en chantier',
+                    style: TextStyle(
+                        fontWeight:
+                            FontWeight.w400,
+                        fontSize: 16,
+                        color:
+                            Colors.black))),
+            ListTile(
+                leading: Icon(
+                  Icons.radio_sharp,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text(
+                    'Radar',
+                    style: TextStyle(
+                        fontWeight:
+                            FontWeight.w400,
+                        fontSize: 16,
+                        color:
+                            Colors.black))),
+          ],
+        ),
       ),
     );
   }
@@ -534,12 +536,12 @@ class AllAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 5min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -565,12 +567,12 @@ class AllAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 30min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -596,12 +598,12 @@ class AllAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Hier',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -627,12 +629,12 @@ class AllAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Avant-hier',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -658,12 +660,12 @@ class AllAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 5min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -674,11 +676,22 @@ class AllAlerte extends StatelessWidget {
   }
 }
 
-class AutreAlerte extends StatelessWidget {
-  const AutreAlerte({
-    Key key,
-  }) : super(key: key);
-
+class AutreAlerte extends StatefulWidget {
+  @override
+  _AutreAlerteState createState() => _AutreAlerteState();
+}
+class _AutreAlerteState extends State<AutreAlerte> {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => showMaterialModalBottomSheet(
+                                        expand: false,
+                                        context: context,
+                                        duration: const Duration(milliseconds: 500),
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) => MaterialModal(),
+                                      ));
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -701,12 +714,12 @@ class AutreAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 5min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -732,12 +745,12 @@ class AutreAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 30min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.black)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -763,12 +776,12 @@ class AutreAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Hier',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -794,12 +807,12 @@ class AutreAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Avant-hier',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
@@ -825,12 +838,12 @@ class AutreAlerte extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                   Text('Il y a 5min',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Colors.grey)),
+                          color: Colors.black.withOpacity(.4))),
                 ],
               ),
             ),
