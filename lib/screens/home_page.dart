@@ -140,22 +140,32 @@ class _HomePageState extends State<HomePage> {
                             ? Colors.white
                             : Colors.white.withOpacity(0.3)),
                     duration: Duration(seconds: 1),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (isExpanded) {
-                            isExpanded = false;
-                            alertHeight = 30.0;
-                          } else {
-                            isExpanded = true;
-                            alertHeight = 300.0;
-                          }
-                        });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.0),
-                        child: swiperIcon,
-                      ),
+                    child: Stack(
+                      overflow: Overflow.visible,
+                      children: [
+                        Align(
+                          alignment: Alignment.topCenter,
+                          //bottom:  15.0,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                if (isExpanded) {
+                                  isExpanded = false;
+                                  alertHeight = 30.0;
+                                } else {
+                                  isExpanded = true;
+                                  alertHeight = 300.0;
+                                }
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: 15.0,
+                              backgroundColor: Colors.blueGrey,
+                                child: Center(child: swiperIcon)
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     onEnd: (){
                       setState(() {
