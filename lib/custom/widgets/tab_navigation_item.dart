@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/screens/home_page.dart';
+import 'package:mapane/screens/welcome_map.dart';
 
 
 class TabNavigationItem {
@@ -20,7 +21,7 @@ class TabNavigationItem {
   );
   static List<TabNavigationItem> get items => [
     TabNavigationItem(
-      page: HomePage(),
+      page: WelcomeMap(),
       icon: Icon(
         Icons.navigation_outlined,
         size: 40.0,
