@@ -3,50 +3,73 @@ import 'package:walkthrough/flutterwalkthrough.dart';
 import 'package:walkthrough/walkthrough.dart';
 import 'dart:async';
 import 'dart:core';
-import 'walk.dart';
+import 'welcome_map.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashWelcome extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashWelcomeState createState() => _SplashWelcomeState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashWelcomeState extends State<SplashWelcome> {
   @override
   Widget build(BuildContext context) {
-    return new SplashScreen2(
-      seconds: 5, 
-      navigateAfterSeconds: new AfterSplash(),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return new SplashScreen21(
+        seconds: 5,
+        navigateAfterSeconds: new AfterSplash(),
+        title: Stack(
+        alignment: Alignment.center,
         children: [
-          new Image.asset('assets/images/Logo-long-edited.png', width: 300,),
-          new Padding(
-            padding: const EdgeInsets.only(top: 15.0),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              new Image.asset(
+                'assets/images/Logo-small.png',
+                width: 103,
+              ),
+              new Padding(
+                padding: const EdgeInsets.only(top: 39),
+              ),
+              Container(
+                  child: new Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    Center(
+                      child: Column(
+                        children: [
+                          Text('Bienvenue sur Mapane',
+                              style: TextStyle(
+                                fontSize: 26.0,
+                                fontFamily: 'Robotto',
+                                color: Colors.black,
+                              )),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          SizedBox(
+                            width: 212,
+                            child: Text(
+                                'Votre application d\'aide au déplacement urbain',
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontFamily: 'Robotto',
+                                  color: Colors.black,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ])),
+            ],
           ),
-          Container(
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: new Text(
-                    'C\'est plus facile de se déplacer',
-                    style: new TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: 'Robotto',
-                      color: Colors.black.withOpacity(.8),
-                    )
-                  ),
-                ),
-              ]
-            )
-          ),
-        ],
-      ),
-      useLoader: false,
-      pageRoute: _createRoute(),
-      imageBackground: AssetImage("assets/images/Background.png"),
-      gradientBackground: LinearGradient(
+        ]),
+        useLoader: false,
+        pageRoute: _createRoute(),
+        imageBackground: AssetImage("assets/images/Background.png"),
+        gradientBackground: LinearGradient(
           colors: [
             Color.fromRGBO(73, 113, 172, 0.6),
             Color.fromRGBO(73, 113, 172, 0.6),
@@ -55,14 +78,13 @@ class _SplashScreenState extends State<SplashScreen> {
           end: Alignment.bottomCenter,
           stops: [0.0, 1.0],
           tileMode: TileMode.clamp,
-      )
-    );
+        ));
   }
 }
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => Walk(),
+    pageBuilder: (context, animation, secondaryAnimation) => WelcomeMap(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
@@ -77,38 +99,40 @@ Route _createRoute() {
     },
   );
 }
+
 class AfterSplash extends StatelessWidget {
   final List<Walkthrough> list = [
-        Walkthrough(
-          title: "Title 1",
-          content: "Content 1",
-          imageIcon: Icons.restaurant_menu,
-        ),
-        Walkthrough(
-          title: "Title 2",
-          content: "Content 2",
-          imageIcon: Icons.search,
-        ),
-        Walkthrough(
-          title: "Title 3",
-          content: "Content 3",
-          imageIcon: Icons.shopping_cart,
-        ),
-        Walkthrough(
-          title: "Title 4",
-          content: "Content 4",
-          imageIcon: Icons.verified_user,
-        ),
+    Walkthrough(
+      title: "Title 1",
+      content: "Content 1",
+      imageIcon: Icons.restaurant_menu,
+    ),
+    Walkthrough(
+      title: "Title 2",
+      content: "Content 2",
+      imageIcon: Icons.search,
+    ),
+    Walkthrough(
+      title: "Title 3",
+      content: "Content 3",
+      imageIcon: Icons.shopping_cart,
+    ),
+    Walkthrough(
+      title: "Title 4",
+      content: "Content 4",
+      imageIcon: Icons.verified_user,
+    ),
   ];
   @override
   Widget build(BuildContext context) {
     return IntroScreen(
-          list,
-          MaterialPageRoute(builder: (context) => AfterSplash()),
+      list,
+      MaterialPageRoute(builder: (context) => AfterSplash()),
     );
   }
 }
-class SplashScreen2 extends StatefulWidget {
+
+class SplashScreen21 extends StatefulWidget {
   /// Seconds to navigate after for time based navigation
   final int seconds;
 
@@ -159,7 +183,7 @@ class SplashScreen2 extends StatefulWidget {
 
   /// Use one of the provided factory constructors instead of.
   @protected
-  SplashScreen2({
+  SplashScreen21({
     this.loaderColor,
     this.navigateAfterFuture,
     this.seconds,
@@ -169,8 +193,8 @@ class SplashScreen2 extends StatefulWidget {
     this.navigateAfterSeconds,
     this.title,
     this.backgroundColor = Colors.white,
-    this.styleTextUnderTheLoader =
-        const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
+    this.styleTextUnderTheLoader = const TextStyle(
+        fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
     this.image,
     this.loadingText = const Text(""),
     this.imageBackground,
@@ -179,7 +203,7 @@ class SplashScreen2 extends StatefulWidget {
     this.routeName,
   });
 
-  factory SplashScreen2.timer(
+  factory SplashScreen21.timer(
           {@required int seconds,
           Color loaderColor,
           Color backgroundColor,
@@ -195,7 +219,7 @@ class SplashScreen2 extends StatefulWidget {
           Gradient gradientBackground,
           bool useLoader,
           String routeName}) =>
-      SplashScreen2(
+      SplashScreen21(
         loaderColor: loaderColor,
         seconds: seconds,
         photoSize: photoSize,
@@ -213,7 +237,7 @@ class SplashScreen2 extends StatefulWidget {
         routeName: routeName,
       );
 
-  factory SplashScreen2.network(
+  factory SplashScreen21.network(
           {@required Future<dynamic> navigateAfterFuture,
           Color loaderColor,
           Color backgroundColor,
@@ -229,7 +253,7 @@ class SplashScreen2 extends StatefulWidget {
           Gradient gradientBackground,
           bool useLoader,
           String routeName}) =>
-      SplashScreen2(
+      SplashScreen21(
         loaderColor: loaderColor,
         navigateAfterFuture: navigateAfterFuture,
         photoSize: photoSize,
@@ -248,31 +272,38 @@ class SplashScreen2 extends StatefulWidget {
       );
 
   @override
-  _SplashScreen2State createState() => _SplashScreen2State();
+  _SplashScreen21State createState() => _SplashScreen21State();
 }
 
-class _SplashScreen2State extends State<SplashScreen2> {
+class _SplashScreen21State extends State<SplashScreen21> {
   @override
   void initState() {
     super.initState();
-    if (widget.routeName != null && widget.routeName is String && "${widget.routeName[0]}" != "/") {
-      throw new ArgumentError("widget.routeName must be a String beginning with forward slash (/)");
+    if (widget.routeName != null &&
+        widget.routeName is String &&
+        "${widget.routeName[0]}" != "/") {
+      throw new ArgumentError(
+          "widget.routeName must be a String beginning with forward slash (/)");
     }
     if (widget.navigateAfterFuture == null) {
       Timer(Duration(seconds: widget.seconds), () {
         if (widget.navigateAfterSeconds is String) {
           // It's fairly safe to assume this is using the in-built material
           // named route component
-          Navigator.of(context).pushReplacementNamed(widget.navigateAfterSeconds);
+          Navigator.of(context)
+              .pushReplacementNamed(widget.navigateAfterSeconds);
         } else if (widget.navigateAfterSeconds is Widget) {
           Navigator.of(context).pushReplacement(widget.pageRoute != null
               ? widget.pageRoute
               : new MaterialPageRoute(
-                  settings:
-                      widget.routeName != null ? RouteSettings(name: "${widget.routeName}") : null,
-                  builder: (BuildContext context) => widget.navigateAfterSeconds));
+                  settings: widget.routeName != null
+                      ? RouteSettings(name: "${widget.routeName}")
+                      : null,
+                  builder: (BuildContext context) =>
+                      widget.navigateAfterSeconds));
         } else {
-          throw new ArgumentError('widget.navigateAfterSeconds must either be a String or Widget');
+          throw new ArgumentError(
+              'widget.navigateAfterSeconds must either be a String or Widget');
         }
       });
     } else {
@@ -285,11 +316,13 @@ class _SplashScreen2State extends State<SplashScreen2> {
           Navigator.of(context).pushReplacement(widget.pageRoute != null
               ? widget.pageRoute
               : new MaterialPageRoute(
-                  settings:
-                      widget.routeName != null ? RouteSettings(name: "${widget.routeName}") : null,
+                  settings: widget.routeName != null
+                      ? RouteSettings(name: "${widget.routeName}")
+                      : null,
                   builder: (BuildContext context) => navigateTo));
         } else {
-          throw new ArgumentError('widget.navigateAfterFuture must either be a String or Widget');
+          throw new ArgumentError(
+              'widget.navigateAfterFuture must either be a String or Widget');
         }
       });
     }
@@ -297,11 +330,13 @@ class _SplashScreen2State extends State<SplashScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       body: new InkWell(
         onTap: widget.onClick,
         child: new Stack(
           fit: StackFit.expand,
+          alignment: Alignment.center,
           children: <Widget>[
             new Container(
               decoration: new BoxDecoration(
@@ -321,29 +356,52 @@ class _SplashScreen2State extends State<SplashScreen2> {
                 new Expanded(
                   flex: 2,
                   child: new Container(
-                    // decoration: BoxDecoration(
-                    //   gradient: LinearGradient(
-                    //     begin: Alignment.topCenter,
-                    //     end: Alignment.bottomCenter,
-                    //     colors: [Color(0x00FFFFFF) , Color(0xD9FFFFFF), Color(0xD9FFFFFF), Color(0xD9FFFFFF),Color(0x00FFFFFF)],
-                    //     stops: [
-                    //       0,
-                    //       0.3,
-                    //       0.7,
-                    //       0,
-                    //       1
-                    //     ]
-                    //   )
-                    // ),
+                      // decoration: BoxDecoration(
+                      //   gradient: LinearGradient(
+                      //     begin: Alignment.topCenter,
+                      //     end: Alignment.bottomCenter,
+                      //     colors: [Color(0x00FFFFFF) , Color(0xD9FFFFFF), Color(0xD9FFFFFF), Color(0xD9FFFFFF),Color(0x00FFFFFF)],
+                      //     stops: [
+                      //       0,
+                      //       0.3,
+                      //       0.7,
+                      //       0,
+                      //       1
+                      //     ]
+                      //   )
+                      // ),
                       child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      widget.title
-                    ],
+                    children: <Widget>[widget.title],
                   )),
                 ),
               ],
             ),
+          Positioned(
+            bottom: 21,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Informations légales",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: 0.02177 * deviceSize.height,
+                ),
+                Text(
+                  "V1.0.0",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                      color: Colors.black),
+                ),
+              ],
+            ),
+          )
           ],
         ),
       ),

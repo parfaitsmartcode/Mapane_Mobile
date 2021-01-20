@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
+import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/screens/tabs_page.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
+import './utils/theme_mapane.dart';
+import 'package:mapane/screens/welcome_map.dart';
+import 'package:mapane/screens/settings.dart';
 
 void main() {
   setupLocator();
@@ -25,13 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mapane',
-      theme: ThemeData(
-          fontFamily: "Raleway",
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          primaryColor: Color.fromRGBO(245, 54, 21, 1),
-          primarySwatch: Colors.deepOrange,
-          canvasColor: Colors.transparent
-      ),
+      theme: ThemeMapane.themeMapane(context),
       home: TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,

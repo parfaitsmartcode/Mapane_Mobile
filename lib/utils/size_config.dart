@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+
+getSize(taille, type, resp) {
+  double size = 0;
+  if (type == "width") {
+    size = MediaQuery.of(resp).size.width * (taille / 375);
+  }
+  if (type == "height") {
+    size = MediaQuery.of(resp).size.height * (taille / 667);
+  }
+  return size;
+}
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
