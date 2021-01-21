@@ -14,6 +14,7 @@ class AlertProvider extends BaseProvider{
     alertService.getAlerts().then((alerts){
       alertList = Right(alerts);
     }).catchError((error){
+      print(error);
       alertList = Left(error);
       this.toggleLoadingState();
     });
