@@ -19,4 +19,14 @@ class AlertProvider extends BaseProvider{
     });
   }
 
+  getAlertByUser(id){
+    this.toggleLoadingState();
+    alertService.getAlertByUser(id).then((alerts){
+      alertList = Right(alerts);
+    }).catchError((error){
+      alertList = Left(error);
+      this.toggleLoadingState();
+    });
+  }
+
 }

@@ -10,7 +10,7 @@ class AlertService{
   Future<List<Alert>> getAlerts() async{
 
     try{
-      final String uri = locator<Di>().apiUrl + "/test";
+      final String uri = locator<Di>().apiUrl + "/alert";
       Response response = await locator<Di>().dio.get(uri,
         options: Options(
             headers: {
@@ -24,6 +24,25 @@ class AlertService{
     } on DioError catch (e){
       throw new NException(e);
     }
-}
+  }
+
+  Future<List<Alert>> getAlertByUser(id) async{
+
+    try{
+      final String uri = locator<Di>().apiUrl + "/alert/"+id;
+      Response response = await locator<Di>().dio.get(uri,
+        options: Options(
+            headers: {
+              "content-type":"application/json"
+            }
+        ),
+      );
+      return List<Alert>.from(((response.data) as List).map((json){
+        return Alert.fromJson(json);
+      }));
+    } on DioError catch (e){
+      throw new NException(e);
+    }
+  }
 }
 final AlertService alertService = AlertService();

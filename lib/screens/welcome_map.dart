@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
+import '../state/alert_provider.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:skeleton_text/skeleton_text.dart';
@@ -16,8 +17,12 @@ class WelcomeMap extends StatefulWidget {
 
 class _MyAppState extends State<WelcomeMap> {
   bool _isloading = false;
+  final alertProvider = AlertProvider();
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print(alertProvider.getAlertList());
+    });
     super.initState();
   }
 
