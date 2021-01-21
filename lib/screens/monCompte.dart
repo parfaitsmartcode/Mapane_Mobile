@@ -473,10 +473,7 @@ class _MyAppState extends State<MonCompte> {
                               pageBuilder: (BuildContext buildContext,
                                   Animation animation,
                                   Animation secondaryAnimation) {
-                                return 
-                                Scaffold(
-                                  // backgroundColor: AppColors.blackColor,
-                                  body: Center(
+                                return Center(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -552,52 +549,55 @@ class _MyAppState extends State<MonCompte> {
                                                                 44,
                                                                 "height",
                                                                 context),
-                                                            child: TextField(
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                      prefixIcon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .account_circle_outlined,
-                                                                        size: getSize(
-                                                                            30,
-                                                                            "height",
-                                                                            context),
-                                                                        color: AppColors
-                                                                            .blackColor,
-                                                                      ),
-                                                                      // border:
-                                                                      //     OutlineInputBorder(
-                                                                      //   borderRadius:
-                                                                      //       BorderRadius.all(
-                                                                      //     Radius.circular(
-                                                                      //         100.0),
+                                                            child: Drawer(
+                                                              elevation: 0,
+                                                                                                                          child: TextField(
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                        prefixIcon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .account_circle_outlined,
+                                                                          size: getSize(
+                                                                              30,
+                                                                              "height",
+                                                                              context),
+                                                                          color: AppColors
+                                                                              .blackColor,
+                                                                        ),
+                                                                        // border:
+                                                                        //     OutlineInputBorder(
+                                                                        //   borderRadius:
+                                                                        //       BorderRadius.all(
+                                                                        //     Radius.circular(
+                                                                        //         100.0),
 
-                                                                      //   ),
-                                                                      // ),
-                                                                      border:
-                                                                          OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide.none,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                      ),
-                                                                      filled:
-                                                                          true,
-                                                                      contentPadding: EdgeInsets.symmetric(
-                                                                          vertical:
-                                                                              5.0),
-                                                                      hintStyle: TextStyle(
-                                                                          color: Colors.black.withOpacity(
-                                                                              .22)),
-                                                                      hintText:
-                                                                          "Votre nom publique",
-                                                                      fillColor: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              .04)),
-                                                              style: AppTheme
-                                                                  .buttonText,
+                                                                        //   ),
+                                                                        // ),
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(100),
+                                                                        ),
+                                                                        filled:
+                                                                            true,
+                                                                        contentPadding: EdgeInsets.symmetric(
+                                                                            vertical:
+                                                                                5.0),
+                                                                        hintStyle: TextStyle(
+                                                                            color: Colors.black.withOpacity(
+                                                                                .22)),
+                                                                        hintText:
+                                                                            "Votre nom publique",
+                                                                        fillColor: Colors
+                                                                            .black
+                                                                            .withOpacity(
+                                                                                .04)),
+                                                                style: AppTheme
+                                                                    .buttonText,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -839,7 +839,6 @@ class _MyAppState extends State<MonCompte> {
                                         ),
                                       ],
                                     ),
-                                  ),
                                 );
                               });
                         },
