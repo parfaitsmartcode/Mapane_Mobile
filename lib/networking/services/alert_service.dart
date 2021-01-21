@@ -18,7 +18,6 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      print(json.decode(schools[0].category));
       return schools;
     } on DioError catch (e) {
       throw new NException(e);
@@ -27,14 +26,17 @@ class AlertService {
 
   Future<List<Alert>> getAlertByUser(id) async {
     try {
-      final String uri = locator<Di>().apiUrl + "/alert/" + id;
+      final String uri = locator<Di>().apiUrl + "/alerts/"+id;
       Response response = await locator<Di>().dio.get(
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
-      return List<Alert>.from(((response.data) as List).map((json) {
+      print(response.data);
+      final items = response.data["alerts"].cast<Map<String, dynamic>>();
+      List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
-      }));
+      }).toList();
+      return schools;
     } on DioError catch (e) {
       throw new NException(e);
     }

@@ -9,13 +9,15 @@ import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
+import 'package:mapane/state/alert_provider.dart';
 
 void main() {
   setupLocator();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create:(_) => BottomBarProvider())
+        ChangeNotifierProvider(create:(_) => BottomBarProvider()),
+        ChangeNotifierProvider(create:(_) => AlertProvider()),
       ],
       child:  MyApp(),
     )
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: MonCompte(),
+      home: WelcomeMap(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

@@ -1,10 +1,13 @@
+import 'package:mapane/models/category.dart';
+import 'package:mapane/models/postedBy.dart';
+
 class Alert{
    String id;
    String lat;
    String lon;
    String desc;
-   final userId;
-   final category;
+   PostedBy userId;
+   Category category;
    String active;
    String createdAt;
 
@@ -25,8 +28,8 @@ class Alert{
          lat: json['lat'],
          lon: json['long'],
          desc: json['desc'],
-         userId: json['postedBy'],
-         category: json['category'],
+         userId: json['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:json['postedBy']['_id'],phone:json['postedBy']['phone']),
+         category: Category(id: json['category']['_id'],name: json['category']['name']),
          active: json['active'],
          createdAt: json['createdAt'],
      );

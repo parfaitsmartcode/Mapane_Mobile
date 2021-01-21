@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
-import '../state/alert_provider.dart';
+import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/custom/widgets/connexion_widget.dart';
+import 'package:mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:ui';
+import 'package:provider/provider.dart';
+import 'package:mapane/utils/n_exception.dart';
+import 'package:mapane/models/alert.dart';
+import 'package:simple_moment/simple_moment.dart';
+import 'package:mapane/state/CategoryState.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -17,14 +23,21 @@ class WelcomeMap extends StatefulWidget {
 
 class _MyAppState extends State<WelcomeMap> {
   bool _isloading = false;
-  final alertProvider = AlertProvider();
+  String cat = "";
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      print(alertProvider.getAlertList());
+      context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
     });
     super.initState();
   }
+      void tt(String value) {
+        if (this.mounted) {
+          setState(() => cat = value);
+        }else{
+          print('non mounted');
+        }
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +102,16 @@ class _MyAppState extends State<WelcomeMap> {
                         ),
                         Container(
                           child: Center(
-                            child: Image.asset(
-                              'assets/images/refresh-icon.png',
-                              height: getSize(20, "height", context),
+                            child: GestureDetector(
+                              onTap: () => {
+                                context
+                                    .read<AlertProvider>()
+                                    .getAlertByUser("5ff34b88af0f1982ab03f3f9")
+                              },
+                              child: Image.asset(
+                                'assets/images/refresh-icon.png',
+                                height: getSize(20, "height", context),
+                              ),
                             ),
                           ),
                         )
@@ -165,7 +185,8 @@ class _MyAppState extends State<WelcomeMap> {
                         ),
                         Container(
                           //Add this to give height
-                          height: MediaQuery.of(context).size.height / 1.5,
+                          height: (MediaQuery.of(context).size.height / 1.5) -
+                              getSize(18, "height", context),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0,
@@ -180,40 +201,53 @@ class _MyAppState extends State<WelcomeMap> {
                                         horizontal: 0),
                                     child: Column(
                                       children: [
-                                        _isloading == true
+                                        context
+                                                    .watch<AlertProvider>()
+                                                    .loadingState ==
+                                                LoadingState.loading
                                             ? SkeletonColumn()
-                                            : AllAlerte()
+                                            : context
+                                                .select(
+                                                    (AlertProvider provider) =>
+                                                        provider)
+                                                .alertList
+                                                .fold((NException error) {
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      error.message,
+                                                    )
+                                                  ],
+                                                );
+                                              }, (alertList) {
+                                                return alertList.isEmpty
+                                                    ? Column(
+                                                        children: [
+                                                          Text(
+                                                              "Aucune alerte faites pour le moment.")
+                                                        ],
+                                                      )
+                                                    : ListView.builder(
+                                                        shrinkWrap: true,
+                                                        physics: NeverScrollableScrollPhysics(),
+                                                        itemCount:
+                                                            alertList.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final Alert alert =
+                                                              alertList[index];
+                                                          return AllAlerte(
+                                                              alert: alert,
+                                                              type: "All",
+                                                              count: alertList.length);
+                                                        },
+                                                      );
+                                              })
                                       ],
                                     ),
                                   ),
                                 ),
                               ]),
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(46, "height", context),
-                                      horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [SkeletonColumn()],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(46, "height", context),
-                                      horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [SkeletonColumn()],
-                                  ),
-                                ),
-                              ),
                               ListView(shrinkWrap: true, children: <Widget>[
                                 Container(
                                   child: Padding(
@@ -222,11 +256,165 @@ class _MyAppState extends State<WelcomeMap> {
                                             getSize(46, "height", context),
                                         horizontal: 0),
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [AutreAlerte()],
+                                      children: [
+                                        context
+                                                    .watch<AlertProvider>()
+                                                    .loadingState ==
+                                                LoadingState.loading
+                                            ? SkeletonColumn()
+                                            : context
+                                                .select(
+                                                    (AlertProvider provider) =>
+                                                        provider)
+                                                .alertList
+                                                .fold((NException error) {
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      error.message,
+                                                    )
+                                                  ],
+                                                );
+                                              }, (alertList) {
+                                                return alertList.isEmpty
+                                                    ? Column(
+                                                        children: [
+                                                          Text(
+                                                              "Aucune alerte faites pour le moment.")
+                                                        ],
+                                                      )
+                                                    : alertList.where((i) => i.category.name == "embouteillage").toList().length > 0 ? ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount:
+                                                            alertList.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final Alert alert =
+                                                              alertList[index];
+                                                          return AllAlerte(
+                                                            alert: alert,
+                                                            type:
+                                                                  "embouteillage"
+                                                          );
+                                                        },
+                                                      ) : Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment',textAlign: TextAlign.center));
+                                              })
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              ListView(shrinkWrap: true, children: <Widget>[
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getSize(46, "height", context),
+                                        horizontal: 0),
+                                    child: Column(
+                                      children: [
+                                        context
+                                                    .watch<AlertProvider>()
+                                                    .loadingState ==
+                                                LoadingState.loading
+                                            ? SkeletonColumn()
+                                            : context
+                                                .select(
+                                                    (AlertProvider provider) =>
+                                                        provider)
+                                                .alertList
+                                                .fold((NException error) {
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      error.message,
+                                                    )
+                                                  ],
+                                                );
+                                              }, (alertList) {
+                                                return alertList.isEmpty
+                                                    ? Column(
+                                                        children: [
+                                                          Text(
+                                                              "Aucune alerte faites pour le moment.")
+                                                        ],
+                                                      )
+                                                    : alertList.where((i) => i.category.name == "route barrée").toList().length > 0 ? ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount:
+                                                            alertList.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final Alert alert =
+                                                              alertList[index];
+                                                          return AllAlerte(
+                                                            alert: alert,
+                                                            type:
+                                                                  "route barrée"
+                                                          );
+                                                        },
+                                                      ) : Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment',textAlign: TextAlign.center));
+                                              })
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              ListView(shrinkWrap: true, children: <Widget>[
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getSize(46, "height", context),
+                                        horizontal: 0),
+                                    child: Column(
+                                      children: [
+                                        context
+                                                    .watch<AlertProvider>()
+                                                    .loadingState ==
+                                                LoadingState.loading
+                                            ? SkeletonColumn()
+                                            : context
+                                                .select(
+                                                    (AlertProvider provider) =>
+                                                        provider)
+                                                .alertList
+                                                .fold((NException error) {
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      error.message,
+                                                    )
+                                                  ],
+                                                );
+                                              }, (alertList) {
+                                                return alertList.isEmpty
+                                                    ? Column(
+                                                        children: [
+                                                          Text(
+                                                              "Aucune alerte faites pour le moment.")
+                                                        ],
+                                                      )
+                                                    : alertList.where((i) => i.category.name == context
+                                                    .watch<CategoryStateProvider>()
+                                                    .cate).toList().length > 0 ? ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount:
+                                                            alertList.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final Alert alert =
+                                                              alertList[index];
+                                                              print(cat);
+                                                          return AutreAlerte(
+                                                            alert: alert,
+                                                            type: cat,
+                                                            index: index
+                                                          );
+                                                        },
+                                                      ) : AutreAlerteVide();
+                                              })
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -243,15 +431,9 @@ class _MyAppState extends State<WelcomeMap> {
       ),
     );
   }
-}
 
-class MaterialModal extends StatelessWidget {
-  const MaterialModal({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  // ignore: non_constant_identifier_names
+  Widget MaterialModal(context) {
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: 0, horizontal: getSize(0, "width", context)),
@@ -271,6 +453,10 @@ class MaterialModal extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: (){
+                final tre = CategoryStateProvider();
+                tre.cate = "embouteillage";
+              },
                 leading: Icon(
                   Icons.map,
                   color: Color(0xFF25296A),
@@ -281,6 +467,9 @@ class MaterialModal extends StatelessWidget {
                         fontSize: 16,
                         color: Colors.black))),
             ListTile(
+              onTap: (){
+                cat = "zone dangereuse";
+              },
                 leading: Icon(
                   Icons.add_location,
                   color: Color(0xFF25296A),
@@ -291,6 +480,9 @@ class MaterialModal extends StatelessWidget {
                         fontSize: 16,
                         color: Colors.black))),
             ListTile(
+              onTap: (){
+                cat = "accident de circulation";
+              },
                 leading: Icon(
                   Icons.airline_seat_recline_extra_rounded,
                   color: Color(0xFF25296A),
@@ -301,6 +493,9 @@ class MaterialModal extends StatelessWidget {
                         fontSize: 16,
                         color: Colors.black))),
             ListTile(
+              onTap: (){
+                cat = "route en chantier";
+              },
                 leading: Icon(
                   Icons.local_taxi_sharp,
                   color: Color(0xFF25296A),
@@ -311,6 +506,9 @@ class MaterialModal extends StatelessWidget {
                         fontSize: 16,
                         color: Colors.black))),
             ListTile(
+              onTap: (){
+                cat = "radar";
+              },
                 leading: Icon(
                   Icons.radio_sharp,
                   color: Color(0xFF25296A),
@@ -325,6 +523,7 @@ class MaterialModal extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class SkeletonColumn extends StatelessWidget {
@@ -492,178 +691,141 @@ class SkeletonColumn extends StatelessWidget {
 }
 
 class AllAlerte extends StatelessWidget {
-  const AllAlerte({
-    Key key,
-  }) : super(key: key);
+  final Alert alert;
+  final type;
+  final count;
+
+  AllAlerte({this.alert, this.type, this.count});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-            title: Text('Accident de circulation',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Bepanda, Douala',
+    Moment.setLocaleGlobally(new LocaleFr());
+    var moment = Moment.now();
+    var dateForComparison = DateTime.parse(alert.createdAt);
+    return type == alert.category.name || type == "All"
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                  title: Text(alert.category.name.capitalize(),
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 5min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
+                          fontSize: 20,
+                          color: Colors.black)),
+                  subtitle: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: getSize(11, "height", context),
+                        horizontal: 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Bepanda, Douala',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(.4))),
+                        Text(moment.from(dateForComparison),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(.4))),
+                      ],
+                    ),
+                  ),
+                  dense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+                child: Divider(thickness: 1, color: Color(0x26000000)),
               ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Route barrée',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Akwa Nord, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 30min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Embouteillage',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Poste centrale, Yaoundé',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Hier',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Radar',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Entrée Yaoundé',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Avant-hier',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Accident de circulation',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Bepanda, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 5min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0))
-      ],
-    );
+            ],
+          )
+        : SizedBox(height: 0,);
   }
 }
 
 class AutreAlerte extends StatefulWidget {
   @override
   _AutreAlerteState createState() => _AutreAlerteState();
+  final type;
+  final index;
+  final Alert alert;
+  AutreAlerte({this.alert, this.type, this.index});
 }
 
 class _AutreAlerteState extends State<AutreAlerte> {
+  final mainc = _MyAppState();
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => widget.index == 0 ?? showMaterialModalBottomSheet(
+              expand: false,
+              context: context,
+              duration: const Duration(milliseconds: 500),
+              backgroundColor: Colors.transparent,
+              builder: (context) => mainc.MaterialModal(context),
+            ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Moment.setLocaleGlobally(new LocaleFr());
+    var moment = Moment.now();
+    var dateForComparison = DateTime.parse(widget.alert.createdAt);
+    return widget.type == widget.alert.category.name
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                  title: Text(widget.alert.category.name.capitalize(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          color: Colors.black)),
+                  subtitle: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: getSize(11, "height", context),
+                        horizontal: 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Bepanda, Douala',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(.4))),
+                        Text(moment.from(dateForComparison),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(.4))),
+                      ],
+                    ),
+                  ),
+                  dense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+                child: Divider(thickness: 1, color: Color(0x26000000)),
+              ),
+            ],
+          )
+        : SizedBox(height: 0,);
+  }
+}
+
+
+class AutreAlerteVide extends StatefulWidget {
+  @override
+  _AutreAlerteVideState createState() => _AutreAlerteVideState();
+}
+
+class _AutreAlerteVideState extends State<AutreAlerteVide> {
+  final mainc = _MyAppState();
   void initState() {
     super.initState();
     WidgetsBinding.instance
@@ -672,168 +834,12 @@ class _AutreAlerteState extends State<AutreAlerte> {
               context: context,
               duration: const Duration(milliseconds: 500),
               backgroundColor: Colors.transparent,
-              builder: (context) => MaterialModal(),
+              builder: (context) => mainc.MaterialModal(context),
             ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-            title: Text('Accident de circulation',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Bepanda, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 5min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Route barrée',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Akwa Nord, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 30min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Embouteillage',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Poste centrale, Yaoundé',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Hier',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Radar',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Entrée Yaoundé',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Avant-hier',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-          child: Divider(thickness: 1, color: Color(0x26000000)),
-        ),
-        ListTile(
-            title: Text('Accident de circulation',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.black)),
-            subtitle: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getSize(11, "height", context), horizontal: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Bepanda, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                  Text('Il y a 5min',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(.4))),
-                ],
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0))
-      ],
-    );
+    return Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment.',textAlign: TextAlign.center));
   }
 }

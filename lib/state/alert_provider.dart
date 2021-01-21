@@ -13,8 +13,8 @@ class AlertProvider extends BaseProvider{
     this.toggleLoadingState();
     alertService.getAlerts().then((alerts){
       alertList = Right(alerts);
+      this.toggleLoadingState();
     }).catchError((error){
-      print(error);
       alertList = Left(error);
       this.toggleLoadingState();
     });
@@ -24,6 +24,7 @@ class AlertProvider extends BaseProvider{
     this.toggleLoadingState();
     alertService.getAlertByUser(id).then((alerts){
       alertList = Right(alerts);
+      this.toggleLoadingState();
     }).catchError((error){
       alertList = Left(error);
       this.toggleLoadingState();

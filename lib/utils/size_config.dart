@@ -12,6 +12,12 @@ getSize(taille, type, resp) {
   return size;
 }
 
+extension StringExtension on String {
+    String capitalize() {
+      return "${this[0].toUpperCase()}${this.substring(1)}";
+    }
+}
+
 class SizeConfig {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
