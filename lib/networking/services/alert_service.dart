@@ -26,17 +26,35 @@ class AlertService {
 
   Future<List<Alert>> getAlertByUser(id) async {
     try {
-      final String uri = locator<Di>().apiUrl + "/alerts/"+id;
+      final String uri = locator<Di>().apiUrl + "/alerts/" + id;
       Response response = await locator<Di>().dio.get(
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
-      print(response.data);
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
       return schools;
+    } on DioError catch (e) {
+      throw new NException(e);
+    }
+  }
+
+  Future<List<Alert>> getAlertByUserCat(id, cat) async {
+    try {
+      final String uri = locator<Di>().apiUrl + "/alerts/" + id;
+      Response response = await locator<Di>().dio.get(
+            uri,
+            options: Options(headers: {"content-type": "application/json"}),
+          );
+      final items = response.data["alerts"].cast<Map<String, dynamic>>();
+      List<Alert> schools = items.map<Alert>((json) {
+        // if(Alert.fromJson(json).category.name == cat){
+        return Alert.fromJson(json);
+        // }
+      }).toList();
+      return schools.where((i) => i.category.name == cat).toList();
     } on DioError catch (e) {
       throw new NException(e);
     }

@@ -15,6 +15,8 @@ import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:mapane/state/CategoryState.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapane/utils/shared_preference_helper.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -28,16 +30,16 @@ class _MyAppState extends State<WelcomeMap> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
+      context.read<AlertProvider>().getAlertByUserCat("All");
     });
     super.initState();
   }
-      void tt(String value) {
-        if (this.mounted) {
-          setState(() => cat = value);
-        }else{
-          print('non mounted');
-        }
-      }
+
+  // Future<dynamic> getAudioNotification() async {
+  //   SharedPreferences  settingUser = await SharedPreferences.getInstance();
+  //   settingUser;
+  //   return 0;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +231,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                       )
                                                     : ListView.builder(
                                                         shrinkWrap: true,
-                                                        physics: NeverScrollableScrollPhysics(),
+                                                        physics:
+                                                            NeverScrollableScrollPhysics(),
                                                         itemCount:
                                                             alertList.length,
                                                         itemBuilder:
@@ -239,7 +242,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                           return AllAlerte(
                                                               alert: alert,
                                                               type: "All",
-                                                              count: alertList.length);
+                                                              count: alertList
+                                                                  .length);
                                                         },
                                                       );
                                               })
@@ -283,21 +287,37 @@ class _MyAppState extends State<WelcomeMap> {
                                                               "Aucune alerte faites pour le moment.")
                                                         ],
                                                       )
-                                                    : alertList.where((i) => i.category.name == "embouteillage").toList().length > 0 ? ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount:
-                                                            alertList.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          final Alert alert =
-                                                              alertList[index];
-                                                          return AllAlerte(
-                                                            alert: alert,
-                                                            type:
-                                                                  "embouteillage"
-                                                          );
-                                                        },
-                                                      ) : Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment',textAlign: TextAlign.center));
+                                                    : alertList
+                                                                .where((i) =>
+                                                                    i.category
+                                                                        .name ==
+                                                                    "embouteillage")
+                                                                .toList()
+                                                                .length >
+                                                            0
+                                                        ? ListView.builder(
+                                                            shrinkWrap: true,
+                                                            itemCount: alertList
+                                                                .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              final Alert
+                                                                  alert =
+                                                                  alertList[
+                                                                      index];
+                                                              return AllAlerte(
+                                                                  alert: alert,
+                                                                  type:
+                                                                      "embouteillage");
+                                                            },
+                                                          )
+                                                        : Center(
+                                                            child: Text(
+                                                                'Aucune alerte créee dans cette catégorie pour le moment',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center));
                                               })
                                       ],
                                     ),
@@ -339,21 +359,37 @@ class _MyAppState extends State<WelcomeMap> {
                                                               "Aucune alerte faites pour le moment.")
                                                         ],
                                                       )
-                                                    : alertList.where((i) => i.category.name == "route barrée").toList().length > 0 ? ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount:
-                                                            alertList.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          final Alert alert =
-                                                              alertList[index];
-                                                          return AllAlerte(
-                                                            alert: alert,
-                                                            type:
-                                                                  "route barrée"
-                                                          );
-                                                        },
-                                                      ) : Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment',textAlign: TextAlign.center));
+                                                    : alertList
+                                                                .where((i) =>
+                                                                    i.category
+                                                                        .name ==
+                                                                    "route barrée")
+                                                                .toList()
+                                                                .length >
+                                                            0
+                                                        ? ListView.builder(
+                                                            shrinkWrap: true,
+                                                            itemCount: alertList
+                                                                .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              final Alert
+                                                                  alert =
+                                                                  alertList[
+                                                                      index];
+                                                              return AllAlerte(
+                                                                  alert: alert,
+                                                                  type:
+                                                                      "route barrée");
+                                                            },
+                                                          )
+                                                        : Center(
+                                                            child: Text(
+                                                                'Aucune alerte créee dans cette catégorie pour le moment',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center));
                                               })
                                       ],
                                     ),
@@ -378,7 +414,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                 .select(
                                                     (AlertProvider provider) =>
                                                         provider)
-                                                .alertList
+                                                .alertListCat
                                                 .fold((NException error) {
                                                 return Column(
                                                   children: [
@@ -387,32 +423,31 @@ class _MyAppState extends State<WelcomeMap> {
                                                     )
                                                   ],
                                                 );
-                                              }, (alertList) {
-                                                return alertList.isEmpty
+                                              }, (alertListCat) {
+                                                return alertListCat.isEmpty
                                                     ? Column(
                                                         children: [
-                                                          Text(
-                                                              "Aucune alerte faites pour le moment.")
+                                                          AutreAlerteVide()
                                                         ],
                                                       )
-                                                    : alertList.where((i) => i.category.name == context
-                                                    .watch<CategoryStateProvider>()
-                                                    .cate).toList().length > 0 ? ListView.builder(
+                                                    : ListView.builder(
                                                         shrinkWrap: true,
+                                                        physics:
+                                                            NeverScrollableScrollPhysics(),
                                                         itemCount:
-                                                            alertList.length,
+                                                            alertListCat.length,
                                                         itemBuilder:
                                                             (context, index) {
                                                           final Alert alert =
-                                                              alertList[index];
-                                                              print(cat);
+                                                              alertListCat[
+                                                                  index];
+                                                          // print(index);
                                                           return AutreAlerte(
-                                                            alert: alert,
-                                                            type: cat,
-                                                            index: index
-                                                          );
+                                                              alert: alert,
+                                                              type: cat,
+                                                              index: index);
                                                         },
-                                                      ) : AutreAlerteVide();
+                                                      );
                                               })
                                       ],
                                     ),
@@ -431,99 +466,6 @@ class _MyAppState extends State<WelcomeMap> {
       ),
     );
   }
-
-  // ignore: non_constant_identifier_names
-  Widget MaterialModal(context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: 0, horizontal: getSize(0, "width", context)),
-      child: Container(
-        height: 350,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-            color: Colors.white),
-        child: Column(
-          children: [
-            SizedBox(
-              width: 54,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
-                child: Divider(thickness: 4, color: Color(0x26000000)),
-              ),
-            ),
-            ListTile(
-              onTap: (){
-                final tre = CategoryStateProvider();
-                tre.cate = "embouteillage";
-              },
-                leading: Icon(
-                  Icons.map,
-                  color: Color(0xFF25296A),
-                ),
-                title: Text('Controle routier',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black))),
-            ListTile(
-              onTap: (){
-                cat = "zone dangereuse";
-              },
-                leading: Icon(
-                  Icons.add_location,
-                  color: Color(0xFF25296A),
-                ),
-                title: Text('Zone dangereuse',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black))),
-            ListTile(
-              onTap: (){
-                cat = "accident de circulation";
-              },
-                leading: Icon(
-                  Icons.airline_seat_recline_extra_rounded,
-                  color: Color(0xFF25296A),
-                ),
-                title: Text('Accident de circulation',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black))),
-            ListTile(
-              onTap: (){
-                cat = "route en chantier";
-              },
-                leading: Icon(
-                  Icons.local_taxi_sharp,
-                  color: Color(0xFF25296A),
-                ),
-                title: Text('Route en chantier',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black))),
-            ListTile(
-              onTap: (){
-                cat = "radar";
-              },
-                leading: Icon(
-                  Icons.radio_sharp,
-                  color: Color(0xFF25296A),
-                ),
-                title: Text('Radar',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black))),
-          ],
-        ),
-      ),
-    );
-  }
-
 }
 
 class SkeletonColumn extends StatelessWidget {
@@ -742,7 +684,126 @@ class AllAlerte extends StatelessWidget {
               ),
             ],
           )
-        : SizedBox(height: 0,);
+        : SizedBox(
+            height: 0,
+          );
+  }
+}
+
+class MaterialModal extends StatefulWidget {
+  @override
+  _MaterialModalState createState() => _MaterialModalState();
+}
+
+class _MaterialModalState extends State<MaterialModal> {
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: 0, horizontal: getSize(0, "width", context)),
+      child: Container(
+        height: 350,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            color: Colors.white),
+        child: Column(
+          children: [
+            SizedBox(
+              width: 54,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
+                child: Divider(thickness: 4, color: Color(0x26000000)),
+              ),
+            ),
+            ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  context
+                      .read<AlertProvider>()
+                      .getAlertByUserCat("Controle routier");
+                },
+                leading: Icon(
+                  Icons.map,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text('Controle routier',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black))),
+            ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  context
+                      .read<AlertProvider>()
+                      .getAlertByUserCat("Zone dangereuse");
+                },
+                leading: Icon(
+                  Icons.add_location,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text('Zone dangereuse',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black))),
+            ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  context
+                      .read<AlertProvider>()
+                      .getAlertByUserCat("Accident de circulation");
+                },
+                leading: Icon(
+                  Icons.airline_seat_recline_extra_rounded,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text('Accident de circulation',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black))),
+            ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  context
+                      .read<AlertProvider>()
+                      .getAlertByUserCat("Route en chantier");
+                },
+                leading: Icon(
+                  Icons.local_taxi_sharp,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text('Route en chantier',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black))),
+            ListTile(
+                onTap: () {
+                  Navigator.pop(context);
+                  context
+                      .read<AlertProvider>()
+                      .getAlertByUserCat("Radar");
+                },
+                leading: Icon(
+                  Icons.radio_sharp,
+                  color: Color(0xFF25296A),
+                ),
+                title: Text('Radar',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black))),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -756,17 +817,17 @@ class AutreAlerte extends StatefulWidget {
 }
 
 class _AutreAlerteState extends State<AutreAlerte> {
-  final mainc = _MyAppState();
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => widget.index == 0 ?? showMaterialModalBottomSheet(
-              expand: false,
-              context: context,
-              duration: const Duration(milliseconds: 500),
-              backgroundColor: Colors.transparent,
-              builder: (context) => mainc.MaterialModal(context),
-            ));
+    WidgetsBinding.instance.addPostFrameCallback((_) => widget.index == 0
+        ? showMaterialModalBottomSheet(
+            expand: false,
+            context: context,
+            duration: const Duration(milliseconds: 500),
+            backgroundColor: Colors.transparent,
+            builder: (context) => MaterialModal(),
+          )
+        : print("essaie"));
   }
 
   @override
@@ -774,50 +835,45 @@ class _AutreAlerteState extends State<AutreAlerte> {
     Moment.setLocaleGlobally(new LocaleFr());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(widget.alert.createdAt);
-    return widget.type == widget.alert.category.name
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                  title: Text(widget.alert.category.name.capitalize(),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+            title: Text(widget.alert.category.name.capitalize(),
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black)),
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getSize(11, "height", context), horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Bepanda, Douala',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                          color: Colors.black)),
-                  subtitle: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: getSize(11, "height", context),
-                        horizontal: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Bepanda, Douala',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: Colors.black.withOpacity(.4))),
-                        Text(moment.from(dateForComparison),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: Colors.black.withOpacity(.4))),
-                      ],
-                    ),
-                  ),
-                  dense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
-                child: Divider(thickness: 1, color: Color(0x26000000)),
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(.4))),
+                  Text(moment.from(dateForComparison),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(.4))),
+                ],
               ),
-            ],
-          )
-        : SizedBox(height: 0,);
+            ),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 1.5, 0, 20.5),
+          child: Divider(thickness: 1, color: Color(0x26000000)),
+        ),
+      ],
+    );
   }
 }
-
 
 class AutreAlerteVide extends StatefulWidget {
   @override
@@ -825,7 +881,6 @@ class AutreAlerteVide extends StatefulWidget {
 }
 
 class _AutreAlerteVideState extends State<AutreAlerteVide> {
-  final mainc = _MyAppState();
   void initState() {
     super.initState();
     WidgetsBinding.instance
@@ -834,12 +889,14 @@ class _AutreAlerteVideState extends State<AutreAlerteVide> {
               context: context,
               duration: const Duration(milliseconds: 500),
               backgroundColor: Colors.transparent,
-              builder: (context) => mainc.MaterialModal(context),
+              builder: (context) => MaterialModal(),
             ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Aucune alerte créee dans cette catégorie pour le moment.',textAlign: TextAlign.center));
+    return Center(
+        child: Text('Aucune alerte créee dans cette catégorie pour le moment.',
+            textAlign: TextAlign.center));
   }
 }
