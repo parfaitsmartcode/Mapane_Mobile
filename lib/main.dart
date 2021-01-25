@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/routes.dart';
+import 'package:mapane/screens/home_page.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/screens/tabs_page.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: WelcomeMap(),
+      home: TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/screens/home_page.dart';
+import 'package:mapane/screens/monCompte.dart';
 import 'package:mapane/screens/welcome_map.dart';
 
 
@@ -41,7 +42,7 @@ class TabNavigationItem {
       ),
     ),
     TabNavigationItem(
-      page: HomePage(),
+      page: MonCompte(),
       icon: Icon(Icons.account_circle_outlined,
         size: 40.0,
       ),
