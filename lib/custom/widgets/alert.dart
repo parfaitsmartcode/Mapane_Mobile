@@ -13,27 +13,28 @@ class Alert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SizedBox(
-      /*width: SizeConfig.blockSizeHorizontal * 4,
-      height: SizeConfig.blockSizeVertical * 10,*/
-      height: SizeConfig.blockSizeVertical * 50,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundColor: color,
-            radius: radius,
-            child: picture,
-          ),
-          Expanded(
-            child: Text(
-              title,
-              //overflow: TextOverflow.clip,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          backgroundColor: color,
+          radius: radius,
+          child: picture,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                //overflow: TextOverflow.clip,
+              ),
             ),
-          )
-        ],
-      ),
+          ],
+        )
+      ],
     );
   }
 }

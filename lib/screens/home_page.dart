@@ -131,9 +131,15 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => SingleChildScrollView(
                           controller: ModalScrollController.of(context),
                           child: Container(
-                            color: Colors.white,
                             height: SizeConfig.blockSizeVertical * 40,
                             width: SizeConfig.screenWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35),
+                                  topRight: Radius.circular(35)
+                              ),
+                            ),
                             child: Stack(
                               children: [
                                 Align(
@@ -253,40 +259,78 @@ class _HomePageState extends State<HomePage> {
                         ),
                         isExpanded ?
                       Padding(
-                        padding:  EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5 , left: SizeConfig.blockSizeHorizontal * 5 , right: SizeConfig.blockSizeHorizontal * 5),
+                        padding:  EdgeInsets.only(top: SizeConfig.blockSizeVertical * 6 , left: SizeConfig.blockSizeHorizontal * 5 , right: SizeConfig.blockSizeHorizontal * 5),
                         child: Align(
                             alignment: Alignment.center,
-                            child: GridView.count(
-                              crossAxisCount: 4,
-                              crossAxisSpacing: 25.0,
+                            child: GridView(
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                childAspectRatio: 0.75,
+                                crossAxisSpacing: 15.0,
+                                mainAxisSpacing: 20.0
+                              ),
                               children: [
                                 Alert(
                                   title: "Embouteillage",
+                                  color: Colors.yellow[200].withOpacity(0.5),
+                                  picture:SvgPicture.asset(
+                                    Assets.trafficIcon,
+                                  ),
+                                  radius: 35.0,
+                                ),
+                                Alert(
+                                  title: "Contrôle routier",
+                                  color: Colors.blue[200],
                                   picture:SvgPicture.asset(
                                     Assets.policeIcon,
                                   ),
-                                  radius: 34.0,
+                                  radius: 35.0,
                                 ),
-                                CircleAvatar(
-                                  radius: 10.0,
-                                  child: SvgPicture.asset(
-                                    Assets.policeIcon,
+                                Alert(
+                                  title: "Zône dangereuse",
+                                  color: Colors.redAccent[200].withOpacity(0.3),
+                                  picture:SvgPicture.asset(
+                                    Assets.dangerIcon,
                                   ),
+                                  radius: 35.0,
                                 ),
-
-                                /*CircleAvatar(
-                                  radius: 10.0,
-                                  child: SvgPicture.asset(
-                                    Assets.policeIcon,
+                                Alert(
+                                  title: "Radar",
+                                  color: Colors.greenAccent[200].withOpacity(0.5),
+                                  picture:SvgPicture.asset(
+                                    Assets.radarIcon,
                                   ),
-                                ),
-                                CircleAvatar(
-                                  radius: 10.0,
-                                  child: SvgPicture.asset(
+                                  radius: 35.0,
+                                ), Alert(
+                                  title: "Accident de circulation",
+                                  color: Colors.blueAccent[200].withOpacity(0.7),
+                                  picture:SvgPicture.asset(
                                     Assets.accidentIcon,
                                   ),
-                                )*/
-
+                                  radius: 35.0,
+                                ), Alert(
+                                  title: "Route en barrée",
+                                  color: Colors.greenAccent[200],
+                                  picture:SvgPicture.asset(
+                                    Assets.roadblockIcon,
+                                  ),
+                                  radius: 35.0,
+                                ), Alert(
+                                  title: "Route en chantier",
+                                  color: Colors.brown[200].withOpacity(0.5),
+                                  picture:SvgPicture.asset(
+                                    Assets.highwayIcon,
+                                  ),
+                                  radius: 35.0,
+                                ), Alert(
+                                  title: "Publier ma position",
+                                  color: Colors.grey[200],
+                                  picture:SvgPicture.asset(
+                                    Assets.pathIcon,
+                                  ),
+                                  radius: 35.0,
+                                ),
                               ],
                             ),
                           ),
