@@ -45,7 +45,38 @@ class UserService {
       if (response.statusCode == 200) {
         Future<SharedPreferences> instance = SharedPreferences.getInstance();
         SharedPreferenceHelper(instance)
-            .storeData("user_info", phone == '' ? phonewrite : phone);
+            .storeData("user_info", response.data["user"]["id"]);
+        return response.data["message"];
+      } else {
+        return response;
+      }
+    } on SocketException {
+      return null;
+    }
+  }
+
+    Future<dynamic> updateHouse(domicile) async {
+
+    SharedPreferences  _preferences = await SharedPreferences.getInstance();
+    String userId = await  _preferences.get('user_info');
+    print("id est "+userId);
+
+    var data = {
+      "number" : userId,
+      "domicile" : domicile,
+    };
+    try {
+      Response response =
+          await locator<Di>().dio.post(locator<Di>().apiUrl + "/edit/{id}",
+              options: Options(headers: {
+                'Content-Type': "application/json",
+              }),
+              data: data);
+
+      if (response.statusCode == 200) {
+        Future<SharedPreferences> instance = SharedPreferences.getInstance();
+        SharedPreferenceHelper(instance)
+            .storeData("user_domicile", domicile);
         return response.data["message"];
       } else {
         return response;

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/utils/size_config.dart';
+import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'dart:ui';
@@ -14,9 +15,9 @@ class Settings extends StatefulWidget {
 }
 
 class _MyAppState extends State<Settings> {
+  @override
   bool _value = false;
   bool _value2 = false;
-  @override
   void initState() {
     super.initState();
   }
@@ -119,6 +120,9 @@ class _MyAppState extends State<Settings> {
                                           onToggle: (val) {
                                             setState(() {
                                               _value = val;
+                                              print("val est "+val.toString());
+                                              userProvider.toggleAudioNotification(val);
+                                              // userProvider.getAudioNotification();
                                             });
                                           },
                                         ),
@@ -159,6 +163,8 @@ class _MyAppState extends State<Settings> {
                                           onToggle: (val) {
                                             setState(() {
                                               _value2 = val;
+                                              userProvider.toggleConnectMode(val);
+                                              print(userProvider.getConnectMode());
                                             });
                                           },
                                         ),
