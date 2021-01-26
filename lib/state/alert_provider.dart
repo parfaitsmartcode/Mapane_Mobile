@@ -4,6 +4,8 @@ import 'package:mapane/models/alert.dart';
 import 'package:mapane/networking/services/alert_service.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'base_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapane/utils/shared_preference_helper.dart';
 
 class AlertProvider extends BaseProvider{
 
@@ -21,9 +23,11 @@ class AlertProvider extends BaseProvider{
     });
   }
 
-  getAlertByUser(id){
+  getAlertByUser(id) async {
+    SharedPreferences  _preferences = await SharedPreferences.getInstance();
+    String userId = await  _preferences.get('user_info');
     this.toggleLoadingState();
-    alertService.getAlertByUser(id).then((alerts){
+    alertService.getAlertByUser(userId).then((alerts){
       alertList = Right(alerts);
       this.toggleLoadingState();
     }).catchError((error){
@@ -32,16 +36,19 @@ class AlertProvider extends BaseProvider{
     });
   }
 
-  getAlertByUserCat(id,type){
+  getAlertByUserCat(id,type) async {
+    SharedPreferences  _preferences = await SharedPreferences.getInstance();
+    String userId = await  _preferences.get('user_info');
+    print("id est "+userId);
     if(type == 1){
-      alertService.getAlertByUserCat("5ff34b88af0f1982ab03f3f9",id).then((alerts){
+      alertService.getAlertByUserCat(userId,id).then((alerts){
         alertListCat = Right(alerts);
       }).catchError((error){
         alertListCat = Left(error);
       });
     }else{
       this.toggleLoadingState();
-      alertService.getAlertByUserCat("5ff34b88af0f1982ab03f3f9",id).then((alerts){
+      alertService.getAlertByUserCat(userId,id).then((alerts){
         alertListCat = Right(alerts);
         this.toggleLoadingState();
       }).catchError((error){

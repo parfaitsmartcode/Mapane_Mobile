@@ -21,14 +21,14 @@ class UserProvider extends BaseProvider{
   toggleAudioNotification(audioParam){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("audioParam", audioParam);
+        .storeData("audioParam", audioParam,'string');
     print(audioParam);
   }
 
   toggleConnectMode(connectMode){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("connectMode", connectMode);
+        .storeData("connectMode", connectMode,'string');
   }
 
   Future<String> getAudioNotification() async {
@@ -40,7 +40,7 @@ class UserProvider extends BaseProvider{
 
   Future<String> getConnectMode() async {
     Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    return SharedPreferenceHelper(instance).getData("connectMode");
+    return SharedPreferenceHelper(instance).getData("connectMode",'bool');
   }
 }
 
