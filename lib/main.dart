@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: Walk(),
+      home: TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

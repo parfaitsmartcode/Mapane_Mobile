@@ -39,7 +39,6 @@ class AlertProvider extends BaseProvider{
   getAlertByUserCat(id,type) async {
     SharedPreferences  _preferences = await SharedPreferences.getInstance();
     String userId = await  _preferences.get('user_info');
-    print("id est "+userId);
     if(type == 1){
       alertService.getAlertByUserCat(userId,id).then((alerts){
         alertListCat = Right(alerts);

@@ -26,11 +26,12 @@ class AlertService {
 
   Future<List<Alert>> getAlertByUser(id) async {
     try {
-      final String uri = locator<Di>().apiUrl + "/alerts/" + id;
+      final String uri = locator<Di>().apiUrl + "/alerts/5ff34b88af0f1982ab03f3f9";
       Response response = await locator<Di>().dio.get(
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
+          print(response.data["alerts"]);
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);

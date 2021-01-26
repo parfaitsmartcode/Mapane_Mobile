@@ -182,8 +182,7 @@ class _MyAppState extends State<WelcomeMap> {
                         ),
                         Container(
                           //Add this to give height
-                          height: (MediaQuery.of(context).size.height / 1.5) -
-                              getSize(18, "height", context),
+                          height: (MediaQuery.of(context).size.height / 1.7),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0,
@@ -304,7 +303,9 @@ class _MyAppState extends State<WelcomeMap> {
                                                               return AllAlerte(
                                                                   alert: alert,
                                                                   type:
-                                                                      "embouteillage");
+                                                                      "embouteillage",
+                                                                      count: alertList
+                                                                .length);
                                                             },
                                                           )
                                                         : Center(

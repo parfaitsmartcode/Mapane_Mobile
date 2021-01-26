@@ -5,6 +5,7 @@ import '../../di.dart';
 import '../../service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
+import 'dart:convert';
 
 class UserService {
   Future<dynamic> getSchools() async {
@@ -43,9 +44,22 @@ class UserService {
               data: data);
 
       if (response.statusCode == 200) {
-        Future<SharedPreferences> instance = SharedPreferences.getInstance();
-        SharedPreferenceHelper(instance)
-            .storeData("user_info", response.data["user"]["id"],"string");
+        print(response.data["user"]);
+        final test = "";
+        response.data["user"].forEach((key, val) {
+          if (key == "_id") {
+            Future<SharedPreferences> instance =
+                SharedPreferences.getInstance();
+            SharedPreferenceHelper(instance)
+                .storeData("user_info", val, "string");
+          }
+          if (key == "phone") {
+            Future<SharedPreferences> instance =
+                SharedPreferences.getInstance();
+            SharedPreferenceHelper(instance)
+                .storeData("user_phone", val, "string");
+          }
+        });
         return response.data["message"];
       } else {
         return response;
@@ -55,19 +69,18 @@ class UserService {
     }
   }
 
-    Future<dynamic> updateHouse(domicile) async {
-
-    SharedPreferences  _preferences = await SharedPreferences.getInstance();
-    String userId = await  _preferences.get('user_info');
-    print("id est "+userId);
+  Future<dynamic> updateHouse(domicile) async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    String userId = await _preferences.get('user_info');
+    String userPhone = await _preferences.get('user_phone');
 
     var data = {
-      "number" : userId,
-      "domicile" : domicile,
+      "number": userId,
+      "domicile": domicile,
     };
     try {
       Response response =
-          await locator<Di>().dio.post(locator<Di>().apiUrl + "/edit/{id}",
+          await locator<Di>().dio.post(locator<Di>().apiUrl + "/edit/"+userId,
               options: Options(headers: {
                 'Content-Type': "application/json",
               }),
@@ -76,7 +89,7 @@ class UserService {
       if (response.statusCode == 200) {
         Future<SharedPreferences> instance = SharedPreferences.getInstance();
         SharedPreferenceHelper(instance)
-            .storeData("user_domicile", domicile,"string");
+            .storeData("user_domicile", domicile, "string");
         return response.data["message"];
       } else {
         return response;

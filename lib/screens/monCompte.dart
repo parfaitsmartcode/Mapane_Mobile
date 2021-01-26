@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import '../state/user_provider.dart';
 import 'package:mapane/routes.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:mobile_number/mobile_number.dart';
+import 'package:mapane/networking/services/user_service.dart';
+import 'dart:async';
 
 class MonCompte extends StatefulWidget {
   @override
@@ -11,8 +16,57 @@ class MonCompte extends StatefulWidget {
 
 class _MyAppState extends State<MonCompte> {
   String newDomicile = "";
+  String _mobileNumber = '';
+  String _mobileNumberPhone = '';
+  String _mobileNumberPhoneWrite = '';
+  bool _loading = false;
+  var isSelected = [false, false, false, false, false];
+  List<SimCard> _simCard = <SimCard>[];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final TextEditingController controller = TextEditingController();
+  String initialCountry = 'CM';
+  PhoneNumber number = PhoneNumber(isoCode: 'CM');
 
+  void takenumber(String value) {
+    setState(() => _mobileNumberPhone = value);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    MobileNumber.listenPhonePermission((isPermissionGranted) {
+      if (isPermissionGranted) {
+        initMobileNumberState();
+      } else {}
+    });
+
+    initMobileNumberState();
+  }
+
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    String mobileNumber = '';
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      mobileNumber = await MobileNumber.mobileNumber;
+      _simCard = await MobileNumber.getSimCards;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _mobileNumber = mobileNumber;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +279,7 @@ class _MyAppState extends State<MonCompte> {
                                                         children: [
                                                           TextSpan(
                                                             text:
-                                                                "un numéro de téléphone",
+                                                                "un numéro \nde téléphone",
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -240,55 +294,33 @@ class _MyAppState extends State<MonCompte> {
                                                     height: getSize(
                                                         33, "height", context),
                                                   ),
-                                                  // Container(
-                                                  //   child: Card(
-                                                  //       shape:
-                                                  //           RoundedRectangleBorder(
-                                                  //         borderRadius:
-                                                  //             BorderRadius
-                                                  //                 .circular(20),
-                                                  //         side: BorderSide(
-                                                  //             color: Color(
-                                                  //                 0x26000000),
-                                                  //             width: 1),
-                                                  //       ),
-                                                  //       child: Container(
-                                                  //         child: Padding(
-                                                  //           padding:
-                                                  //               const EdgeInsets
-                                                  //                       .symmetric(
-                                                  //                   horizontal:
-                                                  //                       10,
-                                                  //                   vertical:
-                                                  //                       12),
-                                                  //           child: Center(
-                                                  //             child: Column(
-                                                  //               children: [
-                                                  //                 Padding(
-                                                  //                   padding:
-                                                  //                       const EdgeInsets.all(
-                                                  //                           0.0),
-                                                  //                   child:
-                                                  //                       ListTile(
-                                                  //                     title:
-                                                  //                         Align(
-                                                  //                       child:
-                                                  //                           Text(
-                                                  //                         'Veuillez entrer une SIM',
-                                                  //                         style: TextStyle(
-                                                  //                             fontWeight: FontWeight.w400,
-                                                  //                             fontSize: 20,
-                                                  //                             color: Colors.black),
-                                                  //                       ),
-                                                  //                     ),
-                                                  //                   ),
-                                                  //                 )
-                                                  //               ],
-                                                  //             ),
-                                                  //           ),
-                                                  //         ),
-                                                  //       )),
-                                                  // ),
+                                                  _mobileNumber == null
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(0.0),
+                                                          child: ListTile(
+                                                            title: Align(
+                                                              child: Text(
+                                                                'Veuillez entrer une SIM',
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    fontSize:
+                                                                        20,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Center(
+                                                          child: _mobileNumber
+                                                                      .length <=
+                                                                  3
+                                                              ? fillInput()
+                                                              : fillCards()),
                                                   SizedBox(
                                                     height: getSize(
                                                         34, "height", context),
@@ -299,7 +331,27 @@ class _MyAppState extends State<MonCompte> {
                                                               .spaceBetween,
                                                       children: [
                                                         RaisedButton(
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _loading = true;
+                                                            });
+                                                            userService
+                                                                .registerUser(
+                                                                    _mobileNumberPhone,
+                                                                    _mobileNumberPhoneWrite)
+                                                                .then((value) {
+                                                              setState(() {
+                                                                _loading =
+                                                                    false;
+                                                              });
+                                                            }).catchError(
+                                                                    (onError) {
+                                                              setState(() {
+                                                                _loading =
+                                                                    false;
+                                                              });
+                                                            });
+                                                          },
                                                           textColor:
                                                               Colors.white,
                                                           color: Colors
@@ -352,24 +404,34 @@ class _MyAppState extends State<MonCompte> {
                                                                   MainAxisAlignment
                                                                       .center,
                                                               children: [
-                                                                SizedBox(
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .white,
-                                                                    strokeWidth:
-                                                                        1,
-                                                                  ),
-                                                                  height: getSize(
-                                                                      14,
-                                                                      "height",
-                                                                      context),
-                                                                  width: getSize(
-                                                                      14,
-                                                                      "height",
-                                                                      context),
-                                                                ),
+                                                                _loading
+                                                                    ? Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            right:
+                                                                                0,
+                                                                            top:
+                                                                                6,
+                                                                            bottom:
+                                                                                6),
+                                                                        child:
+                                                                            SizedBox(
+                                                                          child:
+                                                                              CircularProgressIndicator(
+                                                                            backgroundColor:
+                                                                                Colors.white,
+                                                                            strokeWidth:
+                                                                                1,
+                                                                          ),
+                                                                          height: getSize(
+                                                                              14,
+                                                                              "height",
+                                                                              context),
+                                                                          width: getSize(
+                                                                              14,
+                                                                              "height",
+                                                                              context),
+                                                                        ))
+                                                                    : Row(),
                                                                 Text(
                                                                   'Sauvegarder',
                                                                   style:
@@ -558,8 +620,10 @@ class _MyAppState extends State<MonCompte> {
                                                           child: Drawer(
                                                             elevation: 0,
                                                             child: TextField(
-                                                              onChanged: (value){
-                                                                newDomicile = value;
+                                                              onChanged:
+                                                                  (value) {
+                                                                newDomicile =
+                                                                    value;
                                                               },
                                                               decoration:
                                                                   InputDecoration(
@@ -626,11 +690,15 @@ class _MyAppState extends State<MonCompte> {
                                                         RaisedButton(
                                                           onPressed: () {
                                                             // Actuelle
-                                                          if(newDomicile != ""){
-                                                            userProvider.storeDomicile(newDomicile);
-                                                          }else{
-                                                            print("l'actuel domicile est vide ");
-                                                          }
+                                                            if (newDomicile !=
+                                                                "") {
+                                                              userProvider
+                                                                  .storeDomicile(
+                                                                      newDomicile);
+                                                            } else {
+                                                              print(
+                                                                  "l'actuel domicile est vide ");
+                                                            }
 
                                                             showGeneralDialog(
                                                                 context:
@@ -868,39 +936,44 @@ class _MyAppState extends State<MonCompte> {
                         },
                       ),
                       InkWell(
-                                              child: Container(
-                          height: getSize(38, "height", context),
-                          child: Row(
-                            children: [
-                              Container(
-                                  margin: EdgeInsets.fromLTRB(
-                                      getSize(5, "width", context),
-                                      0,
-                                      getSize(15, "width", context),
-                                      0),
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).pushNamed(Routes.settings);
+                          },
+                          child: Container(
+                            height: getSize(38, "height", context),
+                            child: Row(
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                        getSize(5, "width", context),
+                                        0,
+                                        getSize(15, "width", context),
+                                        0),
+                                    alignment: Alignment.center,
+                                    child: Image.asset(
+                                      'assets/images/Settings-icon.png',
+                                      height: getSize(24, "height", context),
+                                      width: getSize(24, "width", context),
+                                    )),
+                                Container(
                                   alignment: Alignment.center,
-                                  child: Image.asset(
-                                    'assets/images/Settings-icon.png',
-                                    height: getSize(24, "height", context),
-                                    width: getSize(24, "width", context),
-                                  )),
-                              Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Paramètres de l\'application',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          fontSize:
-                                              getSize(14, "height", context),
-                                          fontWeight: FontWeight.w400),
+                                  child: Text(
+                                    'Paramètres de l\'application',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            fontSize:
+                                                getSize(14, "height", context),
+                                            fontWeight: FontWeight.w400),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).pushNamed(Routes.settings);
                         },
                       ),
@@ -942,6 +1015,137 @@ class _MyAppState extends State<MonCompte> {
               ],
             )),
       ),
+    );
+  }
+
+  Widget fillCards() {
+    var taille = _simCard.length;
+    List<Widget> widgets = _simCard
+        .map(
+          (SimCard sim) => Column(
+            children: [
+              Card(
+                shadowColor: Colors.transparent,
+                margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: ListTile(
+                    leading: Image.asset(
+                      'assets/images/Flag-CM.png',
+                      height: 25,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        _mobileNumberPhone = sim.number;
+                        isSelected = [false, false, false, false, false];
+                        isSelected[_simCard.indexOf(sim)] = true;
+                      });
+                    },
+                    title: Align(
+                      child: Text(
+                        sim.number == null ? "" : sim.number,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.black,
+                            letterSpacing: 1.7),
+                      ),
+                      alignment: Alignment(-0.3, 0),
+                    ),
+                    trailing:
+                        taille == 1 || isSelected[_simCard.indexOf(sim)] == true
+                            ? Icon(
+                                Icons.check_circle,
+                                size: 23.0,
+                                color: Color(0xFF25296A),
+                              )
+                            : Text('')),
+              ),
+              _simCard.indexOf(sim) != taille - 1
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.5),
+                      child: Divider(thickness: 2, color: Colors.grey[200]),
+                    )
+                  : Row(),
+            ],
+          ),
+        )
+        .toList();
+    return Column(children: widgets);
+  }
+
+  Widget fillInput() {
+    return Form(
+      key: formKey,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+              child: Drawer(
+                elevation: 0,
+                child: InternationalPhoneNumberInput(
+                  onInputChanged: (PhoneNumber number) {
+                    setState(() {
+                      _mobileNumberPhoneWrite = number.phoneNumber;
+                    });
+                  },
+                  selectorConfig: SelectorConfig(
+                    selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                  ),
+                  ignoreBlank: false,
+                  autoValidateMode: AutovalidateMode.disabled,
+                  selectorTextStyle: TextStyle(color: Colors.black),
+                  initialValue: number,
+                  textFieldController: controller,
+                  formatInput: false,
+                  keyboardType: TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  inputBorder: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NumberSim extends StatelessWidget {
+  const NumberSim({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: ListTile(
+            leading: Image.asset('assets/images/Flag-CM.png'),
+            title: Align(
+              child: Text(
+                "_isoCountryCode",
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.black),
+              ),
+              alignment: Alignment(-1.2, 0),
+            ),
+            trailing: Icon(
+              Icons.check_circle,
+              size: 23.0,
+              color: Color(0xFF25296A),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.5),
+          child: Divider(thickness: 2, color: Colors.grey[200]),
+        ),
+      ],
     );
   }
 }
