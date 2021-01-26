@@ -38,7 +38,7 @@ class UserProvider extends BaseProvider{
 
   //stockage du domicile
   storeDomicile(domicile){
-    return userService.updateHouse(domicile);
+    return userService.updateHouse(0,0,domicile);
   }
 
   //Modification des paramètres dans le SharedPreferences
