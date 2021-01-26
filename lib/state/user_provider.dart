@@ -11,36 +11,52 @@ import 'base_provider.dart';
 class UserProvider extends BaseProvider{
   // Either<NException,List<User>> alertList = Right([]);
 
+  bool audioVal;
+  bool connectVal;
+
+  UserProvider(){
+      this.audioVal = this.getAudioNotification();
+      this.connectVal = this.getConnectMode();
+  }
+
+  modifyAudioParam(bool audioVal){
+    this.audioVal = audioVal ? false : true;
+    notifyListeners();
+  }
+
+  modifyConnectParam(bool connectVal){
+    this.connectVal = connectVal ? false : true;
+    notifyListeners();
+  }
+
   //stockage du domicile
   storeDomicile(domicile){
     return userService.updateHouse(domicile);
   }
 
-  //Modification des paramètres
+  //Modification des paramètres dans le SharedPreferences
 
   toggleAudioNotification(audioParam){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("audioParam", audioParam);
-    print(audioParam);
+        .storeData("audioParam", audioParam, "bool");
+    this.audioVal = audioParam;
   }
 
   toggleConnectMode(connectMode){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("connectMode", connectMode);
+        .storeData("connectMode", connectMode, "bool");
   }
 
-  Future<String> getAudioNotification() async {
+  getAudioNotification() async {
     Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    var test = await SharedPreferenceHelper(instance).getData("audioParam");
-    print(test);
-    return test;
+    return await SharedPreferenceHelper(instance).getData("audioParam","bool");
   }
 
-  Future<String> getConnectMode() async {
+  getConnectMode() async {
     Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    return SharedPreferenceHelper(instance).getData("connectMode");
+    return await SharedPreferenceHelper(instance).getData("connectMode","bool");
   }
 }
 

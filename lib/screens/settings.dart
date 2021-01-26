@@ -7,6 +7,7 @@ import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui';
 
 class Settings extends StatefulWidget {
@@ -16,7 +17,7 @@ class Settings extends StatefulWidget {
 
 class _MyAppState extends State<Settings> {
   @override
-  bool _value = false;
+  bool _value = userProvider.getAudioNotification() != null ? userProvider.getAudioNotification() : false;
   bool _value2 = false;
   void initState() {
     super.initState();
@@ -115,14 +116,14 @@ class _MyAppState extends State<Settings> {
                                           activeColor: Color(0xFF25296A).withOpacity(.2),
                                           inactiveColor: Color(0xFF25296A).withOpacity(.2),
                                           activeToggleColor: Color(0xFF25296A),
-                                          value: _value,
+                                          value: context.watch<UserProvider>().audioVal,
                                           borderRadius: 100.0,
                                           onToggle: (val) {
                                             setState(() {
                                               _value = val;
                                               print("val est "+val.toString());
-                                              userProvider.toggleAudioNotification(val);
-                                              // userProvider.getAudioNotification();
+                                              userProvider.toggleAudioNotification(val.toString());
+                                              userProvider.getAudioNotification();
                                             });
                                           },
                                         ),
@@ -158,7 +159,7 @@ class _MyAppState extends State<Settings> {
                                           activeColor: Color(0xFF25296A).withOpacity(.2),
                                           inactiveColor: Color(0xFF25296A).withOpacity(.2),
                                           activeToggleColor: Color(0xFF25296A),
-                                          value: _value2,
+                                          value: context.watch<UserProvider>().connectVal,
                                           borderRadius: 100.0,
                                           onToggle: (val) {
                                             setState(() {
