@@ -9,9 +9,9 @@ import 'dart:io' show Platform;
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(                           //return LayoutBuilder
+    return LayoutBuilder(                           
       builder: (context, constraints) {
-        return OrientationBuilder(                  //return OrientationBuilder
+        return OrientationBuilder(                  
           builder: (context, orientation) {
             return MaterialApp(
               title: "App Onboarding",
@@ -43,9 +43,9 @@ class _WalkState extends State<Walk> {
 
   Widget pageIndexIndicator(bool isCurrentPage) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15.5),
-      height: isCurrentPage ? 13.0 : 12.0,
-      width: isCurrentPage ? 13.0 : 12.0,
+      margin: EdgeInsets.symmetric(horizontal: getSize(15.5, "height", context)),
+      height: isCurrentPage ? getSize(13, "height", context) : getSize(12, "height", context),
+      width: isCurrentPage ? getSize(13, "width", context) : getSize(12, "width", context),
       decoration: BoxDecoration(
         color: isCurrentPage ? Color.fromRGBO(37, 41, 106, 1) : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(12),
@@ -55,7 +55,6 @@ class _WalkState extends State<Walk> {
 
   @override
   Widget build(BuildContext context) {
-    // print(getSize(17,"height",context));
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageView.builder(
@@ -79,13 +78,13 @@ class _WalkState extends State<Walk> {
               decoration: new BoxDecoration(
                 color: Colors.white,
               ),
-              height: Platform.isIOS ? 70 : 60,
+              height: Platform.isIOS ? getSize(70, "height", context) : getSize(60, "height", context),
               // padding: EdgeInsets.symmetric(horizontal: 40),
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
                   Positioned(
-                    left: 40,
+                    left: getSize(40, "width", context),
                     child: GestureDetector(
                       onTap: () {
                         pageController.animateToPage(
@@ -130,8 +129,8 @@ class _WalkState extends State<Walk> {
               decoration: new BoxDecoration(
                 color: Colors.white,
               ),
-              height: Platform.isIOS ? 70 : 60,
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              height: Platform.isIOS ? getSize(70, "height", context) : getSize(60, "height", context),
+              padding: EdgeInsets.symmetric(horizontal: getSize(40, "height", context)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -165,8 +164,8 @@ class SliderTile extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: <Widget>[
         new Positioned(
-          top: 0.0,
-          child: Image.asset("assets/images/Groupe 152.png")
+          top: getSize(0, "height", context),
+          child: Image.asset("assets/images/Groupe 152.png"),
         ),
         new Positioned(
           top: 103,
@@ -176,13 +175,13 @@ class SliderTile extends StatelessWidget {
           )
         ),
         new Positioned(
-          top:150.0,
-          width: 400,
+          top:getSize(150, "height", context),
+          width: getSize(400, "width", context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Image.asset(imageAssetPath, height: 171),
+              Image.asset(imageAssetPath, height: getSize(171, "height", context)),
               SizedBox(
                 height: 0.06529*deviceSize.height,
               ),
@@ -198,7 +197,7 @@ class SliderTile extends StatelessWidget {
                 height: 0.05377*deviceSize.height,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
+                padding: EdgeInsets.symmetric(horizontal: getSize(36, "height", context)),
                 child: Text(
                   description,
                   textAlign: TextAlign.center,
@@ -214,7 +213,7 @@ class SliderTile extends StatelessWidget {
                 height: 0.05889*deviceSize.height,
               ),
               title == "Notifications" ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
+                padding: EdgeInsets.symmetric(horizontal: getSize(36, "height", context)),
                 child: RaisedButton(
                   onPressed: () {
                     Platform.isAndroid ? Navigator.of(context).pushNamed(Routes.numero_get) : Navigator.of(context).pushNamed(Routes.numero_get_ios);
@@ -226,7 +225,7 @@ class SliderTile extends StatelessWidget {
                       borderRadius: new BorderRadius.circular(18.0),
                   ),
                   child: Container(
-                      width: 400,
+                      width: getSize(400, "width", context),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
                         gradient: LinearGradient(

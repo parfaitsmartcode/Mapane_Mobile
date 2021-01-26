@@ -8,6 +8,7 @@ import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
 import 'package:mapane/screens/welcome_map.dart';
+import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/state/alert_provider.dart';
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: WelcomeMap(),
+      home: Walk(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

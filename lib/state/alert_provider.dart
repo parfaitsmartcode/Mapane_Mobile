@@ -32,15 +32,23 @@ class AlertProvider extends BaseProvider{
     });
   }
 
-  getAlertByUserCat(id){
-    this.toggleLoadingState();
-    alertService.getAlertByUserCat("5ff34b88af0f1982ab03f3f9",id).then((alerts){
-      alertListCat = Right(alerts);
+  getAlertByUserCat(id,type){
+    if(type == 1){
+      alertService.getAlertByUserCat("5ff34b88af0f1982ab03f3f9",id).then((alerts){
+        alertListCat = Right(alerts);
+      }).catchError((error){
+        alertListCat = Left(error);
+      });
+    }else{
       this.toggleLoadingState();
-    }).catchError((error){
-      alertListCat = Left(error);
-      this.toggleLoadingState();
-    });
+      alertService.getAlertByUserCat("5ff34b88af0f1982ab03f3f9",id).then((alerts){
+        alertListCat = Right(alerts);
+        this.toggleLoadingState();
+      }).catchError((error){
+        alertListCat = Left(error);
+        this.toggleLoadingState();
+      });
+    }
   }
 
 }

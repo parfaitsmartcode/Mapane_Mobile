@@ -30,16 +30,10 @@ class _MyAppState extends State<WelcomeMap> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
-      context.read<AlertProvider>().getAlertByUserCat("All");
+      context.read<AlertProvider>().getAlertByUserCat("All",1);
     });
     super.initState();
   }
-
-  // Future<dynamic> getAudioNotification() async {
-  //   SharedPreferences  settingUser = await SharedPreferences.getInstance();
-  //   settingUser;
-  //   return 0;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +99,11 @@ class _MyAppState extends State<WelcomeMap> {
                         Container(
                           child: Center(
                             child: GestureDetector(
-                              onTap: () => {
+                              onTap: (){
                                 context
                                     .read<AlertProvider>()
-                                    .getAlertByUser("5ff34b88af0f1982ab03f3f9")
+                                    .getAlertByUser("5ff34b88af0f1982ab03f3f9");
+                                context.read<AlertProvider>().getAlertByUserCat("All",2);
                               },
                               child: Image.asset(
                                 'assets/images/refresh-icon.png',
@@ -725,7 +720,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Controle routier");
+                      .getAlertByUserCat("Controle routier",2);
                 },
                 leading: Icon(
                   Icons.map,
@@ -741,7 +736,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Zone dangereuse");
+                      .getAlertByUserCat("Zone dangereuse",2);
                 },
                 leading: Icon(
                   Icons.add_location,
@@ -757,7 +752,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Accident de circulation");
+                      .getAlertByUserCat("Accident de circulation",2);
                 },
                 leading: Icon(
                   Icons.airline_seat_recline_extra_rounded,
@@ -773,7 +768,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Route en chantier");
+                      .getAlertByUserCat("Route en chantier",2);
                 },
                 leading: Icon(
                   Icons.local_taxi_sharp,
@@ -789,7 +784,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Radar");
+                      .getAlertByUserCat("Radar",2);
                 },
                 leading: Icon(
                   Icons.radio_sharp,
