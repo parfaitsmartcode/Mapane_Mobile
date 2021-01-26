@@ -44,8 +44,8 @@ class UserService {
 
       if (response.statusCode == 200) {
         Future<SharedPreferences> instance = SharedPreferences.getInstance();
-        SharedPreferenceHelper(instance)
-            .storeData("user_info", response.data["user"]["id"]);
+        // SharedPreferenceHelper(instance)
+        //     .storeData("user_info", response.data["user"]["id"]);
         return response.data["message"];
       } else {
         return response;

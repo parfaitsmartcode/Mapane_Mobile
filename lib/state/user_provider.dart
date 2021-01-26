@@ -15,18 +15,25 @@ class UserProvider extends BaseProvider{
   bool connectVal;
 
   UserProvider(){
-      this.audioVal = this.getAudioNotification();
-      this.connectVal = this.getConnectMode();
+      print("++++++++++++++++++++++ok+++++++++++++++++");
+      this.getAudioNotification().then((value) {
+        print("valeur des preferences " + value.toString());
+      } );
+      this.getAudioNotification().then((value) => this.audioVal = value );
+      this.getConnectMode().then((value) => this.connectVal = value );
+      print("valeur du booléean " + audioVal.toString());
   }
 
   modifyAudioParam(bool audioVal){
     this.audioVal = audioVal ? false : true;
     notifyListeners();
+    storeAudioNotification(audioVal);
   }
 
   modifyConnectParam(bool connectVal){
     this.connectVal = connectVal ? false : true;
     notifyListeners();
+    storeConnectMode(connectVal);
   }
 
   //stockage du domicile
@@ -36,27 +43,39 @@ class UserProvider extends BaseProvider{
 
   //Modification des paramètres dans le SharedPreferences
 
-  toggleAudioNotification(audioParam){
+  storeAudioNotification(audioParam){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
         .storeData("audioParam", audioParam, "bool");
-    this.audioVal = audioParam;
   }
 
-  toggleConnectMode(connectMode){
+  storeConnectMode(connectMode){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("connectMode", connectMode, "bool");
+        .storeData("connectMode", connectMode,"bool");
   }
 
-  getAudioNotification() async {
+  Future<bool>getAudioNotification() async {
     Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    return await SharedPreferenceHelper(instance).getData("audioParam","bool");
+    var value = await SharedPreferenceHelper(instance).getData("audioParam","bool");
+    print("type de value " + value.runtimeType.toString());
+    if(value == null){
+      return false;
+    }else{
+      print(value);
+      return value;
+    }
   }
 
-  getConnectMode() async {
+  Future<bool>getConnectMode() async {
     Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    return await SharedPreferenceHelper(instance).getData("connectMode","bool");
+    var value = await SharedPreferenceHelper(instance).getData("connectMode","bool");
+    if(value == null){
+      return false;
+    }else{
+      print(value);
+      return value;
+    }
   }
 }
 

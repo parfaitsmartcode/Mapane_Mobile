@@ -17,8 +17,6 @@ class Settings extends StatefulWidget {
 
 class _MyAppState extends State<Settings> {
   @override
-  bool _value = userProvider.getAudioNotification() != null ? userProvider.getAudioNotification() : false;
-  bool _value2 = false;
   void initState() {
     super.initState();
   }
@@ -120,10 +118,7 @@ class _MyAppState extends State<Settings> {
                                           borderRadius: 100.0,
                                           onToggle: (val) {
                                             setState(() {
-                                              _value = val;
-                                              print("val est "+val.toString());
-                                              userProvider.toggleAudioNotification(val.toString());
-                                              userProvider.getAudioNotification();
+                                              context.read<UserProvider>().modifyAudioParam(val);
                                             });
                                           },
                                         ),
@@ -163,9 +158,7 @@ class _MyAppState extends State<Settings> {
                                           borderRadius: 100.0,
                                           onToggle: (val) {
                                             setState(() {
-                                              _value2 = val;
-                                              userProvider.toggleConnectMode(val);
-                                              print(userProvider.getConnectMode());
+                                              context.read<UserProvider>().modifyConnectParam(val);
                                             });
                                           },
                                         ),
