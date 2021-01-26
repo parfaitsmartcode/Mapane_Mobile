@@ -11,6 +11,7 @@ import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/state/alert_provider.dart';
+import 'package:mapane/state/user_provider.dart';
 
 void main() {
   setupLocator();
@@ -19,6 +20,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create:(_) => BottomBarProvider()),
         ChangeNotifierProvider(create:(_) => AlertProvider()),
+        ChangeNotifierProvider(create:(_) => UserProvider())
       ],
       child:  MyApp(),
     )
