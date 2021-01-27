@@ -148,11 +148,11 @@ class _MyAppState extends State<MonCompte> {
                         ),
                         // padding: EdgeInsets.all(4),
                         width: getSize(39, "width", context),
-                        height: getSize(38, "height", context),
+                        height: getSize(39, "width", context),
                         child: Center(
                           child: Image.asset(
                             'assets/images/Logo-small.png',
-                            height: getSize(20, "height", context),
+                            height: getSize(21, "height", context),
                           ),
                         ),
                       )
@@ -221,7 +221,7 @@ class _MyAppState extends State<MonCompte> {
                               barrierLabel: MaterialLocalizations.of(context)
                                   .modalBarrierDismissLabel,
                               barrierColor:
-                                  AppColors.whiteColor.withOpacity(0.96),
+                                  AppColors.whiteColor.withOpacity(0.91),
                               transitionDuration:
                                   const Duration(milliseconds: 200),
                               pageBuilder: (BuildContext buildContext,
