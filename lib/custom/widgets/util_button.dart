@@ -20,6 +20,16 @@ class UtilButton extends StatelessWidget {
       child: Container(
         height: height,
         width: width,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 7,
+              blurRadius: 30,
+              offset: Offset(0, 3), // changes position of shadow
+            )
+          ]
+        ),
         child: Card(
           elevation: 3.0,
           shape: RoundedRectangleBorder(

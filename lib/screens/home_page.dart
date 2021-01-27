@@ -25,11 +25,8 @@ class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
   final _startPointController = TextEditingController();
-  Widget swiperIcon = Icon(
-      Icons.keyboard_arrow_up_sharp,
-      color: Colors.grey,
-      size: 30.0
-  );
+  Widget swiperIcon =
+      Icon(Icons.keyboard_arrow_up_sharp, color: Colors.grey, size: 30.0);
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -147,144 +144,186 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(35),
-                                  topRight: Radius.circular(35)
-                              ),
+                                  topRight: Radius.circular(35)),
                             ),
                             child: Stack(
                               children: [
                                 Align(
-                                  alignment: Alignment.topCenter,
-                                  child: CircleAvatar(
-                                  radius: 15.0,
-                                  backgroundColor: Colors.blueGrey,
-                                  child: Center(child: swiperIcon)
-                                  ),
-                                ),
+                                    alignment: Alignment.topCenter,
+                                    child: SvgPicture.asset(
+                                      Assets.arrowDownIcon,
+                                    )),
                                 Padding(
-                                  padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5 ,left: SizeConfig.blockSizeHorizontal * 7,right: SizeConfig.blockSizeHorizontal * 7),
+                                  padding: EdgeInsets.only(
+                                      top: SizeConfig.blockSizeVertical * 5,
+                                      left: SizeConfig.blockSizeHorizontal * 7,
+                                      right:
+                                          SizeConfig.blockSizeHorizontal * 7),
                                   child: TextField(
                                     textInputAction: TextInputAction.go,
                                     controller: _startPointController,
-                                    onSubmitted: (value){
+                                    onSubmitted: (value) {
                                       print(value);
-                                      context.read<SearchProvider>().getSearchResults(value);
+                                      context
+                                          .read<SearchProvider>()
+                                          .getSearchResults(value);
                                     },
-                                    onTap: (){
-                                      context.read<SearchProvider>().toggleSearchState();
+                                    onTap: () {
+                                      context
+                                          .read<SearchProvider>()
+                                          .toggleSearchState();
                                     },
                                     decoration: InputDecoration(
-                                      hintText: 'Rechercher un lieu',
-                                      hintStyle: TextStyle(
-                                        fontSize: 17.0
-                                      ),
-                                      border: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red
-                                        )
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[200]
-                                          )
-                                      ),
-                                      suffixIcon: Icon(
-                                        Icons.search
-                                      )
-                                    ),
+                                        hintText: 'Rechercher un lieu',
+                                        hintStyle: TextStyle(fontSize: 17.0),
+                                        border: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.red)),
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.grey[200])),
+                                        suffixIcon: Icon(Icons.search)),
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5),
+                                  padding: EdgeInsets.only(
+                                      top: SizeConfig.blockSizeVertical * 5),
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 7),
-                                      child: context.watch<SearchProvider>().isSearchEnable == false ?
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SvgPicture.asset(
-                                            Assets.illustration,
-                                          ),
-                                          SizedBox(
-                                            width: SizeConfig.blockSizeHorizontal * 6,
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              "Avec Mapane, rechercher des lieux de vos choix et soyez informé en temps réel en cas d’alerte.",
-                                              overflow: TextOverflow.clip,
-                                            ),
-                                          )
-                                        ],
-                                      ) :
-                                      context.watch<SearchProvider>().loadingState == LoadingState.loading ?
-                                      Center(
-                                        child: CircularProgressIndicator(),
-                                      ) :
-                                          context.select((SearchProvider provider) => provider).placesResult.fold(
-                                              (NException error){
-                                                return Column(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              SizeConfig.blockSizeHorizontal *
+                                                  7),
+                                      child:
+                                          context
+                                                      .watch<SearchProvider>()
+                                                      .isSearchEnable ==
+                                                  false
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    AspectRatio(aspectRatio: 5 / 1),
-                                                    Center(
+                                                    SvgPicture.asset(
+                                                      Assets.illustration,
+                                                    ),
+                                                    SizedBox(
+                                                      width: SizeConfig
+                                                              .blockSizeHorizontal *
+                                                          6,
+                                                    ),
+                                                    Expanded(
+                                                      flex: 2,
                                                       child: Text(
-                                                        error.message,
+                                                        "Avec Mapane, rechercher des lieux de vos choix et soyez informé en temps réel en cas d’alerte.",
+                                                        overflow:
+                                                            TextOverflow.clip,
                                                       ),
                                                     )
                                                   ],
-                                                );
-                                              },
-                                              (placesResult){
-                                                return placesResult.isEmpty ?
-                                                Column(
-                                                  children: [
-                                                    AspectRatio(aspectRatio: 5 / 1),
-                                                    Center(
-                                                      child: Text("Aucun résultat pour cette recherche"),
+                                                )
+                                              : context
+                                                          .watch<
+                                                              SearchProvider>()
+                                                          .loadingState ==
+                                                      LoadingState.loading
+                                                  ? Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
                                                     )
-                                                  ],
-                                                ) :
-                                                 Padding(
-                                                   padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 7),
-                                                   child: Container(
-                                                     child: ListView.separated(
-                                                         itemBuilder: (context,index){
-                                                           return ListTile(
-                                                             leading: SvgPicture.asset(
-                                                               Assets.pathIcon,
-                                                             ),
-                                                             title: Text(
-                                                               placesResult[index].name,
-                                                               style: TextStyle(
-                                                                 fontSize: 17.0,
-                                                                 fontWeight: FontWeight.bold,
-                                                                 color: Colors.black
-                                                               ),
-                                                             ),
-                                                             subtitle: Text(
-                                                                 placesResult[index].osm_value + ","+
-                                                                 placesResult[index].city + "," +
-                                                                     placesResult[index].country + ",",
-                                                               style: TextStyle(
-                                                                 fontSize: 12.0,
-                                                                 color: Colors.grey
-                                                               ),
-                                                             ),
-                                                           );
-                                                         },
-                                                         itemCount: placesResult.length,
-                                                       separatorBuilder: (index,count){
-                                                           return Divider(
-                                                             color: Colors.transparent,
-                                                           );
-                                                       },
-                                                     ),
-                                                   ),
-                                                 );
-                                              }
-                                          )
-                                      ,
+                                                  : context
+                                                      .select((SearchProvider
+                                                              provider) =>
+                                                          provider)
+                                                      .placesResult
+                                                      .fold((NException error) {
+                                                      return Column(
+                                                        children: [
+                                                          AspectRatio(
+                                                              aspectRatio:
+                                                                  5 / 1),
+                                                          Center(
+                                                            child: Text(
+                                                              error.message,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      );
+                                                    }, (placesResult) {
+                                                      return placesResult
+                                                              .isEmpty
+                                                          ? Column(
+                                                              children: [
+                                                                AspectRatio(
+                                                                    aspectRatio:
+                                                                        5 / 1),
+                                                                Center(
+                                                                  child: Text(
+                                                                      "Aucun résultat pour cette recherche"),
+                                                                )
+                                                              ],
+                                                            )
+                                                          : Padding(
+                                                              padding: EdgeInsets.only(
+                                                                  top: SizeConfig
+                                                                          .blockSizeVertical *
+                                                                      7),
+                                                              child: Container(
+                                                                child: ListView
+                                                                    .separated(
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return ListTile(
+                                                                      leading:
+                                                                          SvgPicture
+                                                                              .asset(
+                                                                        Assets
+                                                                            .pathIcon,
+                                                                      ),
+                                                                      title:
+                                                                          Text(
+                                                                        placesResult[index]
+                                                                            .name,
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                17.0,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.black),
+                                                                      ),
+                                                                      subtitle:
+                                                                          Text(
+                                                                        placesResult[index].osm_value +
+                                                                            "," +
+                                                                            placesResult[index].city +
+                                                                            "," +
+                                                                            placesResult[index].country +
+                                                                            ",",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                12.0,
+                                                                            color:
+                                                                                Colors.grey),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  itemCount:
+                                                                      placesResult
+                                                                          .length,
+                                                                  separatorBuilder:
+                                                                      (index,
+                                                                          count) {
+                                                                    return Divider(
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            );
+                                                    }),
                                     ),
                                   ),
                                 )
@@ -317,7 +356,19 @@ class _HomePageState extends State<HomePage> {
                             topRight: Radius.circular(isExpanded ? 35 : 0)),
                         color: isExpanded
                             ? Colors.white
-                            : Colors.white.withOpacity(0.3)),
+                            : Colors.white.withOpacity(0.3),
+                        boxShadow: [
+                          isExpanded ?
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ) :
+                          BoxShadow(
+                            color: Colors.transparent,
+                          )
+                        ]),
                     duration: Duration(milliseconds: 500),
                     child: Stack(
                       overflow: Overflow.visible,
@@ -340,104 +391,119 @@ class _HomePageState extends State<HomePage> {
                             child: swiperIcon,
                           ),
                         ),
-                        isExpanded ?
-                      Padding(
-                        padding:  EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5 , left: SizeConfig.blockSizeHorizontal * 5 , right: SizeConfig.blockSizeHorizontal * 5),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: GridView(
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                childAspectRatio: 0.75,
-                                crossAxisSpacing: 15.0,
-                                mainAxisSpacing: 20.0
-                              ),
-                              children: [
-                                Padding(
-                                  padding:EdgeInsets.only(bottom: SizeConfig.blockSizeVertical),
-                                  child: Alert(
-                                    title: "Embouteillage",
-                                    color: HexColor("#FECE4C").withOpacity(0.25),
-                                    picture:SvgPicture.asset(
-                                      Assets.trafficIcon,
-                                    ),
-                                    radius: 30.0,
+                        isExpanded
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                    top: SizeConfig.blockSizeVertical * 5,
+                                    left: SizeConfig.blockSizeHorizontal * 5,
+                                    right: SizeConfig.blockSizeHorizontal * 5),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: GridView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 4,
+                                            childAspectRatio: 0.75,
+                                            crossAxisSpacing: 15.0,
+                                            mainAxisSpacing: 20.0),
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom:
+                                                SizeConfig.blockSizeVertical *
+                                                    2),
+                                        child: Alert(
+                                          title: "Embouteillage",
+                                          color: HexColor("#FECE4C")
+                                              .withOpacity(0.25),
+                                          picture: SvgPicture.asset(
+                                            Assets.trafficIcon,
+                                          ),
+                                          radius: 30.0,
+                                        ),
+                                      ),
+                                      Alert(
+                                        title: "Contrôle routier",
+                                        color: HexColor("#69BFFD")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.policeIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                      Alert(
+                                        title: "Zône dangereuse",
+                                        color: HexColor("#FD4B89")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.dangerIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom:
+                                                SizeConfig.blockSizeVertical *
+                                                    2),
+                                        child: Alert(
+                                          title: "Radar",
+                                          color: HexColor("#4BB38F")
+                                              .withOpacity(0.25),
+                                          picture: SvgPicture.asset(
+                                            Assets.radarIcon,
+                                          ),
+                                          radius: 30.0,
+                                        ),
+                                      ),
+                                      Alert(
+                                        title: "Accident de circulation",
+                                        color: HexColor("#2C2BFB")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.accidentIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                      Alert(
+                                        title: "Route en barrée",
+                                        color: HexColor("#2EDACD")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.roadblockIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                      Alert(
+                                        title: "Route en chantier",
+                                        color: HexColor("#CBAB81")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.highwayIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                      Alert(
+                                        title: "Publier ma position",
+                                        color: HexColor("#000000")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.pathIcon,
+                                        ),
+                                        radius: 30.0,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Alert(
-                                  title: "Contrôle routier",
-                                  color: HexColor("#69BFFD").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.policeIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                                Alert(
-                                  title: "Zône dangereuse",
-                                  color: HexColor("#FD4B89").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.dangerIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical),
-                                  child: Alert(
-                                    title: "Radar",
-                                    color: HexColor("#4BB38F").withOpacity(0.25),
-                                    picture:SvgPicture.asset(
-                                      Assets.radarIcon,
-                                    ),
-                                    radius: 30.0,
-                                  ),
-                                ),
-                                Alert(
-                                  title: "Accident de circulation",
-                                  color: HexColor("#2C2BFB").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.accidentIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                                Alert(
-                                  title: "Route en barrée",
-                                  color: HexColor("#2EDACD").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.roadblockIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                                Alert(
-                                  title: "Route en chantier",
-                                  color: HexColor("#CBAB81").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.highwayIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                                Alert(
-                                  title: "Publier ma position",
-                                  color: HexColor("#000000").withOpacity(0.25),
-                                  picture:SvgPicture.asset(
-                                    Assets.pathIcon,
-                                  ),
-                                  radius: 30.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                      ) :Container()
+                              )
+                            : Container()
                       ],
                     ),
                     onEnd: () {
                       setState(() {
                         if (!isExpanded) {
-                          swiperIcon = Icon(
-                              Icons.keyboard_arrow_up_sharp,
-                              color: Colors.grey,
-                              size: 30.0
-                            );
+                          swiperIcon = Icon(Icons.keyboard_arrow_up_sharp,
+                              color: Colors.grey, size: 30.0);
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
