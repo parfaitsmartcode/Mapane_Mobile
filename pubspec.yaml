@@ -49,6 +49,8 @@ dependencies:
   modal_bottom_sheet: ^1.0.0+1
   connectivity: ^2.0.2
   flutter_switch: ^0.2.0
+  flutter_mapbox_autocomplete: ^1.0.4
+  nominatim_location_picker: ^0.1.0+7
 
 dev_dependencies:
   flutter_test:

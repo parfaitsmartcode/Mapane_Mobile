@@ -1,13 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/custom/widgets/alert.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
+import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
+import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,6 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
+  final _startPointController = TextEditingController();
   Icon swiperIcon = Icon(
     Icons.keyboard_arrow_up,
     color: Colors.grey,
@@ -153,6 +156,15 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5 ,left: SizeConfig.blockSizeHorizontal * 7,right: SizeConfig.blockSizeHorizontal * 7),
                                   child: TextField(
+                                    textInputAction: TextInputAction.go,
+                                    controller: _startPointController,
+                                    onSubmitted: (value){
+                                      print(value);
+                                      context.read<SearchProvider>().getSearchResults(value);
+                                    },
+                                    onTap: (){
+                                      context.read<SearchProvider>().toggleSearchState();
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Rechercher un lieu',
                                       hintStyle: TextStyle(
@@ -180,7 +192,8 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.center,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 7),
-                                      child: Row(
+                                      child: context.watch<SearchProvider>().isSearchEnable == false ?
+                                      Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           SvgPicture.asset(
@@ -197,7 +210,74 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           )
                                         ],
-                                      ),
+                                      ) :
+                                      context.watch<SearchProvider>().loadingState == LoadingState.loading ?
+                                      Center(
+                                        child: CircularProgressIndicator(),
+                                      ) :
+                                          context.select((SearchProvider provider) => provider).placesResult.fold(
+                                              (NException error){
+                                                return Column(
+                                                  children: [
+                                                    AspectRatio(aspectRatio: 5 / 1),
+                                                    Center(
+                                                      child: Text(
+                                                        error.message,
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              },
+                                              (placesResult){
+                                                return placesResult.isEmpty ?
+                                                Column(
+                                                  children: [
+                                                    AspectRatio(aspectRatio: 5 / 1),
+                                                    Center(
+                                                      child: Text("Aucun résultat pour cette recherche"),
+                                                    )
+                                                  ],
+                                                ) :
+                                                 Padding(
+                                                   padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 7),
+                                                   child: Container(
+                                                     child: ListView.separated(
+                                                         itemBuilder: (context,index){
+                                                           return ListTile(
+                                                             leading: SvgPicture.asset(
+                                                               Assets.pathIcon,
+                                                             ),
+                                                             title: Text(
+                                                               placesResult[index].name,
+                                                               style: TextStyle(
+                                                                 fontSize: 17.0,
+                                                                 fontWeight: FontWeight.bold,
+                                                                 color: Colors.black
+                                                               ),
+                                                             ),
+                                                             subtitle: Text(
+                                                                 placesResult[index].osm_value + ","+
+                                                                 placesResult[index].city + "," +
+                                                                     placesResult[index].country + ",",
+                                                               style: TextStyle(
+                                                                 fontSize: 12.0,
+                                                                 color: Colors.grey
+                                                               ),
+                                                             ),
+                                                           );
+                                                         },
+                                                         itemCount: placesResult.length,
+                                                       separatorBuilder: (index,count){
+                                                           return Divider(
+                                                             color: Colors.transparent,
+                                                           );
+                                                       },
+                                                     ),
+                                                   ),
+                                                 );
+                                              }
+                                          )
+                                      ,
                                     ),
                                   ),
                                 )
