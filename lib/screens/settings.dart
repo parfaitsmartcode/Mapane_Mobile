@@ -19,8 +19,10 @@ class _MyAppState extends State<Settings> {
   @override
   void initState() {
     super.initState();
+    userProvider.setAudioNotification();
+    userProvider.setConnectMode();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

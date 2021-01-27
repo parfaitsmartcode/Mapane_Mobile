@@ -332,10 +332,10 @@ class _MyAppState extends State<MonCompte> {
                                                       children: [
                                                         SizedBox(
                                                           height: getSize(
-                                                                36,
-                                                                "height",
-                                                                context),
-                                                                                                                  child: RaisedButton(
+                                                              36,
+                                                              "height",
+                                                              context),
+                                                          child: RaisedButton(
                                                             onPressed: () {
                                                               setState(() {
                                                                 _loading = true;
@@ -345,16 +345,16 @@ class _MyAppState extends State<MonCompte> {
                                                                       _mobileNumberPhone,
                                                                       _mobileNumberPhoneWrite,
                                                                       0)
-                                                                  .then((value) {
+                                                                  .then(
+                                                                      (value) {
                                                                 showGeneralDialog(
                                                                     context:
                                                                         context,
                                                                     barrierDismissible:
                                                                         true,
-                                                                    barrierLabel:
-                                                                        MaterialLocalizations.of(
-                                                                                context)
-                                                                            .modalBarrierDismissLabel,
+                                                                    barrierLabel: MaterialLocalizations.of(
+                                                                            context)
+                                                                        .modalBarrierDismissLabel,
                                                                     barrierColor: AppColors
                                                                         .whiteColor
                                                                         .withOpacity(
@@ -375,10 +375,8 @@ class _MyAppState extends State<MonCompte> {
                                                                           shadowColor:
                                                                               Colors.transparent,
                                                                           margin: EdgeInsets.symmetric(
-                                                                              horizontal:
-                                                                                  0,
-                                                                              vertical:
-                                                                                  0),
+                                                                              horizontal: 0,
+                                                                              vertical: 0),
                                                                           child:
                                                                               Column(
                                                                             mainAxisSize:
@@ -407,17 +405,16 @@ class _MyAppState extends State<MonCompte> {
                                                                                       Container(
                                                                                         width: getSize(100, "height", context),
                                                                                         height: getSize(100, "height", context),
-                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(20, "height", context), horizontal: getSize(22, "width", context)),
                                                                                         decoration: BoxDecoration(
                                                                                           borderRadius: BorderRadius.circular(100),
                                                                                           color: AppColors.greenColor.withOpacity(0.35),
                                                                                         ),
                                                                                         child: Center(
-                                                                                            child: Icon(
-                                                                                          Icons.check,
-                                                                                          size: getSize(38, "height", context),
-                                                                                          color: AppColors.greenColor,
-                                                                                        )),
+                                                                                          child: Image.asset(
+                                                                                            'assets/images/check-icon.png',
+                                                                                          ),
+                                                                                        ),
                                                                                       ),
                                                                                       SizedBox(
                                                                                         height: getSize(21, "height", context),
@@ -460,10 +457,9 @@ class _MyAppState extends State<MonCompte> {
                                                                         context,
                                                                     barrierDismissible:
                                                                         true,
-                                                                    barrierLabel:
-                                                                        MaterialLocalizations.of(
-                                                                                context)
-                                                                            .modalBarrierDismissLabel,
+                                                                    barrierLabel: MaterialLocalizations.of(
+                                                                            context)
+                                                                        .modalBarrierDismissLabel,
                                                                     barrierColor: AppColors
                                                                         .whiteColor
                                                                         .withOpacity(
@@ -484,10 +480,8 @@ class _MyAppState extends State<MonCompte> {
                                                                           shadowColor:
                                                                               Colors.transparent,
                                                                           margin: EdgeInsets.symmetric(
-                                                                              horizontal:
-                                                                                  0,
-                                                                              vertical:
-                                                                                  0),
+                                                                              horizontal: 0,
+                                                                              vertical: 0),
                                                                           child:
                                                                               Column(
                                                                             mainAxisSize:
@@ -569,7 +563,8 @@ class _MyAppState extends State<MonCompte> {
                                                             color: Colors
                                                                 .transparent,
                                                             padding:
-                                                                EdgeInsets.all(0),
+                                                                EdgeInsets.all(
+                                                                    0),
                                                             shape:
                                                                 RoundedRectangleBorder(
                                                               borderRadius:
@@ -590,7 +585,8 @@ class _MyAppState extends State<MonCompte> {
                                                                             100),
                                                                 gradient:
                                                                     LinearGradient(
-                                                                  colors: <Color>[
+                                                                  colors: <
+                                                                      Color>[
                                                                     Color(
                                                                         0xFFA7BACB),
                                                                     Color(
@@ -598,18 +594,17 @@ class _MyAppState extends State<MonCompte> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              padding: EdgeInsets
-                                                                  .fromLTRB(
-                                                                      0,
-                                                                      getSize(
-                                                                          5,
-                                                                          "height",
-                                                                          context),
-                                                                      0,
-                                                                      getSize(
-                                                                          5,
-                                                                          "height",
-                                                                          context)),
+                                                              padding: EdgeInsets.fromLTRB(
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context),
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context)),
                                                               child: Center(
                                                                   child: Row(
                                                                 mainAxisAlignment:
@@ -821,61 +816,61 @@ class _MyAppState extends State<MonCompte> {
                                                               44,
                                                               "height",
                                                               context),
-                                                          child: Drawer(
-                                                            elevation: 0,
-                                                            child: TextField(
-                                                              onChanged:
-                                                                  (value) {
-                                                                newDomicile =
-                                                                    value;
-                                                              },
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                      prefixIcon:
-                                                                          Image
-                                                                              .asset(
-                                                                        'assets/images/Groupe 9.png',
-                                                                        height: getSize(
-                                                                            24,
-                                                                            "height",
-                                                                            context),
-                                                                        width: getSize(
-                                                                            24,
-                                                                            "width",
-                                                                            context),
-                                                                      ),
-                                                                      // border:
-                                                                      //     OutlineInputBorder(
-                                                                      //   borderRadius:
-                                                                      //       BorderRadius.all(
-                                                                      //     Radius.circular(
-                                                                      //         100.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100),
+                                                            ),
+                                                            child: Drawer(
+                                                              elevation: 0,
+                                                              child: TextField(
+                                                                onChanged:
+                                                                    (value) {
+                                                                  newDomicile =
+                                                                      value;
+                                                                },
+                                                                decoration: InputDecoration(
+                                                                    prefixIcon: Image.asset(
+                                                                      'assets/images/Groupe 9.png',
+                                                                      height: getSize(
+                                                                          24,
+                                                                          "height",
+                                                                          context),
+                                                                      width: getSize(
+                                                                          24,
+                                                                          "width",
+                                                                          context),
+                                                                    ),
+                                                                    // border:
+                                                                    //     OutlineInputBorder(
+                                                                    //   borderRadius:
+                                                                    //       BorderRadius.all(
+                                                                    //     Radius.circular(
+                                                                    //         100.0),
 
-                                                                      //   ),
-                                                                      // ),
-                                                                      border:
-                                                                          OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide.none,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                      ),
-                                                                      filled:
-                                                                          true,
-                                                                      contentPadding: EdgeInsets.symmetric(
-                                                                          vertical:
-                                                                              5.0),
-                                                                      hintStyle: TextStyle(
-                                                                          color: Colors.black.withOpacity(
-                                                                              .22)),
-                                                                      hintText:
-                                                                          "Votre nom publique",
-                                                                      fillColor: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              .04)),
-                                                              style: AppTheme
-                                                                  .buttonText,
+                                                                    //   ),
+                                                                    // ),
+                                                                    border: OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide
+                                                                              .none,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                    ),
+                                                                    filled: true,
+                                                                    contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+                                                                    hintStyle: TextStyle(fontSize: getSize(18, "height", context), color: Colors.black.withOpacity(.22)),
+                                                                    hintText: "Votre nom publique",
+                                                                    fillColor: Colors.black.withOpacity(.04)),
+                                                                style: AppTheme
+                                                                    .buttonText,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -891,205 +886,207 @@ class _MyAppState extends State<MonCompte> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        RaisedButton(
-                                                          onPressed: () {
-                                                            // Actuelle
-                                                            if (newDomicile !=
-                                                                "") {
-                                                              userProvider
-                                                                  .storeDomicile(
-                                                                      newDomicile);
-                                                            } else {
-                                                              print(
-                                                                  "l'actuel domicile est vide ");
-                                                            }
+                                                        Container(
+                                                          height: getSize(
+                                                              36,
+                                                              "height",
+                                                              context),
+                                                          child: RaisedButton(
+                                                            onPressed: () {
+                                                              // Actuelle
+                                                              if (newDomicile !=
+                                                                  "") {
+                                                                userProvider
+                                                                    .storeDomicile(
+                                                                        newDomicile);
+                                                              } else {
+                                                                print(
+                                                                    "l'actuel domicile est vide ");
+                                                              }
 
-                                                            showGeneralDialog(
-                                                                context:
-                                                                    context,
-                                                                barrierDismissible:
-                                                                    true,
-                                                                barrierLabel:
-                                                                    MaterialLocalizations.of(
-                                                                            context)
-                                                                        .modalBarrierDismissLabel,
-                                                                barrierColor: AppColors
-                                                                    .whiteColor
-                                                                    .withOpacity(
-                                                                        0.96),
-                                                                transitionDuration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            200),
-                                                                pageBuilder: (BuildContext
-                                                                        buildContext,
-                                                                    Animation
-                                                                        animation,
-                                                                    Animation
-                                                                        secondaryAnimation) {
-                                                                  return Material(
-                                                                    child:
-                                                                        Center(
+                                                              showGeneralDialog(
+                                                                  context:
+                                                                      context,
+                                                                  barrierDismissible:
+                                                                      true,
+                                                                  barrierLabel:
+                                                                      MaterialLocalizations.of(
+                                                                              context)
+                                                                          .modalBarrierDismissLabel,
+                                                                  barrierColor: AppColors
+                                                                      .whiteColor
+                                                                      .withOpacity(
+                                                                          0.96),
+                                                                  transitionDuration:
+                                                                      const Duration(
+                                                                          milliseconds:
+                                                                              200),
+                                                                  pageBuilder: (BuildContext
+                                                                          buildContext,
+                                                                      Animation
+                                                                          animation,
+                                                                      Animation
+                                                                          secondaryAnimation) {
+                                                                    return Material(
                                                                       child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          Container(
-                                                                            width: getSize(
-                                                                                303,
-                                                                                "width",
-                                                                                context),
-                                                                            // height: getSize(256, "height", context),
-                                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: AppColors.whiteColor,
-                                                                              borderRadius: BorderRadius.circular(getSize(20, "height", context)),
-                                                                              boxShadow: [
-                                                                                BoxShadow(
-                                                                                  color: Color(0xFF000000).withOpacity(0.11),
-                                                                                  spreadRadius: 5,
-                                                                                  blurRadius: 10,
-                                                                                  offset: Offset(0, 5), // changes position of shadow
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            child:
-                                                                                Container(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  Container(
-                                                                                    width: getSize(100, "height", context),
-                                                                                    height: getSize(100, "height", context),
-                                                                                    padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
-                                                                                    decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius.circular(100),
-                                                                                      color: AppColors.greenColor.withOpacity(0.35),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                        child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(38, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    )),
+                                                                          Center(
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          children: [
+                                                                            Container(
+                                                                              width: getSize(303, "width", context),
+                                                                              // height: getSize(256, "height", context),
+                                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                              decoration: BoxDecoration(
+                                                                                color: AppColors.whiteColor,
+                                                                                borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                boxShadow: [
+                                                                                  BoxShadow(
+                                                                                    color: Color(0xFF000000).withOpacity(0.11),
+                                                                                    spreadRadius: 5,
+                                                                                    blurRadius: 10,
+                                                                                    offset: Offset(0, 5), // changes position of shadow
                                                                                   ),
-                                                                                  SizedBox(
-                                                                                    height: getSize(21, "height", context),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    "Sauvegardé",
-                                                                                    style: AppTheme.defaultParagraph,
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: getSize(12, "height", context),
-                                                                                  ),
-                                                                                  Container(
-                                                                                    width: getSize(220, "width", context),
-                                                                                    child: Text(
-                                                                                      "Votre information a été mise à jours avec succès",
-                                                                                      style: AppTheme.bodyText1.copyWith(
-                                                                                        color: AppColors.blackColor.withOpacity(0.5),
-                                                                                      ),
-                                                                                      textAlign: TextAlign.center,
-                                                                                    ),
-                                                                                  )
                                                                                 ],
                                                                               ),
+                                                                              child: Container(
+                                                                                padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                child: Column(
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      width: getSize(100, "height", context),
+                                                                                      height: getSize(100, "height", context),
+                                                                                      padding: EdgeInsets.symmetric(vertical: getSize(20, "height", context), horizontal: getSize(22, "width", context)),
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(100),
+                                                                                        color: AppColors.greenColor.withOpacity(0.35),
+                                                                                      ),
+                                                                                      child: Center(
+                                                                                        child: Image.asset(
+                                                                                          'assets/images/check-icon.png',
+                                                                                          // height:getSize(0, "height", context),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: getSize(21, "height", context),
+                                                                                    ),
+                                                                                    Text(
+                                                                                      "Sauvegardé",
+                                                                                      style: AppTheme.defaultParagraph,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: getSize(12, "height", context),
+                                                                                    ),
+                                                                                    Container(
+                                                                                      width: getSize(220, "width", context),
+                                                                                      child: Text(
+                                                                                        "Votre information a été mise à jours avec succès",
+                                                                                        style: AppTheme.bodyText1.copyWith(
+                                                                                          color: AppColors.blackColor.withOpacity(0.5),
+                                                                                        ),
+                                                                                        textAlign: TextAlign.center,
+                                                                                      ),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              ),
                                                                             ),
-                                                                          ),
-                                                                        ],
+                                                                          ],
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  );
-                                                                });
-                                                          },
-                                                          textColor:
-                                                              Colors.white,
-                                                          color: Colors
-                                                              .transparent,
-                                                          padding:
-                                                              EdgeInsets.all(0),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                new BorderRadius
-                                                                        .circular(
-                                                                    100.0),
-                                                          ),
-                                                          child: Container(
-                                                            width: getSize(
-                                                                215,
-                                                                "width",
-                                                                context),
-                                                            decoration:
-                                                                BoxDecoration(
+                                                                    );
+                                                                  });
+                                                            },
+                                                            textColor:
+                                                                Colors.white,
+                                                            color: Colors
+                                                                .transparent,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    0),
+                                                            shape:
+                                                                RoundedRectangleBorder(
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          100),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                colors: <Color>[
-                                                                  Color(
-                                                                      0xFFA7BACB),
-                                                                  Color(
-                                                                      0xFF25296A),
-                                                                ],
-                                                              ),
+                                                                  new BorderRadius
+                                                                          .circular(
+                                                                      100.0),
                                                             ),
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(
-                                                                    0,
-                                                                    getSize(
-                                                                        12,
-                                                                        "height",
-                                                                        context),
-                                                                    0,
-                                                                    getSize(
-                                                                        12,
-                                                                        "height",
-                                                                        context)),
-                                                            child: Center(
-                                                                child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                SizedBox(
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .white,
-                                                                    strokeWidth:
-                                                                        1,
-                                                                  ),
-                                                                  height: getSize(
-                                                                      14,
+                                                            child: Container(
+                                                              width: getSize(
+                                                                  215,
+                                                                  "width",
+                                                                  context),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            100),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: <
+                                                                      Color>[
+                                                                    Color(
+                                                                        0xFFA7BACB),
+                                                                    Color(
+                                                                        0xFF25296A),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              padding: EdgeInsets.fromLTRB(
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
                                                                       "height",
                                                                       context),
-                                                                  width: getSize(
-                                                                      14,
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
                                                                       "height",
-                                                                      context),
-                                                                ),
-                                                                Text(
-                                                                  'Sauvegarder',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize: getSize(
-                                                                        18,
+                                                                      context)),
+                                                              child: Center(
+                                                                  child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      strokeWidth:
+                                                                          1,
+                                                                    ),
+                                                                    height: getSize(
+                                                                        14,
                                                                         "height",
                                                                         context),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
+                                                                    width: getSize(
+                                                                        14,
+                                                                        "height",
+                                                                        context),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            )),
+                                                                  Text(
+                                                                    'Sauvegarder',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize: getSize(
+                                                                          18,
+                                                                          "height",
+                                                                          context),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                            ),
                                                           ),
                                                         ),
                                                         SizedBox(
@@ -1181,37 +1178,240 @@ class _MyAppState extends State<MonCompte> {
                           Navigator.of(context).pushNamed(Routes.settings);
                         },
                       ),
-                      Container(
-                        height: getSize(38, "height", context),
-                        child: Row(
-                          children: [
-                            Container(
-                                margin: EdgeInsets.fromLTRB(
-                                    getSize(5, "width", context),
-                                    0,
-                                    getSize(15, "width", context),
-                                    0),
+                      InkWell(
+                        child: Container(
+                          height: getSize(38, "height", context),
+                          child: Row(
+                            children: [
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      getSize(5, "width", context),
+                                      0,
+                                      getSize(15, "width", context),
+                                      0),
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/images/Logout-icon.png',
+                                    height: getSize(24, "height", context),
+                                    width: getSize(24, "width", context),
+                                  )),
+                              Container(
                                 alignment: Alignment.center,
-                                child: Image.asset(
-                                  'assets/images/Logout-icon.png',
-                                  height: getSize(24, "height", context),
-                                  width: getSize(24, "width", context),
-                                )),
-                            Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Quitter l\'application',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        fontSize:
-                                            getSize(14, "height", context),
-                                        fontWeight: FontWeight.w400),
+                                child: Text(
+                                  'Quitter l\'application',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          fontSize:
+                                              getSize(14, "height", context),
+                                          fontWeight: FontWeight.w400),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                        onTap: () {
+                          showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: MaterialLocalizations.of(context)
+                                  .modalBarrierDismissLabel,
+                              barrierColor:
+                                  AppColors.whiteColor.withOpacity(0.96),
+                              transitionDuration:
+                                  const Duration(milliseconds: 200),
+                              pageBuilder: (BuildContext buildContext,
+                                  Animation animation,
+                                  Animation secondaryAnimation) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: getSize(303, "width", context),
+                                        // height: getSize(256, "height", context),
+                                        // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.whiteColor,
+                                          borderRadius: BorderRadius.circular(
+                                              getSize(20, "height", context)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Color(0xFF000000)
+                                                  .withOpacity(0.11),
+                                              spreadRadius: 5,
+                                              blurRadius: 10,
+                                              offset: Offset(0,
+                                                  5), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(getSize(
+                                                  20, "height", context)),
+                                              decoration: BoxDecoration(
+                                                  // color: AppColors.whiteColor,
+                                                  ),
+                                              child: Material(
+                                                elevation: 0,
+                                                color: Colors.white,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Voulez vous vraiment quitter l'application Mapane ?",
+                                                      style: TextStyle(
+                                                        fontSize: getSize(18,
+                                                            "height", context),
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: getSize(29,
+                                                          "height", context),
+                                                    ),
+                                                    Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            height: getSize(
+                                                                36,
+                                                                "height",
+                                                                context),
+                                                            child: FlatButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              textColor:
+                                                                  Colors.white,
+                                                              color: Colors
+                                                                  .transparent,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              child: Container(
+                                                                width: getSize(
+                                                                    155,
+                                                                    "width",
+                                                                    context),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              100),
+                                                                  gradient:
+                                                                      LinearGradient(
+                                                                    colors: <
+                                                                        Color>[
+                                                                      Color(
+                                                                          0xFFA7BACB),
+                                                                      Color(
+                                                                          0xFF25296A),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                padding: EdgeInsets.fromLTRB(
+                                                                    0,
+                                                                    getSize(
+                                                                        5,
+                                                                        "height",
+                                                                        context),
+                                                                    0,
+                                                                    getSize(
+                                                                        5,
+                                                                        "height",
+                                                                        context)),
+                                                                child: Center(
+                                                                    child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Non, je reste',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize: getSize(
+                                                                            18,
+                                                                            "height",
+                                                                            context),
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            child: FlatButton(
+                                                              onPressed: () {
+                                                                SystemNavigator
+                                                                    .pop();
+                                                              },
+                                                              color: Color(
+                                                                  0x162C306F),
+                                                              padding: EdgeInsets.fromLTRB(
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context),
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context)),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            100),
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Oui',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize: getSize(
+                                                                        18,
+                                                                        "height",
+                                                                        context),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ])
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
                       ),
                     ],
                   ),
@@ -1308,6 +1508,7 @@ class _MyAppState extends State<MonCompte> {
                     keyboardType: TextInputType.numberWithOptions(
                         signed: true, decimal: true),
                     inputBorder: OutlineInputBorder(),
+                    spaceBetweenSelectorAndTextField: 0,
                   ),
                 ),
               ),
@@ -1342,10 +1543,9 @@ class NumberSim extends StatelessWidget {
               ),
               alignment: Alignment(-1.2, 0),
             ),
-            trailing: Icon(
-              Icons.check_circle,
-              size: 23.0,
-              color: Color(0xFF25296A),
+            trailing: Image.asset(
+              'assets/images/Flag-CM.png',
+              height: getSize(38, "height", context),
             ),
           ),
         ),

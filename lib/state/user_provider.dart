@@ -11,29 +11,39 @@ import 'base_provider.dart';
 class UserProvider extends BaseProvider{
   // Either<NException,List<User>> alertList = Right([]);
 
-  bool audioVal;
-  bool connectVal;
+  bool audioVal = false;
+  bool connectVal = false;
 
   UserProvider(){
-      print("++++++++++++++++++++++ok+++++++++++++++++");
-      this.getAudioNotification().then((value) {
-        print("valeur des preferences " + value.toString());
-      } );
-      this.getAudioNotification().then((value) => this.audioVal = value );
-      this.getConnectMode().then((value) => this.connectVal = value );
-      print("valeur du booléean " + audioVal.toString());
+      // print("++++++++++++++++++++++ok+++++++++++++++++");
+      // this.getAudioNotification().then((value) {
+      //   print("valeur des preferences " + value.toString());
+      // } );
+      // this.getAudioNotification().then((value) => this.audioVal = value );
+      // this.getConnectMode().then((value) => this.connectVal = value );
+      // print("valeur du booléean " + audioVal.toString());
   }
 
   modifyAudioParam(bool audioVal){
     this.audioVal = audioVal ? false : true;
-    notifyListeners();
     storeAudioNotification(audioVal);
+    notifyListeners();
   }
 
   modifyConnectParam(bool connectVal){
     this.connectVal = connectVal ? false : true;
-    notifyListeners();
     storeConnectMode(connectVal);
+    notifyListeners();
+  }
+
+  setAudioNotification(){
+    this.getAudioNotification().then((value) => this.audioVal = value );
+    notifyListeners();
+  }
+
+  setConnectMode(){
+    this.getConnectMode().then((value) => this.connectVal = value );
+    notifyListeners();
   }
 
   //stockage du domicile
