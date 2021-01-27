@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    zoom: 16,
   );
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -275,6 +275,7 @@ class _HomePageState extends State<HomePage> {
                                                                   itemBuilder:
                                                                       (context,
                                                                           index) {
+                                                                    print(placesResult.toList().toString());
                                                                     return ListTile(
                                                                       leading:
                                                                           SvgPicture

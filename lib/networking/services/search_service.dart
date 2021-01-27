@@ -15,7 +15,7 @@ class SearchService{
               "content-type":"application/json"
             }
         ),);
-
+      print(response.data["features"]);
       return List<Place>.from(((response.data["features"]) as List).map((json){
         return Place.fromJson(json);
       }));
