@@ -10,6 +10,7 @@ import './utils/theme_mapane.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/settings.dart';
+import 'package:mapane/screens/numero_get_ios.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 

@@ -31,7 +31,7 @@ class UserService {
 
   Future<dynamic> registerUser(phone, phonewrite) async {
     var data = {
-      "phone": phone == '' ? phonewrite+'789' : phone+'789',
+      "phone": phone == '' ? phonewrite : phone,
       "type": "user",
       "password": "12345678",
     };
@@ -44,7 +44,6 @@ class UserService {
               data: data);
 
       if (response.statusCode == 200) {
-        print(response.data["user"]);
         final test = "";
         response.data["user"].forEach((key, val) {
           if (key == "_id") {
@@ -75,10 +74,7 @@ class UserService {
     String userPhone = await _preferences.get('user_phone');
     String userDomicile = await _preferences.get('user_domicile');
     userDomicile = userDomicile == null ? '':userDomicile;
-    print(userPhone);
-    print(userId);
     var data = {};
-    print(locator<Di>().apiUrl + "/edit/"+userId);
     if (phone == 0) {
       data = {
         "phone": userPhone,
@@ -89,9 +85,7 @@ class UserService {
         "phone": phone == '' ? phonewrite : phone,
         "residence": domicile == 0 ? userDomicile : domicile,
       };
-      print(data);
     }
-    print(data);
     try {
       Response response =
           await locator<Di>().dio.put(locator<Di>().apiUrl + "/edit/"+userId,
@@ -101,16 +95,16 @@ class UserService {
               data: data);
 
       if (response.statusCode == 200) {
-        // Future<SharedPreferences> instance = SharedPreferences.getInstance();
-        // if (phone == 0) {
-        //   SharedPreferenceHelper(instance)
-        //       .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
-        // } else {
-        //   SharedPreferenceHelper(instance)
-        //       .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
-        //   SharedPreferenceHelper(instance)
-        //       .storeData("user_phone", phone == '' ? phonewrite : phone, "string");
-        // }
+        Future<SharedPreferences> instance = SharedPreferences.getInstance();
+        if (phone == 0) {
+          SharedPreferenceHelper(instance)
+              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
+        } else {
+          SharedPreferenceHelper(instance)
+              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
+          SharedPreferenceHelper(instance)
+              .storeData("user_phone", phone == '' ? phonewrite : phone, "string");
+        }
         return response.data["message"];
       } else {
         return response;
