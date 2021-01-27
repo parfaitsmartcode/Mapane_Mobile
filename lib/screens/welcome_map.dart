@@ -138,10 +138,7 @@ class _MyAppState extends State<WelcomeMap> {
                                   .bodyText1
                                   .copyWith(
                                       fontSize: getSize(12, "height", context)),
-                              unselectedLabelStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
+                              unselectedLabelStyle: TextStyle(
                                       color: Colors.black,
                                       fontSize: getSize(12, "height", context)),
                               labelColor: Color(0xFF25296A),
@@ -193,7 +190,7 @@ class _MyAppState extends State<WelcomeMap> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical:
-                                            getSize(46, "height", context),
+                                            getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -251,7 +248,7 @@ class _MyAppState extends State<WelcomeMap> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical:
-                                            getSize(46, "height", context),
+                                            getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -325,7 +322,7 @@ class _MyAppState extends State<WelcomeMap> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical:
-                                            getSize(46, "height", context),
+                                            getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -397,7 +394,7 @@ class _MyAppState extends State<WelcomeMap> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical:
-                                            getSize(46, "height", context),
+                                            getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -477,8 +474,8 @@ class SkeletonColumn extends StatelessWidget {
       children: [
         SkeletonAnimation(
           child: Container(
-            width: 215.0,
-            height: 21.0,
+            width: getSize(215, "width", context),
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -492,11 +489,11 @@ class SkeletonColumn extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 11,
+          height: getSize(11, "height", context),
         ),
         SkeletonAnimation(
           child: Container(
-            height: 21.0,
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -515,8 +512,8 @@ class SkeletonColumn extends StatelessWidget {
         ),
         SkeletonAnimation(
           child: Container(
-            width: 215.0,
-            height: 21.0,
+            width: getSize(215, "width", context),
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -530,11 +527,11 @@ class SkeletonColumn extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 11,
+          height: getSize(11, "height", context),
         ),
         SkeletonAnimation(
           child: Container(
-            height: 21.0,
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -553,8 +550,8 @@ class SkeletonColumn extends StatelessWidget {
         ),
         SkeletonAnimation(
           child: Container(
-            width: 215.0,
-            height: 21.0,
+            width: getSize(215, "width", context),
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -568,11 +565,11 @@ class SkeletonColumn extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 11,
+          height: getSize(11, "height", context),
         ),
         SkeletonAnimation(
           child: Container(
-            height: 21.0,
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -591,8 +588,8 @@ class SkeletonColumn extends StatelessWidget {
         ),
         SkeletonAnimation(
           child: Container(
-            width: 215.0,
-            height: 21.0,
+            width: getSize(215, "width", context),
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -606,11 +603,11 @@ class SkeletonColumn extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 11,
+          height: getSize(11, "height", context),
         ),
         SkeletonAnimation(
           child: Container(
-            height: 21.0,
+            height: getSize(21, "height", context),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
@@ -702,7 +699,7 @@ class _MaterialModalState extends State<MaterialModal> {
       padding: EdgeInsets.symmetric(
           vertical: 0, horizontal: getSize(0, "width", context)),
       child: Container(
-        height: 350,
+        height: getSize(350, "height", context),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15), topRight: Radius.circular(15)),
@@ -710,7 +707,7 @@ class _MaterialModalState extends State<MaterialModal> {
         child: Column(
           children: [
             SizedBox(
-              width: 54,
+              width: getSize(54.35, "width", context),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
                 child: Divider(thickness: 4, color: Color(0x26000000)),
