@@ -20,7 +20,12 @@ class Alert extends StatelessWidget {
         CircleAvatar(
           backgroundColor: color,
           radius: radius,
-          child: picture,
+          child: Center(
+            child: picture
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.blockSizeVertical
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -29,6 +34,10 @@ class Alert extends StatelessWidget {
               child: Text(
                 title,
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize : 12.0,
+                  color: Colors.grey
+                )
                 //overflow: TextOverflow.clip,
               ),
             ),

@@ -9,6 +9,7 @@ import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
+import 'package:mapane/utils/hexcolor.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -24,10 +25,10 @@ class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
   final _startPointController = TextEditingController();
-  Icon swiperIcon = Icon(
-    Icons.keyboard_arrow_up,
-    color: Colors.grey,
-    size: 30.0,
+  Widget swiperIcon = Icon(
+      Icons.keyboard_arrow_up_sharp,
+      color: Colors.grey,
+      size: 30.0
   );
 
   Completer<GoogleMapController> _controller = Completer();
@@ -102,24 +103,30 @@ class _HomePageState extends State<HomePage> {
                       UtilButton(
                         height: SizeConfig.blockSizeVertical * 6,
                         width: SizeConfig.blockSizeHorizontal * 13,
-                        icon: Icon(Icons.volume_up_rounded),
+                        icon: SvgPicture.asset(
+                          Assets.soundIcon,
+                        ),
                       ),
                       UtilButton(
                         height: SizeConfig.blockSizeVertical * 6,
                         width: SizeConfig.blockSizeHorizontal * 13,
-                        icon: Icon(Icons.zoom_in),
+                        icon: SvgPicture.asset(
+                          Assets.zoomPlusIcon,
+                        ),
                       ),
                       UtilButton(
                         height: SizeConfig.blockSizeVertical * 6,
                         width: SizeConfig.blockSizeHorizontal * 13,
-                        icon: Icon(Icons.zoom_out),
+                        icon: SvgPicture.asset(
+                          Assets.zoomMinIcon,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               AnimatedPadding(
-                duration: Duration(seconds: 1),
+                duration: Duration(milliseconds: 500),
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
                         ? SizeConfig.blockSizeVertical * 15
@@ -289,9 +296,8 @@ class _HomePageState extends State<HomePage> {
                     },
                     height: SizeConfig.blockSizeVertical * 8,
                     width: SizeConfig.blockSizeHorizontal * 17,
-                    icon: Icon(
-                      Icons.search,
-                      size: 35.0,
+                    icon: SvgPicture.asset(
+                      Assets.searchIcon,
                     ),
                   ),
                 ),
@@ -312,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                         color: isExpanded
                             ? Colors.white
                             : Colors.white.withOpacity(0.3)),
-                    duration: Duration(seconds: 1),
+                    duration: Duration(milliseconds: 500),
                     child: Stack(
                       overflow: Overflow.visible,
                       children: [
@@ -331,15 +337,12 @@ class _HomePageState extends State<HomePage> {
                                 }
                               });
                             },
-                            child: CircleAvatar(
-                                radius: 15.0,
-                                backgroundColor: Colors.blueGrey,
-                                child: Center(child: swiperIcon)),
+                            child: swiperIcon,
                           ),
                         ),
                         isExpanded ?
                       Padding(
-                        padding:  EdgeInsets.only(top: SizeConfig.blockSizeVertical * 6 , left: SizeConfig.blockSizeHorizontal * 5 , right: SizeConfig.blockSizeHorizontal * 5),
+                        padding:  EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5 , left: SizeConfig.blockSizeHorizontal * 5 , right: SizeConfig.blockSizeHorizontal * 5),
                         child: Align(
                             alignment: Alignment.center,
                             child: GridView(
@@ -351,65 +354,75 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisSpacing: 20.0
                               ),
                               children: [
-                                Alert(
-                                  title: "Embouteillage",
-                                  color: Colors.yellow[200].withOpacity(0.5),
-                                  picture:SvgPicture.asset(
-                                    Assets.trafficIcon,
+                                Padding(
+                                  padding:EdgeInsets.only(bottom: SizeConfig.blockSizeVertical),
+                                  child: Alert(
+                                    title: "Embouteillage",
+                                    color: HexColor("#FECE4C").withOpacity(0.25),
+                                    picture:SvgPicture.asset(
+                                      Assets.trafficIcon,
+                                    ),
+                                    radius: 30.0,
                                   ),
-                                  radius: 35.0,
                                 ),
                                 Alert(
                                   title: "Contrôle routier",
-                                  color: Colors.blue[200],
+                                  color: HexColor("#69BFFD").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.policeIcon,
                                   ),
-                                  radius: 35.0,
+                                  radius: 30.0,
                                 ),
                                 Alert(
                                   title: "Zône dangereuse",
-                                  color: Colors.redAccent[200].withOpacity(0.3),
+                                  color: HexColor("#FD4B89").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.dangerIcon,
                                   ),
-                                  radius: 35.0,
+                                  radius: 30.0,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical),
+                                  child: Alert(
+                                    title: "Radar",
+                                    color: HexColor("#4BB38F").withOpacity(0.25),
+                                    picture:SvgPicture.asset(
+                                      Assets.radarIcon,
+                                    ),
+                                    radius: 30.0,
+                                  ),
                                 ),
                                 Alert(
-                                  title: "Radar",
-                                  color: Colors.greenAccent[200].withOpacity(0.5),
-                                  picture:SvgPicture.asset(
-                                    Assets.radarIcon,
-                                  ),
-                                  radius: 35.0,
-                                ), Alert(
                                   title: "Accident de circulation",
-                                  color: Colors.blueAccent[200].withOpacity(0.7),
+                                  color: HexColor("#2C2BFB").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.accidentIcon,
                                   ),
-                                  radius: 35.0,
-                                ), Alert(
+                                  radius: 30.0,
+                                ),
+                                Alert(
                                   title: "Route en barrée",
-                                  color: Colors.greenAccent[200],
+                                  color: HexColor("#2EDACD").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.roadblockIcon,
                                   ),
-                                  radius: 35.0,
-                                ), Alert(
+                                  radius: 30.0,
+                                ),
+                                Alert(
                                   title: "Route en chantier",
-                                  color: Colors.brown[200].withOpacity(0.5),
+                                  color: HexColor("#CBAB81").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.highwayIcon,
                                   ),
-                                  radius: 35.0,
-                                ), Alert(
+                                  radius: 30.0,
+                                ),
+                                Alert(
                                   title: "Publier ma position",
-                                  color: Colors.grey[200],
+                                  color: HexColor("#000000").withOpacity(0.25),
                                   picture:SvgPicture.asset(
                                     Assets.pathIcon,
                                   ),
-                                  radius: 35.0,
+                                  radius: 30.0,
                                 ),
                               ],
                             ),
@@ -421,10 +434,10 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         if (!isExpanded) {
                           swiperIcon = Icon(
-                            Icons.keyboard_arrow_up,
-                            color: Colors.grey,
-                            size: 30.0,
-                          );
+                              Icons.keyboard_arrow_up_sharp,
+                              color: Colors.grey,
+                              size: 30.0
+                            );
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
@@ -432,27 +445,15 @@ class _HomePageState extends State<HomePage> {
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white);
-                          swiperIcon = Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.grey,
-                            size: 30.0,
+                          swiperIcon = SvgPicture.asset(
+                            Assets.arrowDownIcon,
                           );
                         }
                       });
                     },
                   ),
                 ),
-              ),
-              /*Align(
-                alignment: Alignment.bottomCenter,
-                child: Card(
-                  elevation: 10.0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: 200,
-                  ),
-                )
-              ),*/
+              )
             ],
           ),
         ));

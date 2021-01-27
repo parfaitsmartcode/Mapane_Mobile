@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UtilButton extends StatelessWidget {
-  final Icon icon;
+  final Widget icon;
   final double height;
   final double width;
   final Function onTap;
