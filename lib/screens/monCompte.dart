@@ -358,7 +358,7 @@ class _MyAppState extends State<MonCompte> {
                                                                     barrierColor: AppColors
                                                                         .whiteColor
                                                                         .withOpacity(
-                                                                            0.96),
+                                                                            0),
                                                                     transitionDuration:
                                                                         const Duration(
                                                                             milliseconds:
@@ -916,7 +916,7 @@ class _MyAppState extends State<MonCompte> {
                                                                   barrierColor: AppColors
                                                                       .whiteColor
                                                                       .withOpacity(
-                                                                          0.96),
+                                                                          0),
                                                                   transitionDuration:
                                                                       const Duration(
                                                                           milliseconds:
