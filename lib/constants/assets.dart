@@ -19,5 +19,6 @@ class Assets {
   static const String zoomMinIcon = "assets/icons/Zoom-min-icon.svg";
   static const String zoomPlusIcon = "assets/icons/Zoom-plus-icon.svg";
   static const String arrowDownIcon = "assets/icons/Dropdown-button.svg";
+  static const String arrowUpIcon = "assets/icons/Dropup-button.svg";
 
 }
