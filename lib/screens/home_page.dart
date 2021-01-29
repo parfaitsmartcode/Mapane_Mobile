@@ -89,6 +89,10 @@ class _HomePageState extends State<HomePage> {
     // set the initial location
     setInitialLocation();
   }
+  Future<void> _goTo() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(

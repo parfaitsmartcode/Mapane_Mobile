@@ -20,5 +20,7 @@ class Assets {
   static const String zoomPlusIcon = "assets/icons/Zoom-plus-icon.svg";
   static const String arrowDownIcon = "assets/icons/Dropdown-button.svg";
   static const String arrowUpIcon = "assets/icons/Dropup-button.svg";
+  static const String locationIcon = "assets/icons/user-localisation.svg";
+  static const String mapPin= "assets/icons/Map pin.svg";
 
 }

@@ -4,6 +4,7 @@ import 'package:mapane/screens/home_page.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/screens/tabs_page.dart';
+import 'package:mapane/screens/test.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: TabsPage(),
+      home: Test(),//TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );
