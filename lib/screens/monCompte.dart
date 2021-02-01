@@ -1253,12 +1253,12 @@ class _MyAppState extends State<MonCompte> {
                                                                 .fromLTRB(
                                                                     0,
                                                                     getSize(
-                                                                        12,
+                                                                        5,
                                                                         "height",
                                                                         context),
                                                                     0,
                                                                     getSize(
-                                                                        12,
+                                                                        5,
                                                                         "height",
                                                                         context)),
                                                             child: Center(
@@ -1392,37 +1392,240 @@ class _MyAppState extends State<MonCompte> {
                           Navigator.of(context).pushNamed(Routes.settings);
                         },
                       ),
-                      Container(
-                        height: getSize(38, "height", context),
-                        child: Row(
-                          children: [
-                            Container(
-                                margin: EdgeInsets.fromLTRB(
-                                    getSize(5, "width", context),
-                                    0,
-                                    getSize(15, "width", context),
-                                    0),
+                      InkWell(
+                        child: Container(
+                          height: getSize(38, "height", context),
+                          child: Row(
+                            children: [
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      getSize(5, "width", context),
+                                      0,
+                                      getSize(15, "width", context),
+                                      0),
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/images/Logout-icon.png',
+                                    height: getSize(24, "height", context),
+                                    width: getSize(24, "width", context),
+                                  )),
+                              Container(
                                 alignment: Alignment.center,
-                                child: Image.asset(
-                                  'assets/images/Logout-icon.png',
-                                  height: getSize(24, "height", context),
-                                  width: getSize(24, "width", context),
-                                )),
-                            Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Quitter l\'application',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        fontSize:
-                                            getSize(14, "height", context),
-                                        fontWeight: FontWeight.w400),
+                                child: Text(
+                                  'Quitter l\'application',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          fontSize:
+                                              getSize(14, "height", context),
+                                          fontWeight: FontWeight.w400),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                        onTap: () {
+                          showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: MaterialLocalizations.of(context)
+                                  .modalBarrierDismissLabel,
+                              barrierColor:
+                                  AppColors.whiteColor.withOpacity(0.96),
+                              transitionDuration:
+                                  const Duration(milliseconds: 200),
+                              pageBuilder: (BuildContext buildContext,
+                                  Animation animation,
+                                  Animation secondaryAnimation) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: getSize(303, "width", context),
+                                        // height: getSize(256, "height", context),
+                                        // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.whiteColor,
+                                          borderRadius: BorderRadius.circular(
+                                              getSize(20, "height", context)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Color(0xFF000000)
+                                                  .withOpacity(0.11),
+                                              spreadRadius: 5,
+                                              blurRadius: 10,
+                                              offset: Offset(0,
+                                                  5), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(getSize(
+                                                  20, "height", context)),
+                                              decoration: BoxDecoration(
+                                                  // color: AppColors.whiteColor,
+                                                  ),
+                                              child: Material(
+                                                elevation: 0,
+                                                color: Colors.white,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Voulez vous vraiment quitter l'application Mapane ?",
+                                                      style: TextStyle(
+                                                        fontSize: getSize(18,
+                                                            "height", context),
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: getSize(29,
+                                                          "height", context),
+                                                    ),
+                                                    Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            height: getSize(
+                                                                36,
+                                                                "height",
+                                                                context),
+                                                            child: FlatButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              textColor:
+                                                                  Colors.white,
+                                                              color: Colors
+                                                                  .transparent,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              child: Container(
+                                                                width: getSize(
+                                                                    155,
+                                                                    "width",
+                                                                    context),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              100),
+                                                                  gradient:
+                                                                      LinearGradient(
+                                                                    colors: <
+                                                                        Color>[
+                                                                      Color(
+                                                                          0xFFA7BACB),
+                                                                      Color(
+                                                                          0xFF25296A),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                padding: EdgeInsets.fromLTRB(
+                                                                    0,
+                                                                    getSize(
+                                                                        5,
+                                                                        "height",
+                                                                        context),
+                                                                    0,
+                                                                    getSize(
+                                                                        5,
+                                                                        "height",
+                                                                        context)),
+                                                                child: Center(
+                                                                    child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Non, je reste',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize: getSize(
+                                                                            18,
+                                                                            "height",
+                                                                            context),
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            child: FlatButton(
+                                                              onPressed: () {
+                                                                SystemNavigator
+                                                                    .pop();
+                                                              },
+                                                              color: Color(
+                                                                  0x162C306F),
+                                                              padding: EdgeInsets.fromLTRB(
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context),
+                                                                  0,
+                                                                  getSize(
+                                                                      5,
+                                                                      "height",
+                                                                      context)),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            100),
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Oui',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize: getSize(
+                                                                        18,
+                                                                        "height",
+                                                                        context),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ])
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
                       ),
                     ],
                   ),

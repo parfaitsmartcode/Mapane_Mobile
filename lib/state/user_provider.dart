@@ -20,21 +20,28 @@ class UserProvider extends BaseProvider{
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
-      print("++++++++++++++++++++++ok+++++++++++++++++");
       this.getAudioNotification().then((value) {
         print("valeur des preferences " + value.toString());
       } );
       this.getAudioNotification().then((value) => this.audioVal = value );
       this.getConnectMode().then((value) => this.connectVal = value );
-      print("valeur du booléean " + audioVal.toString());
+      print("valeur du booléean " + this.audioVal.toString());
       this.userPhone = "+237";
       this.userDomicile = " ";
+      this.audioVal = false;
+      this.connectVal = false;
   }
 
-  modifyAudioParam(bool audioVal){
-    this.audioVal = audioVal ? false : true;
+  modifyAudioParam(test){
+    audioVal = test;
     notifyListeners();
     storeAudioNotification(audioVal);
+  }
+
+  modifyConnectParam(test){
+    connectVal = test;
+    notifyListeners();
+    storeConnectMode(connectVal);
   }
 
   getUserPhone() async {
@@ -51,10 +58,14 @@ class UserProvider extends BaseProvider{
     domicilecontroller.text = userDomicile == null ? '' : userDomicile;
   }
 
-  modifyConnectParam(bool connectVal){
-    this.connectVal = connectVal ? false : true;
+  setAudioNotification(){
+    this.getAudioNotification().then((value) => this.audioVal = value );
     notifyListeners();
-    storeConnectMode(connectVal);
+  }
+
+  setConnectMode(){
+    this.getConnectMode().then((value) => this.connectVal = value );
+    notifyListeners();
   }
 
   //stockage du domicile

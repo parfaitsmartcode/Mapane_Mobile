@@ -20,6 +20,8 @@ class _MyAppState extends State<Settings> {
   @override
   void initState() {
     super.initState();
+    userProvider.setAudioNotification();
+    userProvider.setConnectMode();
   }
 
   @override
@@ -60,8 +62,8 @@ class _MyAppState extends State<Settings> {
                             height: getSize(485, "height", context),
                             child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: getSize(24, "width", context),
-                                    vertical: getSize(23, "height", context)),
+                                    horizontal: getSize(23, "height", context),
+                                    vertical: getSize(24, "width", context)),
                                 child: Center(
                                     child: Column(children: [
                                   Row(
@@ -87,7 +89,7 @@ class _MyAppState extends State<Settings> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: getSize(46, "height", context),
+                                    height: getSize(42, "height", context),
                                   ),
                                   Row(
                                     children: [
@@ -95,33 +97,55 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Sound-icon.png',
-                                          height: getSize(17, "height", context),
+                                          height: getSize(20, "width", context),
                                         ),
                                       ),
                                       Container(
-                                        width: getSize(160, "width", context),
-                                        child: Text(
-                                          'Notifications audio',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: FlutterSwitch(
-                                          width: getSize(40, "width", context),
-                                          height: getSize(20, "height", context),
-                                          activeColor: Color(0xFF25296A).withOpacity(.2),
-                                          inactiveColor: Color(0xFF25296A).withOpacity(.2),
-                                          activeToggleColor: Color(0xFF25296A),
-                                          value: context.watch<UserProvider>().audioVal,
-                                          borderRadius: 100.0,
-                                          onToggle: (val) {
-                                            setState(() {
-                                              context.read<UserProvider>().modifyAudioParam(val);
-                                            });
-                                          },
+                                        width: getSize(200, "width", context),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              // width: getSize(160, "width", context),
+                                              child: Text(
+                                                'Notifications audio',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: getSize(
+                                                        14, "height", context),
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: FlutterSwitch(
+                                                padding: 2,
+                                                toggleSize: getSize(
+                                                    18, "width", context),
+                                                width: getSize(
+                                                    36, "width", context),
+                                                height: getSize(
+                                                    20, "height", context),
+                                                activeColor: Color(0xFF25296A)
+                                                    .withOpacity(.2),
+                                                inactiveColor: Color(0xFF25296A)
+                                                    .withOpacity(.2),
+                                                activeToggleColor:
+                                                    Color(0xFF25296A),
+                                                value: context
+                                                    .watch<UserProvider>()
+                                                    .audioVal,
+                                                borderRadius: 100.0,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    context
+                                                        .read<UserProvider>()
+                                                        .modifyAudioParam(val);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -135,35 +159,59 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Link-icon.png',
-                                          height: getSize(17, "height", context),
+                                          height: getSize(20, "width", context),
                                         ),
                                       ),
                                       Container(
-                                        width: getSize(160, "width", context),
-                                        child: Text(
-                                          'Mode non connecté',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: FlutterSwitch(
-                                          width: getSize(40, "width", context),
-                                          height: getSize(20, "height", context),
-                                          activeColor: Color(0xFF25296A).withOpacity(.2),
-                                          inactiveColor: Color(0xFF25296A).withOpacity(.2),
-                                          activeToggleColor: Color(0xFF25296A),
-                                          value: context.watch<UserProvider>().connectVal,
-                                          borderRadius: 100.0,
-                                          onToggle: (val) {
-                                            setState(() {
-                                              context.read<UserProvider>().modifyConnectParam(val);
-                                            });
-                                          },
-                                        ),
-                                      ),
+                                          width: getSize(200, "width", context),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                // width: getSize(160, "width", context),
+                                                child: Text(
+                                                  'Mode non connecté',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: getSize(14,
+                                                          "height", context),
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              Container(
+                                                child: FlutterSwitch(
+                                                  padding: 2,
+                                                  toggleSize: getSize(
+                                                      18, "width", context),
+                                                  width: getSize(
+                                                      36, "width", context),
+                                                  height: getSize(
+                                                      20, "height", context),
+                                                  activeColor: Color(0xFF25296A)
+                                                      .withOpacity(.2),
+                                                  inactiveColor:
+                                                      Color(0xFF25296A)
+                                                          .withOpacity(.2),
+                                                  activeToggleColor:
+                                                      Color(0xFF25296A),
+                                                  value: context
+                                                      .watch<UserProvider>()
+                                                      .connectVal,
+                                                  borderRadius: 100.0,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      context
+                                                          .read<UserProvider>()
+                                                          .modifyConnectParam(
+                                                              val);
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          )), 
                                     ],
                                   ),
                                   SizedBox(
@@ -175,7 +223,7 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/FIle-icon.png',
-                                          height: getSize(17, "height", context),
+                                          height: getSize(20, "width", context),
                                         ),
                                       ),
                                       Container(
@@ -184,7 +232,8 @@ class _MyAppState extends State<Settings> {
                                           'Termes et conditions',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 14,
+                                              fontSize: getSize(
+                                                  14, "height", context),
                                               color: Colors.black),
                                         ),
                                       ),
@@ -199,7 +248,7 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Info-icon.png',
-                                          height: getSize(17, "height", context),
+                                          height: getSize(20, "width", context),
                                         ),
                                       ),
                                       Container(
@@ -208,7 +257,8 @@ class _MyAppState extends State<Settings> {
                                           'A Propos',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 14,
+                                              fontSize: getSize(
+                                                  14, "height", context),
                                               color: Colors.black),
                                         ),
                                       ),
@@ -223,7 +273,7 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Help-icon.png',
-                                          height: getSize(17, "height", context),
+                                          height: getSize(20, "width", context),
                                         ),
                                       ),
                                       Container(
@@ -232,7 +282,8 @@ class _MyAppState extends State<Settings> {
                                           'Aide',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 14,
+                                              fontSize: getSize(
+                                                  14, "height", context),
                                               color: Colors.black),
                                         ),
                                       ),
