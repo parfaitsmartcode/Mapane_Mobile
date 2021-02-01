@@ -144,7 +144,7 @@ class _MyAppState extends State<MonCompte> {
                           boxShadow: Elevation.low,
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.circular(
-                              getSize(19, "height", context)),
+                              getSize(100, "height", context)),
                         ),
                         // padding: EdgeInsets.all(4),
                         width: getSize(39, "width", context),
@@ -152,7 +152,7 @@ class _MyAppState extends State<MonCompte> {
                         child: Center(
                           child: Image.asset(
                             'assets/images/Logo-small.png',
-                            height: getSize(21, "height", context),
+                            height: getSize(20, "height", context),
                           ),
                         ),
                       )
