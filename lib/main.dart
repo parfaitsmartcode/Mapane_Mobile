@@ -22,7 +22,6 @@ void main() {
       ],
       child:  MyApp(),
     )
-
   );
 }
 
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: Test(),//TabsPage(),
+      home: TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );
