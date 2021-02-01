@@ -5,7 +5,6 @@ import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/utils/size_config.dart';
-import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -14,9 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
-import 'package:mapane/state/CategoryState.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mapane/utils/shared_preference_helper.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override

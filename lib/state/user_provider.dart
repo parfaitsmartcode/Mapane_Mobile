@@ -5,6 +5,7 @@ import 'package:mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
+import 'package:flutter/material.dart';
 
 
 
@@ -13,6 +14,10 @@ class UserProvider extends BaseProvider{
 
   bool audioVal;
   bool connectVal;
+  bool getval;
+  String userPhone;
+  String userDomicile;
+  final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
       print("++++++++++++++++++++++ok+++++++++++++++++");
@@ -22,12 +27,28 @@ class UserProvider extends BaseProvider{
       this.getAudioNotification().then((value) => this.audioVal = value );
       this.getConnectMode().then((value) => this.connectVal = value );
       print("valeur du booléean " + audioVal.toString());
+      this.userPhone = "+237";
+      this.userDomicile = " ";
   }
 
   modifyAudioParam(bool audioVal){
     this.audioVal = audioVal ? false : true;
     notifyListeners();
     storeAudioNotification(audioVal);
+  }
+
+  getUserPhone() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    userPhone = await _preferences.get('user_phone');
+    return userPhone;
+  }
+
+  getUserDomicile() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    userDomicile = await _preferences.get('user_domicile');
+    userDomicile = userDomicile == null ? '' : userDomicile;
+    notifyListeners();
+    domicilecontroller.text = userDomicile == null ? '' : userDomicile;
   }
 
   modifyConnectParam(bool connectVal){
@@ -38,7 +59,14 @@ class UserProvider extends BaseProvider{
 
   //stockage du domicile
   storeDomicile(domicile){
-    return userService.updateHouse(0,0,domicile);
+    this.toggleLoadingState();
+    userService.updateHouse(0, 0, domicile).then((data){
+      userData = Right(data);
+      this.toggleLoadingState();
+    }).catchError((error){
+      userData = Left(error);
+      this.toggleLoadingState();
+    });
   }
 
   //stockage du domicile

@@ -11,6 +11,7 @@ import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:mapane/screens/settings.dart';
+import 'package:mapane/state/LoadingState.dart';
 
 class MonCompte extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class MonCompte extends StatefulWidget {
 
 class _MyAppState extends State<MonCompte> {
   String newDomicile = "";
+  String oldDomicile = "";
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
   String _mobileNumberPhoneWrite = '';
@@ -38,6 +40,8 @@ class _MyAppState extends State<MonCompte> {
   @override
   void initState() {
     super.initState();
+    context.read<UserProvider>().getUserPhone();
+    context.read<UserProvider>().getUserDomicile();
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
         initMobileNumberState();
@@ -73,6 +77,7 @@ class _MyAppState extends State<MonCompte> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = context.watch<UserProvider>();
     return context.watch<BottomBarProvider>().widgetToDisplay ? Settings() : Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -129,7 +134,7 @@ class _MyAppState extends State<MonCompte> {
                                     ),
                           ),
                           Text(
-                            "+237 690348765",
+                            context.watch<UserProvider>().userPhone,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline3
@@ -340,9 +345,6 @@ class _MyAppState extends State<MonCompte> {
                                                                 context),
                                                                                                                   child: RaisedButton(
                                                             onPressed: () {
-                                                              setState(() {
-                                                                _loading = true;
-                                                              });
                                                               userService
                                                                   .updateHouse(
                                                                       _mobileNumberPhone,
@@ -452,10 +454,6 @@ class _MyAppState extends State<MonCompte> {
                                                                       );
                                                                     });
 
-                                                                setState(() {
-                                                                  _loading =
-                                                                      false;
-                                                                });
                                                               }).catchError(
                                                                       (onError) {
                                                                 showGeneralDialog(
@@ -561,10 +559,7 @@ class _MyAppState extends State<MonCompte> {
                                                                       );
                                                                     });
 
-                                                                setState(() {
-                                                                  _loading =
-                                                                      false;
-                                                                });
+                                                                
                                                               });
                                                             },
                                                             textColor:
@@ -619,8 +614,8 @@ class _MyAppState extends State<MonCompte> {
                                                                     MainAxisAlignment
                                                                         .center,
                                                                 children: [
-                                                                  _loading
-                                                                      ? SizedBox(
+                                                                  provider.loadingState ==
+                                                LoadingState.loading ? SizedBox(
                                                                           child:
                                                                               CircularProgressIndicator(
                                                                             backgroundColor:
@@ -827,6 +822,7 @@ class _MyAppState extends State<MonCompte> {
                                                           child: Drawer(
                                                             elevation: 0,
                                                             child: TextField(
+                                                              controller: TextEditingController(text:provider.userDomicile),
                                                               onChanged:
                                                                   (value) {
                                                                 newDomicile =
@@ -899,114 +895,325 @@ class _MyAppState extends State<MonCompte> {
                                                             // Actuelle
                                                             if (newDomicile !=
                                                                 "") {
-                                                              userProvider
-                                                                  .storeDomicile(
-                                                                      newDomicile);
+                                                              
+                                                              userService
+                                                                  .updateHouse(
+                                                                      0,
+                                                                      0,
+                                                                      newDomicile)
+                                                                  .then((value) {
+                                                                showGeneralDialog(
+                                                                    context:
+                                                                        context,
+                                                                    barrierDismissible:
+                                                                        true,
+                                                                    barrierLabel:
+                                                                        MaterialLocalizations.of(
+                                                                                context)
+                                                                            .modalBarrierDismissLabel,
+                                                                    barrierColor: AppColors
+                                                                        .whiteColor
+                                                                        .withOpacity(
+                                                                            0.96),
+                                                                    transitionDuration:
+                                                                        const Duration(
+                                                                            milliseconds:
+                                                                                200),
+                                                                    pageBuilder: (BuildContext
+                                                                            buildContext,
+                                                                        Animation
+                                                                            animation,
+                                                                        Animation
+                                                                            secondaryAnimation) {
+                                                                      return Center(
+                                                                        child:
+                                                                            Card(
+                                                                          shadowColor:
+                                                                              Colors.transparent,
+                                                                          margin: EdgeInsets.symmetric(
+                                                                              horizontal:
+                                                                                  0,
+                                                                              vertical:
+                                                                                  0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: getSize(303, "width", context),
+                                                                                // height: getSize(256, "height", context),
+                                                                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: AppColors.whiteColor,
+                                                                                  borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                  boxShadow: [
+                                                                                    BoxShadow(
+                                                                                      color: Color(0xFF000000).withOpacity(0.11),
+                                                                                      spreadRadius: 5,
+                                                                                      blurRadius: 10,
+                                                                                      offset: Offset(0, 5), // changes position of shadow
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                child: Container(
+                                                                                  padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: getSize(100, "height", context),
+                                                                                        height: getSize(100, "height", context),
+                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                        decoration: BoxDecoration(
+                                                                                          borderRadius: BorderRadius.circular(100),
+                                                                                          color: AppColors.greenColor.withOpacity(0.35),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Icon(
+                                                                                          Icons.check,
+                                                                                          size: getSize(38, "height", context),
+                                                                                          color: AppColors.greenColor,
+                                                                                        )),
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(21, "height", context),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        "Sauvegardé",
+                                                                                        style: AppTheme.defaultParagraph,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(12, "height", context),
+                                                                                      ),
+                                                                                      Container(
+                                                                                        width: getSize(220, "width", context),
+                                                                                        child: Text(
+                                                                                          value,
+                                                                                          style: AppTheme.bodyText1.copyWith(
+                                                                                            color: AppColors.blackColor.withOpacity(0.5),
+                                                                                          ),
+                                                                                          textAlign: TextAlign.center,
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+
+                                                              }).catchError(
+                                                                      (onError) {
+                                                                showGeneralDialog(
+                                                                    context:
+                                                                        context,
+                                                                    barrierDismissible:
+                                                                        true,
+                                                                    barrierLabel:
+                                                                        MaterialLocalizations.of(
+                                                                                context)
+                                                                            .modalBarrierDismissLabel,
+                                                                    barrierColor: AppColors
+                                                                        .whiteColor
+                                                                        .withOpacity(
+                                                                            0.96),
+                                                                    transitionDuration:
+                                                                        const Duration(
+                                                                            milliseconds:
+                                                                                200),
+                                                                    pageBuilder: (BuildContext
+                                                                            buildContext,
+                                                                        Animation
+                                                                            animation,
+                                                                        Animation
+                                                                            secondaryAnimation) {
+                                                                      return Center(
+                                                                        child:
+                                                                            Card(
+                                                                          shadowColor:
+                                                                              Colors.transparent,
+                                                                          margin: EdgeInsets.symmetric(
+                                                                              horizontal:
+                                                                                  0,
+                                                                              vertical:
+                                                                                  0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: getSize(303, "width", context),
+                                                                                // height: getSize(256, "height", context),
+                                                                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: AppColors.whiteColor,
+                                                                                  borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                  boxShadow: [
+                                                                                    BoxShadow(
+                                                                                      color: Color(0xFF000000).withOpacity(0.11),
+                                                                                      spreadRadius: 5,
+                                                                                      blurRadius: 10,
+                                                                                      offset: Offset(0, 5), // changes position of shadow
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                child: Container(
+                                                                                  padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: getSize(100, "height", context),
+                                                                                        height: getSize(100, "height", context),
+                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                        decoration: BoxDecoration(
+                                                                                          borderRadius: BorderRadius.circular(100),
+                                                                                          color: Colors.red.withOpacity(0.35),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Icon(
+                                                                                          Icons.close,
+                                                                                          size: getSize(38, "height", context),
+                                                                                          color: Colors.white,
+                                                                                        )),
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(21, "height", context),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        "Erreur",
+                                                                                        style: AppTheme.defaultParagraph,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(12, "height", context),
+                                                                                      ),
+                                                                                      Container(
+                                                                                        width: getSize(220, "width", context),
+                                                                                        child: Text(
+                                                                                          onError.response == null || onError.response == "" ? 'Une erreur est survenue, verifier votre connexion.' : onError.response.data["message"],
+                                                                                          style: AppTheme.bodyText1.copyWith(
+                                                                                            color: AppColors.blackColor.withOpacity(0.5),
+                                                                                          ),
+                                                                                          textAlign: TextAlign.center,
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              });
                                                             } else {
-                                                              print(
-                                                                  "l'actuel domicile est vide ");
+                                                              showGeneralDialog(
+                                                                    context:
+                                                                        context,
+                                                                    barrierDismissible:
+                                                                        true,
+                                                                    barrierLabel:
+                                                                        MaterialLocalizations.of(
+                                                                                context)
+                                                                            .modalBarrierDismissLabel,
+                                                                    barrierColor: AppColors
+                                                                        .whiteColor
+                                                                        .withOpacity(
+                                                                            0.96),
+                                                                    transitionDuration:
+                                                                        const Duration(
+                                                                            milliseconds:
+                                                                                200),
+                                                                    pageBuilder: (BuildContext
+                                                                            buildContext,
+                                                                        Animation
+                                                                            animation,
+                                                                        Animation
+                                                                            secondaryAnimation) {
+                                                                      return Center(
+                                                                        child:
+                                                                            Card(
+                                                                          shadowColor:
+                                                                              Colors.transparent,
+                                                                          margin: EdgeInsets.symmetric(
+                                                                              horizontal:
+                                                                                  0,
+                                                                              vertical:
+                                                                                  0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: getSize(303, "width", context),
+                                                                                // height: getSize(256, "height", context),
+                                                                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: AppColors.whiteColor,
+                                                                                  borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                  boxShadow: [
+                                                                                    BoxShadow(
+                                                                                      color: Color(0xFF000000).withOpacity(0.11),
+                                                                                      spreadRadius: 5,
+                                                                                      blurRadius: 10,
+                                                                                      offset: Offset(0, 5), // changes position of shadow
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                child: Container(
+                                                                                  padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: getSize(100, "height", context),
+                                                                                        height: getSize(100, "height", context),
+                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                        decoration: BoxDecoration(
+                                                                                          borderRadius: BorderRadius.circular(100),
+                                                                                          color: Colors.red.withOpacity(0.35),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Icon(
+                                                                                          Icons.close,
+                                                                                          size: getSize(38, "height", context),
+                                                                                          color: Colors.white,
+                                                                                        )),
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(21, "height", context),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        "Erreur",
+                                                                                        style: AppTheme.defaultParagraph,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        height: getSize(12, "height", context),
+                                                                                      ),
+                                                                                      Container(
+                                                                                        width: getSize(220, "width", context),
+                                                                                        child: Text('Veuillez entrer une valeur.',
+                                                                                          style: AppTheme.bodyText1.copyWith(
+                                                                                            color: AppColors.blackColor.withOpacity(0.5),
+                                                                                          ),
+                                                                                          textAlign: TextAlign.center,
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
                                                             }
 
-                                                            showGeneralDialog(
-                                                                context:
-                                                                    context,
-                                                                barrierDismissible:
-                                                                    true,
-                                                                barrierLabel:
-                                                                    MaterialLocalizations.of(
-                                                                            context)
-                                                                        .modalBarrierDismissLabel,
-                                                                barrierColor: AppColors
-                                                                    .whiteColor
-                                                                    .withOpacity(
-                                                                        0.96),
-                                                                transitionDuration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            200),
-                                                                pageBuilder: (BuildContext
-                                                                        buildContext,
-                                                                    Animation
-                                                                        animation,
-                                                                    Animation
-                                                                        secondaryAnimation) {
-                                                                  return Material(
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          Container(
-                                                                            width: getSize(
-                                                                                303,
-                                                                                "width",
-                                                                                context),
-                                                                            // height: getSize(256, "height", context),
-                                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: AppColors.whiteColor,
-                                                                              borderRadius: BorderRadius.circular(getSize(20, "height", context)),
-                                                                              boxShadow: [
-                                                                                BoxShadow(
-                                                                                  color: Color(0xFF000000).withOpacity(0.11),
-                                                                                  spreadRadius: 5,
-                                                                                  blurRadius: 10,
-                                                                                  offset: Offset(0, 5), // changes position of shadow
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            child:
-                                                                                Container(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  Container(
-                                                                                    width: getSize(100, "height", context),
-                                                                                    height: getSize(100, "height", context),
-                                                                                    padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
-                                                                                    decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius.circular(100),
-                                                                                      color: AppColors.greenColor.withOpacity(0.35),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                        child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(38, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    )),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: getSize(21, "height", context),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    "Sauvegardé",
-                                                                                    style: AppTheme.defaultParagraph,
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: getSize(12, "height", context),
-                                                                                  ),
-                                                                                  Container(
-                                                                                    width: getSize(220, "width", context),
-                                                                                    child: Text(
-                                                                                      "Votre information a été mise à jours avec succès",
-                                                                                      style: AppTheme.bodyText1.copyWith(
-                                                                                        color: AppColors.blackColor.withOpacity(0.5),
-                                                                                      ),
-                                                                                      textAlign: TextAlign.center,
-                                                                                    ),
-                                                                                  )
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                });
                                                           },
                                                           textColor:
                                                               Colors.white,
@@ -1060,7 +1267,8 @@ class _MyAppState extends State<MonCompte> {
                                                                   MainAxisAlignment
                                                                       .center,
                                                               children: [
-                                                                SizedBox(
+                                                                provider.loadingState ==
+                                                LoadingState.loading ? SizedBox(
                                                                   child:
                                                                       CircularProgressIndicator(
                                                                     backgroundColor:
@@ -1077,7 +1285,7 @@ class _MyAppState extends State<MonCompte> {
                                                                       14,
                                                                       "height",
                                                                       context),
-                                                                ),
+                                                                ) : Row(),
                                                                 Text(
                                                                   'Sauvegarder',
                                                                   style:

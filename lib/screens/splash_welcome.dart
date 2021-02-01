@@ -4,6 +4,7 @@ import 'package:walkthrough/walkthrough.dart';
 import 'dart:async';
 import 'dart:core';
 import 'welcome_map.dart';
+import 'package:mapane/screens/tabs_page.dart';
 
 class SplashWelcome extends StatefulWidget {
   @override
@@ -84,7 +85,7 @@ class _SplashWelcomeState extends State<SplashWelcome> {
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => WelcomeMap(),
+    pageBuilder: (context, animation, secondaryAnimation) => TabsPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
