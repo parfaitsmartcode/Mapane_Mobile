@@ -9,6 +9,7 @@ import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
+import 'package:mapane/state/bottom_bar_provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -58,7 +59,7 @@ class _MyAppState extends State<Settings> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Container(
-                            height: getSize(536, "height", context),
+                            height: getSize(485, "height", context),
                             child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: getSize(23, "height", context),
@@ -67,6 +68,7 @@ class _MyAppState extends State<Settings> {
                                     child: Column(children: [
                                   Row(
                                     children: [
+<<<<<<< HEAD
                                       Container(
                                         width: getSize(38, "width", context),
                                         child: IconButton(
@@ -91,6 +93,25 @@ class _MyAppState extends State<Settings> {
                                             fontWeight: FontWeight.w400,
                                             fontSize: 20,
                                             color: Colors.black),
+=======
+                                      IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          onPressed: () {
+                                            context.read<BottomBarProvider>().setWidget(false);
+                                          }),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                getSize(5, "width", context),
+                                            vertical: 0),
+                                        child: Text(
+                                          'Paramètres',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                       )
                                     ],
                                   ),
@@ -103,7 +124,11 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Sound-icon.png',
+<<<<<<< HEAD
                                           height: getSize(20, "width", context),
+=======
+                                          height: getSize(17, "height", context),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                         ),
                                       ),
                                       Container(
@@ -165,7 +190,11 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Link-icon.png',
+<<<<<<< HEAD
                                           height: getSize(20, "width", context),
+=======
+                                          height: getSize(17, "height", context),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                         ),
                                       ),
                                       Container(
@@ -229,7 +258,11 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/FIle-icon.png',
+<<<<<<< HEAD
                                           height: getSize(20, "width", context),
+=======
+                                          height: getSize(17, "height", context),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                         ),
                                       ),
                                       Container(
@@ -254,7 +287,11 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Info-icon.png',
+<<<<<<< HEAD
                                           height: getSize(20, "width", context),
+=======
+                                          height: getSize(17, "height", context),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                         ),
                                       ),
                                       Container(
@@ -279,7 +316,11 @@ class _MyAppState extends State<Settings> {
                                         width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Help-icon.png',
+<<<<<<< HEAD
                                           height: getSize(20, "width", context),
+=======
+                                          height: getSize(17, "height", context),
+>>>>>>> 8718e51f1f480232aae76e4684ffd2d667ec7903
                                         ),
                                       ),
                                       Container(

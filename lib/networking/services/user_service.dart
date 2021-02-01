@@ -86,6 +86,7 @@ class UserService {
         "residence": domicile == 0 ? userDomicile : domicile,
       };
     }
+    print(data);
     try {
       Response response =
           await locator<Di>().dio.put(locator<Di>().apiUrl + "/edit/"+userId,
@@ -95,16 +96,16 @@ class UserService {
               data: data);
 
       if (response.statusCode == 200) {
-        Future<SharedPreferences> instance = SharedPreferences.getInstance();
-        if (phone == 0) {
-          SharedPreferenceHelper(instance)
-              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
-        } else {
-          SharedPreferenceHelper(instance)
-              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
-          SharedPreferenceHelper(instance)
-              .storeData("user_phone", phone == '' ? phonewrite : phone, "string");
-        }
+        // Future<SharedPreferences> instance = SharedPreferences.getInstance();
+        // if (phone == 0) {
+        //   SharedPreferenceHelper(instance)
+        //       .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
+        // } else {
+        //   SharedPreferenceHelper(instance)
+        //       .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
+        //   SharedPreferenceHelper(instance)
+        //       .storeData("user_phone", phone == '' ? phonewrite : phone, "string");
+        // }
         return response.data["message"];
       } else {
         return response;
