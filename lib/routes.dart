@@ -6,6 +6,7 @@ import 'package:mapane/screens/numero_get_ios.dart';
 import 'package:mapane/screens/splash_welcome.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
+import 'package:mapane/screens/tabs_page_settings.dart';
 
 
 class Routes {

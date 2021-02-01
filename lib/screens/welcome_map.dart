@@ -658,12 +658,12 @@ class AllAlerte extends StatelessWidget {
                         Text('Bepanda, Douala',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: getSize(14, "height", context),
                                 color: Colors.black.withOpacity(.4))),
                         Text(moment.from(dateForComparison),
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: getSize(14, "height", context),
                                 color: Colors.black.withOpacity(.4))),
                       ],
                     ),
@@ -727,7 +727,7 @@ class _MaterialModalState extends State<MaterialModal> {
                 title: Text('Controle routier',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: getSize(16, "height", context),
                         color: Colors.black))),
             ListTile(
                 onTap: () {
@@ -743,7 +743,7 @@ class _MaterialModalState extends State<MaterialModal> {
                 title: Text('Zone dangereuse',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: getSize(16, "height", context),
                         color: Colors.black))),
             ListTile(
                 onTap: () {
@@ -759,7 +759,7 @@ class _MaterialModalState extends State<MaterialModal> {
                 title: Text('Accident de circulation',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: getSize(16, "height", context),
                         color: Colors.black))),
             ListTile(
                 onTap: () {
@@ -775,7 +775,7 @@ class _MaterialModalState extends State<MaterialModal> {
                 title: Text('Route en chantier',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: getSize(16, "height", context),
                         color: Colors.black))),
             ListTile(
                 onTap: () {
@@ -791,7 +791,7 @@ class _MaterialModalState extends State<MaterialModal> {
                 title: Text('Radar',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                        fontSize: getSize(16, "height", context),
                         color: Colors.black))),
           ],
         ),
@@ -836,7 +836,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
             title: Text(widget.alert.category.name.capitalize(),
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 20,
+                    fontSize: getSize(20, "height", context),
                     color: Colors.black)),
             subtitle: Padding(
               padding: EdgeInsets.symmetric(
@@ -847,12 +847,12 @@ class _AutreAlerteState extends State<AutreAlerte> {
                   Text('Bepanda, Douala',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontSize: getSize(14, "height", context),
                           color: Colors.black.withOpacity(.4))),
                   Text(moment.from(dateForComparison),
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontSize: getSize(14, "height", context),
                           color: Colors.black.withOpacity(.4))),
                 ],
               ),

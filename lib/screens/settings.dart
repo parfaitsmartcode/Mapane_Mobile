@@ -9,6 +9,7 @@ import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
+import 'package:mapane/state/bottom_bar_provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -56,7 +57,7 @@ class _MyAppState extends State<Settings> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Container(
-                            height: getSize(536, "height", context),
+                            height: getSize(485, "height", context),
                             child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: getSize(24, "width", context),
@@ -68,7 +69,7 @@ class _MyAppState extends State<Settings> {
                                       IconButton(
                                           icon: Icon(Icons.arrow_back),
                                           onPressed: () {
-                                            Navigator.pop(context, true);
+                                            context.read<BottomBarProvider>().setWidget(false);
                                           }),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -91,10 +92,10 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "height", context),
+                                        width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Sound-icon.png',
-                                          height: getSize(17, "width", context),
+                                          height: getSize(17, "height", context),
                                         ),
                                       ),
                                       Container(
@@ -131,10 +132,10 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "height", context),
+                                        width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Link-icon.png',
-                                          height: getSize(17, "width", context),
+                                          height: getSize(17, "height", context),
                                         ),
                                       ),
                                       Container(
@@ -171,10 +172,10 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "height", context),
+                                        width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/FIle-icon.png',
-                                          height: getSize(17, "width", context),
+                                          height: getSize(17, "height", context),
                                         ),
                                       ),
                                       Container(
@@ -195,10 +196,10 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "height", context),
+                                        width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Info-icon.png',
-                                          height: getSize(17, "width", context),
+                                          height: getSize(17, "height", context),
                                         ),
                                       ),
                                       Container(
@@ -219,10 +220,10 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "height", context),
+                                        width: getSize(39, "width", context),
                                         child: Image.asset(
                                           'assets/images/Help-icon.png',
-                                          height: getSize(17, "width", context),
+                                          height: getSize(17, "height", context),
                                         ),
                                       ),
                                       Container(

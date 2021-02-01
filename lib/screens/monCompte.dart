@@ -7,7 +7,10 @@ import 'package:mapane/routes.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:mapane/networking/services/user_service.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:mapane/screens/settings.dart';
 
 class MonCompte extends StatefulWidget {
   @override
@@ -70,7 +73,7 @@ class _MyAppState extends State<MonCompte> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return context.watch<BottomBarProvider>().widgetToDisplay ? Settings() : Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
@@ -1142,7 +1145,7 @@ class _MyAppState extends State<MonCompte> {
                       InkWell(
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushNamed(Routes.settings);
+                            context.read<BottomBarProvider>().setWidget(true);
                           },
                           child: Container(
                             height: getSize(38, "height", context),

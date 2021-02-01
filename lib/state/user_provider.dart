@@ -9,7 +9,7 @@ import 'base_provider.dart';
 
 
 class UserProvider extends BaseProvider{
-  // Either<NException,List<User>> alertList = Right([]);
+  Either<NException,List<User>> userData = Right([]);
 
   bool audioVal;
   bool connectVal;
@@ -39,6 +39,18 @@ class UserProvider extends BaseProvider{
   //stockage du domicile
   storeDomicile(domicile){
     return userService.updateHouse(0,0,domicile);
+  }
+
+  //stockage du domicile
+  updatePhone(phone, phonewrite, domicile){
+    this.toggleLoadingState();
+    userService.updateHouse(phone, phonewrite, domicile).then((data){
+      userData = Right(data);
+      this.toggleLoadingState();
+    }).catchError((error){
+      userData = Left(error);
+      this.toggleLoadingState();
+    });
   }
 
   //Modification des paramètres dans le SharedPreferences
