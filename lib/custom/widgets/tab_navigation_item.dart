@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/screens/home_page.dart';
+import 'package:mapane/screens/monCompte.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/monCompte.dart';
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/socket_test.dart';
+import 'package:mapane/screens/home_page.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/screens/tabs_page.dart';
+import 'package:mapane/screens/test.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ import 'package:mapane/screens/numero_get_ios.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 
+import 'package:mapane/state/search_provider.dart';
 void main() {
   setupLocator();
   runApp(
@@ -22,11 +25,11 @@ void main() {
       providers: [
         ChangeNotifierProvider(create:(_) => BottomBarProvider()),
         ChangeNotifierProvider(create:(_) => AlertProvider()),
-        ChangeNotifierProvider(create:(_) => UserProvider())
+        ChangeNotifierProvider(create:(_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => SearchProvider())
       ],
       child:  MyApp(),
     )
-
   );
 }
 
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: MyAppSocket(),
+      home: TabsPage(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

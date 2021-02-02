@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UtilButton extends StatelessWidget {
-  final Icon icon;
+  final Widget icon;
   final double height;
   final double width;
   final Function onTap;
@@ -19,6 +20,16 @@ class UtilButton extends StatelessWidget {
       child: Container(
         height: height,
         width: width,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 7,
+              blurRadius: 30,
+              offset: Offset(0, 3), // changes position of shadow
+            )
+          ]
+        ),
         child: Card(
           elevation: 3.0,
           shape: RoundedRectangleBorder(

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#6286ba"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+  </defs>
+  <g id="Dropdown-button" transform="translate(0 -0.162)">
+    <rect id="Background" width="32" height="32" rx="15" transform="translate(0 0.162)" fill="url(#linear-gradient)"/>
+    <g id="Arrow-down-icon" transform="translate(4 4)">
+      <path id="Tracé_7" data-name="Tracé 7" d="M0,0H24V24H0Z" fill="none"/>
+      <path id="Tracé_8" data-name="Tracé 8" d="M12,13.172l4.95-4.95,1.414,1.414L12,16,5.636,9.636,7.05,8.222Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>
