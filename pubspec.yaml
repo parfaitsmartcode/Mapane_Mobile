@@ -51,6 +51,7 @@ dependencies:
   connectivity: ^2.0.2
   flutter_switch: ^0.2.0
   flutter_tindercard: ^0.2.0
+  socket_io_client: ^0.9.12
 
 dev_dependencies:
   flutter_test:
@@ -70,8 +71,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
-  #   - images/a_dot_ham.jpeg
     - assets/images/
+    - assets/markers/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
