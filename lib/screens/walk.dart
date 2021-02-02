@@ -175,7 +175,7 @@ class SliderTile extends StatelessWidget {
           )
         ),
         new Positioned(
-          top:getSize(150, "height", context),
+          top:getSize(115, "height", context),
           width: getSize(400, "width", context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

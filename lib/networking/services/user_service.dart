@@ -31,7 +31,7 @@ class UserService {
 
   Future<dynamic> registerUser(phone, phonewrite) async {
     var data = {
-      "phone": phone == '' ? phonewrite+'206' : phone+'206',
+      "phone": phone == '' ? phonewrite+'235' : phone+'235',
       "type": "user",
       "password": "12345678",
     };

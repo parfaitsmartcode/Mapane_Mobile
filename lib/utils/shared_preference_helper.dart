@@ -64,6 +64,22 @@ class SharedPreferenceHelper {
     });
   }
 
+  Future<bool> get isFirstTime {
+    return _sharedPreference.then((prefs) {
+      return false;
+    });
+  }
+
+  setBooleanValue(String key, bool value) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    myPrefs.setBool(key, value);
+  }
+
+  Future<bool> getBooleanValue(String key) async {
+    SharedPreferences myPrefs = await SharedPreferences.getInstance();
+    return myPrefs.getBool(key) ?? false;
+  }
+
   Future<void> changeBrightnessToDark(bool value) {
     return _sharedPreference.then((prefs) {
       return prefs.setBool(Preferences.is_dark_mode, value);

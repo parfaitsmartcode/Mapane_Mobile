@@ -6,7 +6,8 @@ import 'package:mapane/screens/numero_get_ios.dart';
 import 'package:mapane/screens/splash_welcome.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
-import 'package:mapane/screens/tabs_page_settings.dart';
+import 'package:mapane/screens/tabs_page.dart';
+import 'package:mapane/screens/home_page.dart';
 
 
 class Routes {
@@ -20,6 +21,7 @@ class Routes {
   static const String splash_welcome = '/splash-welcome';
   static const String welcome_map = '/welcome-map';
   static const String settings = '/settings';
+  static const String map = '/map';
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
     walk: (BuildContext context) => Walk(),
@@ -28,6 +30,7 @@ class Routes {
     splash_welcome: (BuildContext context) => SplashWelcome(),
     welcome_map: (BuildContext context) => WelcomeMap(),
     settings: (BuildContext context) => Settings(),
+    map: (BuildContext context) => TabsPage(),
 
   };
 }

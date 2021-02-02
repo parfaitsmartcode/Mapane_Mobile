@@ -7,6 +7,7 @@ import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:mapane/constants/socket.dart';
+import 'dart:io' show Platform;
 
 
 
@@ -16,6 +17,7 @@ class UserProvider extends BaseProvider{
   bool audioVal;
   bool connectVal;
   bool getval;
+  bool first_time;
   String userPhone;
   String userDomicile;
   final TextEditingController domicilecontroller = TextEditingController();
@@ -31,6 +33,7 @@ class UserProvider extends BaseProvider{
       this.userDomicile = " ";
       this.audioVal = false;
       this.connectVal = false;
+      // this.first_time = true;
   }
 
   modifyAudioParam(test){
@@ -49,6 +52,34 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
     return userPhone;
+  }
+
+  checkifpuceau(context) async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    first_time = _preferences.getBool("first_time");
+    userPhone = await _preferences.get('user_phone');
+    if (first_time != null && !first_time) {// Not first time
+      if (userPhone != null || userPhone != "+237") {
+        Navigator.of(context).pushReplacementNamed('/map');
+      } else {
+        if (Platform.isAndroid) {
+          Navigator.of(context).pushReplacementNamed('/numero-get');
+        } else {
+          Navigator.of(context).pushReplacementNamed('/numero-get-ios');
+        }
+      }
+    } else {// First time
+      setFirstTime();
+      Navigator.of(context).pushReplacementNamed('/walk');
+    }
+    return first_time;
+  }
+
+  setFirstTime() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    _preferences.setBool('first_time', false);
+    first_time = false;
+    return first_time;
   }
 
   testSocket() async {
