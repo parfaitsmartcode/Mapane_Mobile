@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:mapane/constants/socket.dart';
 
 
 
@@ -48,6 +49,10 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
     return userPhone;
+  }
+
+  testSocket() async {
+    Sockete.emit("hey");
   }
 
   getUserDomicile() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/routes.dart';
+import 'package:mapane/screens/socket_test.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/moncompte.dart';
 import 'package:mapane/screens/tabs_page.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: TabsPage(),
+      home: MyAppSocket(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );
