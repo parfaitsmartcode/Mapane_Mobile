@@ -301,7 +301,7 @@ class _MyAppState extends State<NumeroGet> {
                             Timer(
                                 Duration(seconds: 5),
                                 () => Navigator.of(context)
-                                    .pushNamed(Routes.splash_welcome));
+                                    .pushReplacementNamed(Routes.splash_welcome));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;

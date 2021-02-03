@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:walkthrough/flutterwalkthrough.dart';
 import 'package:walkthrough/walkthrough.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import '../state/user_provider.dart';
 import 'dart:core';
 import 'walk.dart';
+import 'dart:io' show Platform;
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -12,41 +16,45 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new SplashScreen2(
-      seconds: 5, 
-      navigateAfterSeconds: new AfterSplash(),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          new Image.asset('assets/images/Logo-long-edited.png', width: 300,),
-          new Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-          ),
-          Container(
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: new Text(
-                    'C\'est plus facile de se déplacer',
-                    style: new TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: 'Robotto',
-                      color: Colors.black.withOpacity(.8),
-                    )
-                  ),
-                ),
-              ]
-            )
-          ),
-        ],
-      ),
-      useLoader: false,
-      pageRoute: _createRoute(),
-      imageBackground: AssetImage("assets/images/Background.png"),
-      gradientBackground: LinearGradient(
+        seconds: 5,
+        navigateAfterSeconds: new AfterSplash(),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            new Image.asset(
+              'assets/images/Logo-long-edited.png',
+              width: 300,
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+            ),
+            Container(
+                child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: new Text('C\'est plus facile de se déplacer',
+                            style: new TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: 'Robotto',
+                              color: Colors.black.withOpacity(.8),
+                            )),
+                      ),
+                    ])),
+          ],
+        ),
+        useLoader: false,
+        pageRoute: _createRoute(),
+        imageBackground: AssetImage("assets/images/Background.png"),
+        gradientBackground: LinearGradient(
           colors: [
             Color.fromRGBO(73, 113, 172, 0.6),
             Color.fromRGBO(73, 113, 172, 0.6),
@@ -55,8 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
           end: Alignment.bottomCenter,
           stops: [0.0, 1.0],
           tileMode: TileMode.clamp,
-      )
-    );
+        ));
   }
 }
 
@@ -77,37 +84,39 @@ Route _createRoute() {
     },
   );
 }
+
 class AfterSplash extends StatelessWidget {
   final List<Walkthrough> list = [
-        Walkthrough(
-          title: "Title 1",
-          content: "Content 1",
-          imageIcon: Icons.restaurant_menu,
-        ),
-        Walkthrough(
-          title: "Title 2",
-          content: "Content 2",
-          imageIcon: Icons.search,
-        ),
-        Walkthrough(
-          title: "Title 3",
-          content: "Content 3",
-          imageIcon: Icons.shopping_cart,
-        ),
-        Walkthrough(
-          title: "Title 4",
-          content: "Content 4",
-          imageIcon: Icons.verified_user,
-        ),
+    Walkthrough(
+      title: "Title 1",
+      content: "Content 1",
+      imageIcon: Icons.restaurant_menu,
+    ),
+    Walkthrough(
+      title: "Title 2",
+      content: "Content 2",
+      imageIcon: Icons.search,
+    ),
+    Walkthrough(
+      title: "Title 3",
+      content: "Content 3",
+      imageIcon: Icons.shopping_cart,
+    ),
+    Walkthrough(
+      title: "Title 4",
+      content: "Content 4",
+      imageIcon: Icons.verified_user,
+    ),
   ];
   @override
   Widget build(BuildContext context) {
     return IntroScreen(
-          list,
-          MaterialPageRoute(builder: (context) => AfterSplash()),
+      list,
+      MaterialPageRoute(builder: (context) => AfterSplash()),
     );
   }
 }
+
 class SplashScreen2 extends StatefulWidget {
   /// Seconds to navigate after for time based navigation
   final int seconds;
@@ -169,8 +178,8 @@ class SplashScreen2 extends StatefulWidget {
     this.navigateAfterSeconds,
     this.title,
     this.backgroundColor = Colors.white,
-    this.styleTextUnderTheLoader =
-        const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
+    this.styleTextUnderTheLoader = const TextStyle(
+        fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
     this.image,
     this.loadingText = const Text(""),
     this.imageBackground,
@@ -180,21 +189,21 @@ class SplashScreen2 extends StatefulWidget {
   });
 
   factory SplashScreen2.timer(
-          {@required int seconds,
-          Color loaderColor,
-          Color backgroundColor,
-          double photoSize,
-          Text loadingText,
-          Image image,
-          Route pageRoute,
-          dynamic onClick,
-          dynamic navigateAfterSeconds,
-          Widget title,
-          TextStyle styleTextUnderTheLoader,
-          ImageProvider imageBackground,
-          Gradient gradientBackground,
-          bool useLoader,
-          String routeName}) =>
+      {@required int seconds,
+        Color loaderColor,
+        Color backgroundColor,
+        double photoSize,
+        Text loadingText,
+        Image image,
+        Route pageRoute,
+        dynamic onClick,
+        dynamic navigateAfterSeconds,
+        Widget title,
+        TextStyle styleTextUnderTheLoader,
+        ImageProvider imageBackground,
+        Gradient gradientBackground,
+        bool useLoader,
+        String routeName}) =>
       SplashScreen2(
         loaderColor: loaderColor,
         seconds: seconds,
@@ -214,21 +223,21 @@ class SplashScreen2 extends StatefulWidget {
       );
 
   factory SplashScreen2.network(
-          {@required Future<dynamic> navigateAfterFuture,
-          Color loaderColor,
-          Color backgroundColor,
-          double photoSize,
-          Text loadingText,
-          Image image,
-          Route pageRoute,
-          dynamic onClick,
-          dynamic navigateAfterSeconds,
-          Widget title,
-          TextStyle styleTextUnderTheLoader,
-          ImageProvider imageBackground,
-          Gradient gradientBackground,
-          bool useLoader,
-          String routeName}) =>
+      {@required Future<dynamic> navigateAfterFuture,
+        Color loaderColor,
+        Color backgroundColor,
+        double photoSize,
+        Text loadingText,
+        Image image,
+        Route pageRoute,
+        dynamic onClick,
+        dynamic navigateAfterSeconds,
+        Widget title,
+        TextStyle styleTextUnderTheLoader,
+        ImageProvider imageBackground,
+        Gradient gradientBackground,
+        bool useLoader,
+        String routeName}) =>
       SplashScreen2(
         loaderColor: loaderColor,
         navigateAfterFuture: navigateAfterFuture,
@@ -255,24 +264,24 @@ class _SplashScreen2State extends State<SplashScreen2> {
   @override
   void initState() {
     super.initState();
-    if (widget.routeName != null && widget.routeName is String && "${widget.routeName[0]}" != "/") {
-      throw new ArgumentError("widget.routeName must be a String beginning with forward slash (/)");
+    if (widget.routeName != null &&
+        widget.routeName is String &&
+        "${widget.routeName[0]}" != "/") {
+      throw new ArgumentError(
+          "widget.routeName must be a String beginning with forward slash (/)");
     }
     if (widget.navigateAfterFuture == null) {
       Timer(Duration(seconds: widget.seconds), () {
         if (widget.navigateAfterSeconds is String) {
           // It's fairly safe to assume this is using the in-built material
           // named route component
-          Navigator.of(context).pushReplacementNamed(widget.navigateAfterSeconds);
+          Navigator.of(context)
+              .pushReplacementNamed(widget.navigateAfterSeconds);
         } else if (widget.navigateAfterSeconds is Widget) {
-          Navigator.of(context).pushReplacement(widget.pageRoute != null
-              ? widget.pageRoute
-              : new MaterialPageRoute(
-                  settings:
-                      widget.routeName != null ? RouteSettings(name: "${widget.routeName}") : null,
-                  builder: (BuildContext context) => widget.navigateAfterSeconds));
+          context.read<UserProvider>().checkifpuceau(context);
         } else {
-          throw new ArgumentError('widget.navigateAfterSeconds must either be a String or Widget');
+          throw new ArgumentError(
+              'widget.navigateAfterSeconds must either be a String or Widget');
         }
       });
     } else {
@@ -282,14 +291,10 @@ class _SplashScreen2State extends State<SplashScreen2> {
           // named route component
           Navigator.of(context).pushReplacementNamed(navigateTo);
         } else if (navigateTo is Widget) {
-          Navigator.of(context).pushReplacement(widget.pageRoute != null
-              ? widget.pageRoute
-              : new MaterialPageRoute(
-                  settings:
-                      widget.routeName != null ? RouteSettings(name: "${widget.routeName}") : null,
-                  builder: (BuildContext context) => navigateTo));
+          context.read<UserProvider>().checkifpuceau(context);
         } else {
-          throw new ArgumentError('widget.navigateAfterFuture must either be a String or Widget');
+          throw new ArgumentError(
+              'widget.navigateAfterFuture must either be a String or Widget');
         }
       });
     }
@@ -308,9 +313,9 @@ class _SplashScreen2State extends State<SplashScreen2> {
                 image: widget.imageBackground == null
                     ? null
                     : new DecorationImage(
-                        fit: BoxFit.cover,
-                        image: widget.imageBackground,
-                      ),
+                  fit: BoxFit.cover,
+                  image: widget.imageBackground,
+                ),
                 gradient: widget.gradientBackground,
                 color: widget.backgroundColor,
               ),
@@ -336,11 +341,9 @@ class _SplashScreen2State extends State<SplashScreen2> {
                     //   )
                     // ),
                       child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      widget.title
-                    ],
-                  )),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[widget.title],
+                      )),
                 ),
               ],
             ),
