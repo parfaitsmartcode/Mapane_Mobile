@@ -66,8 +66,18 @@ flutter:
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # the material Icons class.Q<A
   uses-material-design: true
+  fonts:
+    - family:  MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFLutterApp.ttf
+    - family: ProfileFont
+      fonts:
+        - asset: assets/fonts/ProfileFont.ttf
+    - family: Map
+      fonts:
+        - asset: assets/fonts/Map.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:

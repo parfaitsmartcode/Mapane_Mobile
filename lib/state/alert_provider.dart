@@ -1,6 +1,8 @@
 
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/models/alert.dart';
+import 'package:mapane/models/category.dart';
 import 'package:mapane/networking/services/alert_service.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'base_provider.dart';
@@ -55,6 +57,12 @@ class AlertProvider extends BaseProvider{
         this.toggleLoadingState();
       });
     }
+  }
+
+  makeAlert() async{
+    alertService.createAlert(LatLng(19,12), "test", "601287248f3e902d60579854", Category(name:"embouitellage",id:"601287248f3e902d60579854"), "test").then((value) {
+      print(value);
+    });
   }
 
 }

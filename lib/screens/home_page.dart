@@ -8,6 +8,7 @@ import 'package:mapane/constants/assets.dart';
 import 'package:mapane/custom/widgets/alert.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/state/LoadingState.dart';
+import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
@@ -181,6 +182,7 @@ class _HomePageState extends State<HomePage> {
     // do this inside the setState() so Flutter gets notified
     // that a widget update is due
     setState(() {
+      print(currentLocation.longitude.toString() + " " + currentLocation.latitude.toString());
       // updated position
       var pinPosition = LatLng(currentLocation.latitude,
           currentLocation.longitude);
@@ -552,16 +554,18 @@ class _HomePageState extends State<HomePage> {
                         AnimatedPositioned(
                           duration: Duration(milliseconds: 500),
                           bottom: bottomPadding,
-                          left: SizeConfig.blockSizeVertical * 21.75,
+                          left: SizeConfig.screenWidth / 2.2,
                           child: InkWell(
                             onTap: () {
                               setState(() {
                                 if (isExpanded) {
                                   isExpanded = false;
                                   alertHeight = 30.0;
+                                  bottomPadding = SizeConfig.blockSizeVertical;
                                 } else {
                                   isExpanded = true;
                                   alertHeight = 300.0;
+                                  bottomPadding = SizeConfig.blockSizeVertical * 34.5;
                                 }
                               });
                             },
@@ -598,6 +602,9 @@ class _HomePageState extends State<HomePage> {
                                             Assets.trafficIcon,
                                           ),
                                           radius: 30.0,
+                                          onTap: (){
+                                            context.read<AlertProvider>().makeAlert();
+                                          },
                                         ),
                                       ),
                                       Alert(
@@ -685,7 +692,7 @@ class _HomePageState extends State<HomePage> {
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
-                          bottomPadding = SizeConfig.blockSizeVertical;
+                          //bottomPadding = SizeConfig.blockSizeVertical;
                         } else {
                           context
                               .read<BottomBarProvider>()
@@ -693,7 +700,7 @@ class _HomePageState extends State<HomePage> {
                           swiperIcon = SvgPicture.asset(
                             Assets.arrowDownIcon,
                           );
-                          bottomPadding = SizeConfig.blockSizeVertical * 34.5;
+                         // bottomPadding = SizeConfig.blockSizeVertical * 34.5;
                         }
                       });
                     },
