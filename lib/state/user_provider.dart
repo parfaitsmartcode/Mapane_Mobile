@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapane/models/place.dart';
 import 'package:mapane/models/user.dart';
+import 'package:mapane/networking/services/search_service.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +16,7 @@ import 'dart:io' show Platform;
 
 class UserProvider extends BaseProvider{
   Either<NException,List<User>> userData = Right([]);
+  Either<NException,Place> userPlace = Right(new Place());
 
   bool audioVal;
   bool connectVal;
@@ -163,6 +167,16 @@ class UserProvider extends BaseProvider{
       print(value);
       return value;
     }
+  }
+
+  getPlace(LatLng coord){
+    this.toggleLoadingState();
+    searchService.geocoding(coord).then((place) {
+      userPlace = Right(place);
+    }).catchError((error){
+      userPlace = Left(error);
+      this.toggleLoadingState();
+    });
   }
 }
 

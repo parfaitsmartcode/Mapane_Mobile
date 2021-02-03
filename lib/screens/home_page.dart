@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/custom/widgets/alert.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
+import 'package:mapane/models/place.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/search_provider.dart';
+import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
 import 'package:mapane/utils/hexcolor.dart';
 import 'package:mapane/utils/n_exception.dart';
@@ -27,8 +30,8 @@ class HomePage extends StatefulWidget {
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
-const LatLng SOURCE_LOCATION = LatLng(42.747932,-71.167889);
-const LatLng DEST_LOCATION = LatLng(37.335685,-122.0605916);
+const LatLng SOURCE_LOCATION = LatLng(42.747932, -71.167889);
+const LatLng DEST_LOCATION = LatLng(37.335685, -122.0605916);
 
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
@@ -36,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   double bottomPadding = SizeConfig.blockSizeVertical;
   final _startPointController = TextEditingController();
   Widget swiperIcon = SvgPicture.asset(
-        Assets.arrowUpIcon,
+    Assets.arrowUpIcon,
   );
 
   Set<Marker> _markers = Set<Marker>();
@@ -44,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   Set<Polyline> _polylines = Set<Polyline>();
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints;
-  String googleAPIKey = "<YOUR_API_KEY>";
+  String googleAPIKey = "AIzaSyA1vPvfFjBhjgx0rOJcP8_K9vv5Xa2y1ZU";
 // for my custom marker pins
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
@@ -55,7 +58,6 @@ class _HomePageState extends State<HomePage> {
   LocationData destinationLocation;
 // wrapper around the location API
   Location location;
-
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -83,6 +85,7 @@ class _HomePageState extends State<HomePage> {
       // current user's position in real time,
       // so we're holding on to it
       currentLocation = cLoc;
+      context.read<UserProvider>().getPlace(LatLng(currentLocation.latitude, currentLocation.longitude));
       updatePinOnMap();
     });
     // set custom marker pins
@@ -90,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     // set the initial location
     setInitialLocation();
   }
+
   Future<void> _goTo() async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
@@ -97,13 +101,13 @@ class _HomePageState extends State<HomePage> {
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.locationMarker);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/destination_map_marker.png');
   }
+
   void setInitialLocation() async {
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
@@ -119,23 +123,21 @@ class _HomePageState extends State<HomePage> {
   void showPinsOnMap() {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
-    var pinPosition = LatLng(currentLocation.latitude,
-        currentLocation.longitude);
+    var pinPosition =
+        LatLng(currentLocation.latitude, currentLocation.longitude);
     // get a LatLng out of the LocationData object
-    var destPosition = LatLng(destinationLocation.latitude,
-        destinationLocation.longitude);
+    var destPosition =
+        LatLng(destinationLocation.latitude, destinationLocation.longitude);
     // add the initial source location pin
     _markers.add(Marker(
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
-        icon: sourceIcon
-    ));
+        icon: sourceIcon));
     // destination pin
     _markers.add(Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
-        icon: destinationIcon
-    ));
+        icon: destinationIcon));
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
     setPolylines();
@@ -143,30 +145,26 @@ class _HomePageState extends State<HomePage> {
 
   void setPolylines() async {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleAPIKey,
-        PointLatLng(currentLocation.latitude, currentLocation.longitude),
-        PointLatLng(destinationLocation.latitude,destinationLocation.longitude),
+      googleAPIKey,
+      PointLatLng(currentLocation.latitude, currentLocation.longitude),
+      PointLatLng(destinationLocation.latitude, destinationLocation.longitude),
     );
 
-    if(result.points.isNotEmpty){
-      result.points.forEach((PointLatLng point){
-        polylineCoordinates.add(
-            LatLng(point.latitude,point.longitude)
-        );
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
       setState(() {
         _polylines.add(Polyline(
             width: 5, // set the width of the polylines
             polylineId: PolylineId("poly"),
             color: Color.fromARGB(255, 40, 122, 198),
-            points: polylineCoordinates
-        ));
+            points: polylineCoordinates));
       });
     }
   }
 
   void updatePinOnMap() async {
-
     // create a new CameraPosition instance
     // every time the location changes, so the camera
     // follows the pin as it moves with an animation
@@ -174,50 +172,45 @@ class _HomePageState extends State<HomePage> {
       zoom: CAMERA_ZOOM,
       tilt: CAMERA_TILT,
       bearing: CAMERA_BEARING,
-      target: LatLng(currentLocation.latitude,
-          currentLocation.longitude),
+      target: LatLng(currentLocation.latitude, currentLocation.longitude),
     );
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     // do this inside the setState() so Flutter gets notified
     // that a widget update is due
     setState(() {
-      print(currentLocation.longitude.toString() + " " + currentLocation.latitude.toString());
+      print(currentLocation.longitude.toString() +
+          " " +
+          currentLocation.latitude.toString());
       // updated position
-      var pinPosition = LatLng(currentLocation.latitude,
-          currentLocation.longitude);
+      var pinPosition =
+          LatLng(currentLocation.latitude, currentLocation.longitude);
 
       // the trick is to remove the marker (by id)
       // and add it again at the updated location
-      _markers.removeWhere(
-              (m) => m.markerId.value == "sourcePin");
+      _markers.removeWhere((m) => m.markerId.value == "sourcePin");
       _markers.add(Marker(
           markerId: MarkerId("sourcePin"),
           position: pinPosition, // updated position
-          icon: sourceIcon
-      ));
+          icon: sourceIcon));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     SizeConfig().init(context);
 
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
-        target: SOURCE_LOCATION
-    );
+        target: SOURCE_LOCATION);
     if (currentLocation != null) {
       initialCameraPosition = CameraPosition(
-          target: LatLng(currentLocation.latitude,
-              currentLocation.longitude),
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
           zoom: CAMERA_ZOOM,
           tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING
-      );
+          bearing: CAMERA_BEARING);
     }
     return SafeArea(
         bottom: false,
@@ -256,20 +249,54 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
+                      context.watch<UserProvider>().loadingState == LoadingState.loading
+                      ?  Column(
                         children: [
-                          Text(
-                            "Avenue Kennedy",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 19.0),
+                          SpinKitThreeBounce(
+                            color: HexColor("#A7BACB"),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: SizeConfig.blockSizeHorizontal * 5,
-                                top: SizeConfig.blockSizeVertical / 2),
-                            child: Text("Yaoundé,Cameroun"),
-                          )
                         ],
+                      )
+                          : context.select((UserProvider provider) => provider).userPlace.fold(
+                            (NException error) {
+                          return Column(
+                            children: [
+                              AspectRatio(aspectRatio: 5 / 1),
+                              Text(
+                               error.message,
+                              )
+                            ],
+                          );
+                        },
+                          (userPlace) {
+                              return userPlace == null
+                                  ? Column(
+                                children: [
+                                  AspectRatio(aspectRatio: 5 / 1),
+                                  Text(
+                                     "Not available right now.",
+                                  )
+                                ],
+                              ) : Container(
+                                width: SizeConfig.blockSizeHorizontal * 38,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      userPlace.name,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold, fontSize: 18.0),
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.blockSizeHorizontal * 5,
+                                          top: SizeConfig.blockSizeVertical / 2),
+                                      child: Text(userPlace.city+ ","+ userPlace.country,overflow: TextOverflow.clip,),
+                                    )
+                                  ],
+                                ),
+                              );
+                          }
                       ),
                       SizedBox(
                         width: SizeConfig.blockSizeHorizontal * 5,
@@ -315,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => SingleChildScrollView(
                           controller: ModalScrollController.of(context),
                           child: Container(
-                            height: SizeConfig.blockSizeVertical * 40,
+                            height: SizeConfig.blockSizeVertical * 50,
                             width: SizeConfig.screenWidth,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -340,7 +367,6 @@ class _HomePageState extends State<HomePage> {
                                     textInputAction: TextInputAction.go,
                                     controller: _startPointController,
                                     onSubmitted: (value) {
-                                      print(value);
                                       context
                                           .read<SearchProvider>()
                                           .getSearchResults(value);
@@ -452,7 +478,9 @@ class _HomePageState extends State<HomePage> {
                                                                   itemBuilder:
                                                                       (context,
                                                                           index) {
-                                                                    print(placesResult.toList().toString());
+                                                                    print(placesResult
+                                                                        .toList()
+                                                                        .toString());
                                                                     return ListTile(
                                                                       leading:
                                                                           SvgPicture
@@ -536,16 +564,17 @@ class _HomePageState extends State<HomePage> {
                             ? Colors.white
                             : Colors.white.withOpacity(0.3),
                         boxShadow: [
-                          isExpanded ?
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ) :
-                          BoxShadow(
-                            color: Colors.transparent,
-                          )
+                          isExpanded
+                              ? BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
+                                )
+                              : BoxShadow(
+                                  color: Colors.transparent,
+                                )
                         ]),
                     duration: Duration(milliseconds: 500),
                     child: Stack(
@@ -565,7 +594,8 @@ class _HomePageState extends State<HomePage> {
                                 } else {
                                   isExpanded = true;
                                   alertHeight = 300.0;
-                                  bottomPadding = SizeConfig.blockSizeVertical * 34.5;
+                                  bottomPadding =
+                                      SizeConfig.blockSizeVertical * 34.5;
                                 }
                               });
                             },
@@ -602,8 +632,10 @@ class _HomePageState extends State<HomePage> {
                                             Assets.trafficIcon,
                                           ),
                                           radius: 30.0,
-                                          onTap: (){
-                                            context.read<AlertProvider>().makeAlert();
+                                          onTap: () {
+                                            context
+                                                .read<AlertProvider>()
+                                                .makeAlert();
                                           },
                                         ),
                                       ),
@@ -686,9 +718,7 @@ class _HomePageState extends State<HomePage> {
                     onEnd: () {
                       setState(() {
                         if (!isExpanded) {
-                          swiperIcon = SvgPicture.asset(
-                              Assets.arrowUpIcon
-                          );
+                          swiperIcon = SvgPicture.asset(Assets.arrowUpIcon);
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
@@ -700,7 +730,7 @@ class _HomePageState extends State<HomePage> {
                           swiperIcon = SvgPicture.asset(
                             Assets.arrowDownIcon,
                           );
-                         // bottomPadding = SizeConfig.blockSizeVertical * 34.5;
+                          // bottomPadding = SizeConfig.blockSizeVertical * 34.5;
                         }
                       });
                     },
