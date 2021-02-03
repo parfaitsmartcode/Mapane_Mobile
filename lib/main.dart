@@ -14,6 +14,7 @@ import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/screens/numero_get_ios.dart';
+import 'package:mapane/screens/numero_get.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: SplashScreen(),
+      home: Walk(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

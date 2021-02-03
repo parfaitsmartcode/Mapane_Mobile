@@ -134,9 +134,9 @@ class _MyAppState extends State<NumeroGetIos> {
                               context: context,
                               type: CoolAlertType.success,
                               text: value,
-                              onConfirmBtnTap:() => Navigator.of(context).pushNamed(Routes.splash_welcome)
+                              onConfirmBtnTap:() => Navigator.of(context).pushReplacementNamed(Routes.splash_welcome)
                             );
-                            Timer(Duration(seconds: 5), () => Navigator.of(context).pushNamed(Routes.splash_welcome));
+                            Timer(Duration(seconds: 5), () => Navigator.of(context).pushReplacementNamed(Routes.splash_welcome));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;

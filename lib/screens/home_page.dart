@@ -273,22 +273,22 @@ class _HomePageState extends State<HomePage> {
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
                       UtilButton(
-                        height: SizeConfig.blockSizeVertical * 6,
-                        width: SizeConfig.blockSizeHorizontal * 13,
+                        height: getSize(38, "width", context),
+                        width: getSize(38, "width", context),
                         icon: SvgPicture.asset(
                           Assets.soundIcon,
                         ),
                       ),
                       UtilButton(
-                        height: SizeConfig.blockSizeVertical * 6,
-                        width: SizeConfig.blockSizeHorizontal * 13,
+                        height: getSize(38, "width", context),
+                        width: getSize(38, "width", context),
                         icon: SvgPicture.asset(
                           Assets.zoomPlusIcon,
                         ),
                       ),
                       UtilButton(
-                        height: SizeConfig.blockSizeVertical * 6,
-                        width: SizeConfig.blockSizeHorizontal * 13,
+                        height: getSize(38, "width", context),
+                        width: getSize(38, "width", context),
                         icon: SvgPicture.asset(
                           Assets.zoomMinIcon,
                         ),
@@ -509,8 +509,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     },
-                    height: SizeConfig.blockSizeVertical * 8,
-                    width: SizeConfig.blockSizeHorizontal * 17,
+                    height: getSize(46, "width", context),
+                    width: getSize(46, "width", context),
                     icon: SvgPicture.asset(
                       Assets.searchIcon,
                     ),
@@ -552,7 +552,7 @@ class _HomePageState extends State<HomePage> {
                         AnimatedPositioned(
                           duration: Duration(milliseconds: 500),
                           bottom: bottomPadding,
-                          left: SizeConfig.blockSizeVertical * 21.75,
+                          left: getSize(175.64, "width", context),
                           child: InkWell(
                             onTap: () {
                               setState(() {

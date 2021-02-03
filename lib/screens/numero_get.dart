@@ -121,6 +121,7 @@ class _MyAppState extends State<NumeroGet> {
                       side: BorderSide(color: Color(0x26000000), width: 1),
                     ),
                     child: Container(
+                      width: getSize(303, "width", context),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 12),
@@ -143,7 +144,8 @@ class _MyAppState extends State<NumeroGet> {
                                       ),
                                     )
                                   : Padding(
-                                      padding: const EdgeInsets.all(0.0),
+                                      padding: _mobileNumber.length <= 3
+                                          ? EdgeInsets.fromLTRB(getSize(2.5, "width", context), 0, getSize(20.5, "width", context), 0) : EdgeInsets.all(0),
                                       child: _mobileNumber.length <= 3
                                           ? fillInput()
                                           : fillCards()),
@@ -299,9 +301,9 @@ class _MyAppState extends State<NumeroGet> {
                                 });
 
                             Timer(
-                                Duration(seconds: 5),
+                                Duration(seconds: 3),
                                 () => Navigator.of(context)
-                                    .pushNamed(Routes.splash_welcome));
+                                    .pushReplacementNamed(Routes.splash_welcome));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;
@@ -437,7 +439,7 @@ class _MyAppState extends State<NumeroGet> {
                           borderRadius: new BorderRadius.circular(100.0),
                         ),
                         child: Container(
-                          width: 400,
+                          width: getSize(303, "width", context),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             gradient: LinearGradient(
@@ -586,6 +588,7 @@ class _MyAppState extends State<NumeroGet> {
                 selectorConfig: SelectorConfig(
                   selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                 ),
+                textStyle: TextStyle(fontSize: 16),
                 ignoreBlank: false,
                 autoValidateMode: AutovalidateMode.disabled,
                 selectorTextStyle: TextStyle(color: Colors.black),
@@ -594,7 +597,7 @@ class _MyAppState extends State<NumeroGet> {
                 formatInput: false,
                 keyboardType: TextInputType.numberWithOptions(
                     signed: true, decimal: true),
-                inputBorder: OutlineInputBorder(),
+                inputBorder: UnderlineInputBorder(),
               ),
             ),
           ],

@@ -44,11 +44,11 @@ class _WalkState extends State<Walk> {
   Widget pageIndexIndicator(bool isCurrentPage) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: getSize(15.5, "height", context)),
-      height: isCurrentPage ? getSize(13, "height", context) : getSize(12, "height", context),
+      height: isCurrentPage ? getSize(13, "width", context) : getSize(12, "width", context),
       width: isCurrentPage ? getSize(13, "width", context) : getSize(12, "width", context),
       decoration: BoxDecoration(
         color: isCurrentPage ? Color.fromRGBO(37, 41, 106, 1) : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(getSize(100, "width", context)),
       ),
     );
   }
@@ -160,23 +160,23 @@ class SliderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    return new Stack(
+    return Stack(
       alignment: Alignment.topCenter,
       children: <Widget>[
         new Positioned(
           top: getSize(0, "height", context),
-          child: Image.asset("assets/images/Groupe 152.png"),
+          child: Image.asset("assets/images/Background-walk.png", fit: BoxFit.cover, height: getSize(272.08, "height", context),width: MediaQuery.of(context).size.width),
         ),
         new Positioned(
-          top: 103,
+          top: getSize(103, "height", context),
           child: ClipPath(
-            child: Container(height: 200,width: MediaQuery.of(context).size.width,color: Colors.white),
+            child: Container(height: getSize(200, "height", context),width: MediaQuery.of(context).size.width,color: Colors.white),
             clipper: DrawTriangle(),
           )
         ),
         new Positioned(
-          top:getSize(115, "height", context),
-          width: getSize(400, "width", context),
+          top:getSize(136, "height", context),
+          width: getSize(301, "width", context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -188,8 +188,8 @@ class SliderTile extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 40,
+                  fontWeight: FontWeight.w400,
+                  fontSize: getSize(40, "height", context),
                   color: Color.fromRGBO(37, 41, 106, 1)
                 ),
               ),
@@ -204,8 +204,9 @@ class SliderTile extends StatelessWidget {
                   maxLines: 2,
                   softWrap: true,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: getSize(18, "height", context),
                     fontWeight: FontWeight.w400,
+                    height: 1.33
                   ),
                 ),
               ),
@@ -213,21 +214,21 @@ class SliderTile extends StatelessWidget {
                 height: 0.05889*deviceSize.height,
               ),
               title == "Notifications" ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: getSize(36, "height", context)),
+                padding: EdgeInsets.symmetric(horizontal: getSize(25, "height", context)),
                 child: RaisedButton(
                   onPressed: () {
-                    Platform.isAndroid ? Navigator.of(context).pushNamed(Routes.numero_get) : Navigator.of(context).pushNamed(Routes.numero_get_ios);
+                    Platform.isAndroid ? Navigator.of(context).pushReplacementNamed(Routes.numero_get) : Navigator.of(context).pushReplacementNamed(Routes.numero_get_ios);
                   },
                   textColor: Colors.white,
                   color: Colors.transparent,
                   padding: EdgeInsets.all(0),
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(18.0),
+                      borderRadius: new BorderRadius.circular(25.0),
                   ),
                   child: Container(
                       width: getSize(400, "width", context),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
+                        borderRadius: BorderRadius.circular(25),
                         gradient: LinearGradient(
                             colors: <Color>[
                               Color(0xFFA7BACB),

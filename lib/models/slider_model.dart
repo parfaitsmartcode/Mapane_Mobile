@@ -33,7 +33,7 @@ List<SliderModel> getSlides() {
 
   SliderModel sliderModel = new SliderModel();
 
-  sliderModel.setimagePath("assets/images/Map-icon.png");
+  sliderModel.setimagePath("assets/images/localisationwalk.png");
   sliderModel.settitle("Exploration");
   sliderModel.setdescription(
       "Visualisez les alertes routières sur une carte en temps réel.");
@@ -41,7 +41,7 @@ List<SliderModel> getSlides() {
 
   sliderModel = new SliderModel();
 
-  sliderModel.setimagePath("assets/images/Groupe 14.png");
+  sliderModel.setimagePath("assets/images/mapwalk.png");
   sliderModel.settitle("Alertes");
   sliderModel.setdescription(
       "Signalez facilement et en un clic les alerte au prêt de vous.");
@@ -49,7 +49,7 @@ List<SliderModel> getSlides() {
 
   sliderModel = new SliderModel();
 
-  sliderModel.setimagePath("assets/images/Groupe 15.png");
+  sliderModel.setimagePath("assets/images/notifwalk.png");
   sliderModel.settitle("Notifications");
   sliderModel.setdescription(
       "Recevez en temp réel des notifications visuelles et sonores.");

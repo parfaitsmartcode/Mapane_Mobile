@@ -33,7 +33,7 @@ class UtilButton extends StatelessWidget {
         child: Card(
           elevation: 3.0,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0)
+              borderRadius: BorderRadius.circular(100.0)
           ),
           child: Center(
             child: icon,
