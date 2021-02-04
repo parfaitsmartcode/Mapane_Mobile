@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mapane/utils/shared_preference_helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class Di{
 
@@ -8,5 +7,6 @@ class Di{
 
   Dio dio = new Dio();
 
+  IO.Socket socket = IO.io("http://mapane.smartcodegroup.com");
 
 }

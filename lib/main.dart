@@ -8,6 +8,7 @@ import 'package:mapane/screens/tabs_page.dart';
 import 'package:mapane/screens/test.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
 import 'package:mapane/screens/welcome_map.dart';
@@ -26,7 +27,8 @@ void main() {
         ChangeNotifierProvider(create:(_) => BottomBarProvider()),
         ChangeNotifierProvider(create:(_) => AlertProvider()),
         ChangeNotifierProvider(create:(_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => SearchProvider())
+        ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => PlaceProvider()),
       ],
       child:  MyApp(),
     )

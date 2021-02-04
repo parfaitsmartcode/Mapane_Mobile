@@ -12,6 +12,7 @@ import 'package:mapane/models/place.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
   double bottomPadding = SizeConfig.blockSizeVertical;
+  String addresse = "";
   final _startPointController = TextEditingController();
   Widget swiperIcon = SvgPicture.asset(
     Assets.arrowUpIcon,
@@ -58,6 +60,7 @@ class _HomePageState extends State<HomePage> {
   LocationData destinationLocation;
 // wrapper around the location API
   Location location;
+  String userId;
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -76,16 +79,25 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // create an instance of Location
     location = new Location();
+    context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
 
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
     location.onLocationChanged.listen((LocationData cLoc) {
-      // cLoc contains the lat and long of the
-      // current user's position in real time,
-      // so we're holding on to it
+      bool test = true;
+      if (currentLocation != null) test = false;
+
+      if (!test &&
+          num.parse((currentLocation.latitude + currentLocation.longitude)
+                  .toStringAsFixed(5)) !=
+              num.parse((cLoc.latitude + cLoc.longitude).toStringAsFixed(5)))
+        context.read<PlaceProvider>().getPlace(
+            LatLng(currentLocation.latitude, currentLocation.longitude));
       currentLocation = cLoc;
-      context.read<UserProvider>().getPlace(LatLng(currentLocation.latitude, currentLocation.longitude));
+      if (test)
+        context.read<PlaceProvider>().getPlace(
+            LatLng(currentLocation.latitude, currentLocation.longitude));
       updatePinOnMap();
     });
     // set custom marker pins
@@ -179,9 +191,6 @@ class _HomePageState extends State<HomePage> {
     // do this inside the setState() so Flutter gets notified
     // that a widget update is due
     setState(() {
-      print(currentLocation.longitude.toString() +
-          " " +
-          currentLocation.latitude.toString());
       // updated position
       var pinPosition =
           LatLng(currentLocation.latitude, currentLocation.longitude);
@@ -249,55 +258,77 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      context.watch<UserProvider>().loadingState == LoadingState.loading
-                      ?  Column(
-                        children: [
-                          SpinKitThreeBounce(
-                            color: HexColor("#A7BACB"),
-                          ),
-                        ],
-                      )
-                          : context.select((UserProvider provider) => provider).userPlace.fold(
-                            (NException error) {
-                          return Column(
-                            children: [
-                              AspectRatio(aspectRatio: 5 / 1),
-                              Text(
-                               error.message,
-                              )
-                            ],
-                          );
-                        },
-                          (userPlace) {
-                              return userPlace == null
-                                  ? Column(
+                      context.watch<PlaceProvider>().loadingState ==
+                              LoadingState.loading
+                          ? Column(
+                              children: [
+                                SpinKitThreeBounce(
+                                  color: HexColor("#A7BACB"),
+                                ),
+                              ],
+                            )
+                          : context
+                              .select((PlaceProvider provider) => provider)
+                              .userPlace
+                              .fold((NException error) {
+                              return Column(
                                 children: [
                                   AspectRatio(aspectRatio: 5 / 1),
                                   Text(
-                                     "Not available right now.",
+                                    error.message,
                                   )
                                 ],
-                              ) : Container(
-                                width: SizeConfig.blockSizeHorizontal * 38,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      userPlace.name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold, fontSize: 18.0),
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          right: SizeConfig.blockSizeHorizontal * 5,
-                                          top: SizeConfig.blockSizeVertical / 2),
-                                      child: Text(userPlace.city+ ","+ userPlace.country,overflow: TextOverflow.clip,),
-                                    )
-                                  ],
-                                ),
                               );
-                          }
-                      ),
+                            }, (userPlace) {
+                              if (userPlace.name != null && userPlace.city != null && userPlace.country != null) {
+                                addresse = userPlace.name +
+                                    "," +
+                                    userPlace.city +
+                                    "," +
+                                    userPlace.country;
+                              }
+                              return userPlace == null
+                                  ? Column(
+                                      children: [
+                                        AspectRatio(aspectRatio: 5 / 1),
+                                        Text(
+                                          "Not available right now.",
+                                        )
+                                      ],
+                                    )
+                                  : Container(
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 38,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            userPlace.name ?? " ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18.0),
+                                            overflow: TextOverflow.clip,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                right: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    5,
+                                                top: SizeConfig
+                                                        .blockSizeVertical /
+                                                    2),
+                                            child: Text(
+                                              userPlace.city == null
+                                                  ? " "
+                                                  : userPlace.city +
+                                                      "," +
+                                                      userPlace.country,
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                            }),
                       SizedBox(
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
@@ -635,7 +666,14 @@ class _HomePageState extends State<HomePage> {
                                           onTap: () {
                                             context
                                                 .read<AlertProvider>()
-                                                .makeAlert();
+                                                .makeAlert(
+                                                    "embouteillage3",
+                                                    addresse,
+                                                    LatLng(
+                                                        currentLocation
+                                                            .latitude,
+                                                        currentLocation
+                                                            .longitude),userId);
                                           },
                                         ),
                                       ),
@@ -647,6 +685,17 @@ class _HomePageState extends State<HomePage> {
                                           Assets.policeIcon,
                                         ),
                                         radius: 30.0,
+                                        onTap: () {
+                                          context
+                                              .read<AlertProvider>()
+                                              .makeAlert(
+                                                  "controle-routier2",
+                                                  addresse,
+                                                  LatLng(
+                                                      currentLocation.latitude,
+                                                      currentLocation
+                                                          .longitude),userId);
+                                        },
                                       ),
                                       Alert(
                                         title: "Zône dangereuse",
@@ -656,6 +705,17 @@ class _HomePageState extends State<HomePage> {
                                           Assets.dangerIcon,
                                         ),
                                         radius: 30.0,
+                                        onTap: () {
+                                          context
+                                              .read<AlertProvider>()
+                                              .makeAlert(
+                                                  "zone-dangereuse-1",
+                                                  addresse,
+                                                  LatLng(
+                                                      currentLocation.latitude,
+                                                      currentLocation
+                                                          .longitude),userId);
+                                        },
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -670,6 +730,18 @@ class _HomePageState extends State<HomePage> {
                                             Assets.radarIcon,
                                           ),
                                           radius: 30.0,
+                                          onTap: () {
+                                            context
+                                                .read<AlertProvider>()
+                                                .makeAlert(
+                                                    "Radar1",
+                                                    addresse,
+                                                    LatLng(
+                                                        currentLocation
+                                                            .latitude,
+                                                        currentLocation
+                                                            .longitude),userId);
+                                          },
                                         ),
                                       ),
                                       Alert(
@@ -680,6 +752,17 @@ class _HomePageState extends State<HomePage> {
                                           Assets.accidentIcon,
                                         ),
                                         radius: 30.0,
+                                        onTap: () {
+                                          context
+                                              .read<AlertProvider>()
+                                              .makeAlert(
+                                                  "Accident-de-circulation-1",
+                                                  addresse,
+                                                  LatLng(
+                                                      currentLocation.latitude,
+                                                      currentLocation
+                                                          .longitude),userId);
+                                        },
                                       ),
                                       Alert(
                                         title: "Route en barrée",
@@ -689,6 +772,17 @@ class _HomePageState extends State<HomePage> {
                                           Assets.roadblockIcon,
                                         ),
                                         radius: 30.0,
+                                        onTap: () {
+                                          context
+                                              .read<AlertProvider>()
+                                              .makeAlert(
+                                                  "travaux2",
+                                                  addresse,
+                                                  LatLng(
+                                                      currentLocation.latitude,
+                                                      currentLocation
+                                                          .longitude),userId);
+                                        },
                                       ),
                                       Alert(
                                         title: "Route en chantier",
@@ -698,6 +792,17 @@ class _HomePageState extends State<HomePage> {
                                           Assets.highwayIcon,
                                         ),
                                         radius: 30.0,
+                                        onTap: () {
+                                          context
+                                              .read<AlertProvider>()
+                                              .makeAlert(
+                                                  "Route-en-chantier-2",
+                                                  addresse,
+                                                  LatLng(
+                                                      currentLocation.latitude,
+                                                      currentLocation
+                                                          .longitude),userId);
+                                        },
                                       ),
                                       Alert(
                                         title: "Publier ma position",

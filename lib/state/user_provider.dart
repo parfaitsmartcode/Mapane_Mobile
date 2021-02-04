@@ -16,7 +16,6 @@ import 'dart:io' show Platform;
 
 class UserProvider extends BaseProvider{
   Either<NException,List<User>> userData = Right([]);
-  Either<NException,Place> userPlace = Right(new Place());
 
   bool audioVal;
   bool connectVal;
@@ -24,6 +23,7 @@ class UserProvider extends BaseProvider{
   bool first_time;
   String userPhone;
   String userDomicile;
+  String userId;
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
@@ -56,6 +56,13 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
     return userPhone;
+  }
+
+  Future<String> getUserId() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    userId= await _preferences.get('user_info');
+    print("userId" + userId);
+    return userId;
   }
 
   checkifpuceau(context) async {
@@ -169,15 +176,7 @@ class UserProvider extends BaseProvider{
     }
   }
 
-  getPlace(LatLng coord){
-    this.toggleLoadingState();
-    searchService.geocoding(coord).then((place) {
-      userPlace = Right(place);
-    }).catchError((error){
-      userPlace = Left(error);
-      this.toggleLoadingState();
-    });
-  }
+
 }
 
 final UserProvider userProvider = UserProvider();

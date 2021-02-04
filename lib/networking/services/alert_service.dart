@@ -76,7 +76,7 @@ class AlertService {
       throw new NException(e);
     }
   }
-  Future<dynamic> createAlert(LatLng coord,String description,String userId,Category category,String address) async{
+  Future<dynamic> createAlert(LatLng coord,String description,String userId,String slug,String address) async{
     try{
       final String uri = locator<Di>().apiUrl + "/create-alert";
       Response response = await locator<Di>().dio.post(
@@ -86,7 +86,7 @@ class AlertService {
             "long": coord.longitude,
             "desc": description,
             "postedBy": userId,
-            "category": category.id,
+            "category": slug,
             "address": address
           },
           options: Options(headers:{"content-type": "application/json"})
