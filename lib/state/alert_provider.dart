@@ -64,7 +64,10 @@ class AlertProvider extends BaseProvider{
   makeAlert(String slug,String addresse,LatLng coord,String userId) async{
 
     print(userId);
-    locator<Di>().socket.onconnect();
+    //locator<Di>().socket.onconnect();
+    alertService.createAlert(coord, "test", userId, slug, addresse).then((value) {
+      print(value);
+    });
   }
 
 }
