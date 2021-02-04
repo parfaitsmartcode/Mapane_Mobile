@@ -176,7 +176,7 @@ class SliderTile extends StatelessWidget {
         ),
         new Positioned(
           top:getSize(136, "height", context),
-          width: getSize(301, "width", context),
+          width: getSize(350, "width", context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -201,7 +201,7 @@ class SliderTile extends StatelessWidget {
                 child: Text(
                   description,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 3,
                   softWrap: true,
                   style: TextStyle(
                     fontSize: getSize(18, "height", context),

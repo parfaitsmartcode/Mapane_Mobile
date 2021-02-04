@@ -44,7 +44,7 @@ List<SliderModel> getSlides() {
   sliderModel.setimagePath("assets/images/mapwalk.png");
   sliderModel.settitle("Alertes");
   sliderModel.setdescription(
-      "Signalez facilement et en un clic les alerte au prêt de vous.");
+      "Signalez facilement et en un clic les alertes auprès de vous.");
   slides.add(sliderModel);
 
   sliderModel = new SliderModel();
