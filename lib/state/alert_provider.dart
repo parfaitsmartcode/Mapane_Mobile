@@ -1,11 +1,15 @@
 
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/models/alert.dart';
+import 'package:mapane/models/place.dart';
 import 'package:mapane/networking/services/alert_service.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/utils/n_exception.dart';
+import '../di.dart';
+import '../service_locator.dart';
 import 'base_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mapane/utils/shared_preference_helper.dart';
 
 class AlertProvider extends BaseProvider{
 
@@ -55,6 +59,12 @@ class AlertProvider extends BaseProvider{
         this.toggleLoadingState();
       });
     }
+  }
+
+  makeAlert(String slug,String addresse,LatLng coord,String userId) async{
+
+    print(userId);
+    locator<Di>().socket.onconnect();
   }
 
 }

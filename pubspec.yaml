@@ -53,6 +53,7 @@ dependencies:
   simple_moment: ^1.0.7
   flutter_tindercard: ^0.2.0
   socket_io_client: ^0.9.12
+  flutter_spinkit: ^4.1.2
 
 dev_dependencies:
   flutter_test:
@@ -66,8 +67,18 @@ flutter:
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # the material Icons class.Q<A
   uses-material-design: true
+  fonts:
+    - family:  MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFLutterApp.ttf
+    - family: ProfileFont
+      fonts:
+        - asset: assets/fonts/ProfileFont.ttf
+    - family: Map
+      fonts:
+        - asset: assets/fonts/Map.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:

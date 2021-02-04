@@ -8,7 +8,8 @@ class Alert extends StatelessWidget {
   final Color color;
   final radius;
   final SvgPicture picture;
-  Alert({@required this.title, this.color, this.picture, this.radius});
+  final Function onTap;
+  Alert({@required this.title, this.color, this.picture, this.radius,this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +18,14 @@ class Alert extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CircleAvatar(
-          backgroundColor: color,
-          radius: radius,
-          child: Center(
-            child: picture
+        InkWell(
+          onTap: onTap ,
+          child: CircleAvatar(
+            backgroundColor: color,
+            radius: radius,
+            child: Center(
+              child: picture
+            ),
           ),
         ),
         SizedBox(

@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapane/models/place.dart';
 import 'package:mapane/models/user.dart';
+import 'package:mapane/networking/services/search_service.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +23,7 @@ class UserProvider extends BaseProvider{
   bool first_time;
   String userPhone;
   String userDomicile;
+  String userId;
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
@@ -52,6 +56,13 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
     return userPhone;
+  }
+
+  Future<String> getUserId() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    userId= await _preferences.get('user_info');
+    print("userId" + userId);
+    return userId;
   }
 
   checkifpuceau(context) async {
@@ -164,6 +175,8 @@ class UserProvider extends BaseProvider{
       return value;
     }
   }
+
+
 }
 
 final UserProvider userProvider = UserProvider();
