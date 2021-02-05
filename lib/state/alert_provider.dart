@@ -1,6 +1,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapane/constants/socket.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:mapane/models/place.dart';
 import 'package:mapane/networking/services/alert_service.dart';
@@ -61,10 +62,24 @@ class AlertProvider extends BaseProvider{
     }
   }
 
-  makeAlert(String slug,String addresse,LatLng coord,String userId) async{
+  makeAlert(String slug,String address,LatLng coord,String userId) async{
 
     print(userId);
-    locator<Di>().socket.onconnect();
+    //locator<Di>().socket.onconnect();
+    /*alertService.createAlert(coord, "test", userId, slug, addresse).then((value) {
+      print(value);
+    });*/
+    SocketHelper.emit("createAlert",arguments: {
+      "lat": 15,//coord.latitude,
+      "long": 17,//coord.longitude,
+      "desc": "test",
+      "postedBy": "userId",
+      "category": 'slug',
+      "address": "address"
+    });
+    SocketHelper.subscribe("createAlertOk", (value){
+      print(value);
+    });
   }
 
 }

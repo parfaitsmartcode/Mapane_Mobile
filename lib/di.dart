@@ -7,6 +7,6 @@ class Di{
 
   Dio dio = new Dio();
 
-  IO.Socket socket = IO.io("http://mapane.smartcodegroup.com");
+  IO.Socket socket = IO.io("https://bfd74787a0a5.ngrok.io/");
 
 }
