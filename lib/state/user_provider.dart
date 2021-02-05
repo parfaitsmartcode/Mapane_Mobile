@@ -94,7 +94,7 @@ class UserProvider extends BaseProvider{
   }
 
   testSocket() async {
-    Sockete.emit("hey");
+    SocketHelper.emit("hey");
   }
 
   getUserDomicile() async {

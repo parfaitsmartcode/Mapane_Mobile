@@ -1,16 +1,19 @@
+import 'package:mapane/di.dart';
+import 'package:mapane/service_locator.dart';
 import 'package:socket_io_client/socket_io_client.dart' as client;
 
-class Sockete {
+
+class SocketHelper{
   static const _url = 'https://together.smartcodegroup.com';
 
-  static client.Socket _socket;
+  static client.Socket _socket = locator<Di>().socket;
 
   static _initialize() {
-    if (_socket != null) return;
+    /*if (_socket != null) return;
 
     _socket = client.io(
       _url
-    );
+    );*/
     _socket.on('connect', (_) => print('Connected'));
     _socket.connect();
   }
