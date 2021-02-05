@@ -158,7 +158,8 @@ class _MyAppState extends State<MonCompte> {
                             GestureDetector(
                               onTap: (){
                                 print("hey");
-                                return Popup(type: "error", msg: "test", image: AssetImage("assets/images/Background.png"),);
+                                context.read<UserProvider>().testSocket();
+                                // return Popup(type: "error", msg: "test", image: AssetImage("assets/images/Background.png"),);
                               },
                               child: Container(
                                 decoration: BoxDecoration(

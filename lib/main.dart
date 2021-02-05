@@ -18,22 +18,34 @@ import 'package:mapane/screens/numero_get_ios.dart';
 import 'package:mapane/screens/numero_get.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:mapane/state/search_provider.dart';
-void main() {
+
+Injector injector;
+void main() async {
   setupLocator();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create:(_) => BottomBarProvider()),
-        ChangeNotifierProvider(create:(_) => AlertProvider()),
-        ChangeNotifierProvider(create:(_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => SearchProvider()),
-        ChangeNotifierProvider(create: (_) => PlaceProvider()),
-      ],
-      child:  MyApp(),
-    )
-  );
+  // IO.Socket socket = IO.io('https://ee9a821b9b54.ngrok.io',<String, dynamic>{
+  //     'transports': ['websocket'],
+  //   });
+  // socket.onConnect((_) {
+  //   print('connect');
+  //   socket.emit('msg', 'test');
+  // });
+  // socket.on('event', (data) => print(data));
+  // socket.onDisconnect((_) => print('disconnect'));
+  // socket.on('fromServer', (_) => print(_));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => BottomBarProvider()),
+      ChangeNotifierProvider(create: (_) => AlertProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+      ChangeNotifierProvider(create: (_) => SearchProvider()),
+      ChangeNotifierProvider(create: (_) => PlaceProvider()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

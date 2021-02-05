@@ -93,8 +93,17 @@ class UserProvider extends BaseProvider{
     return first_time;
   }
 
-  testSocket() async {
-    Sockete.emit("hey");
+  testSocket() {
+    var data = {
+            "lat": 4.0,
+            "long": 9.5,
+            "desc": "hey",
+            "postedBy": "userId",
+            "category": "embouteillage",
+            "address": "address"
+          };
+    final ss = SocketService();
+    ss.createSocketConnection();
   }
 
   getUserDomicile() async {

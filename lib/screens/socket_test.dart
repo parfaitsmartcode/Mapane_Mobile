@@ -9,7 +9,7 @@ class MyAppSocket extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyAppSocket> {
-  void test() => Sockete.emit('test_connection');
+  // void test() => Sockete.emit('test_connection');
 
   @override
   void initState() {
