@@ -22,6 +22,7 @@ import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'dart:io' show Platform; 
 
 class HomePage extends StatefulWidget {
   @override
@@ -75,7 +76,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   initState() {
-    PermissionHelper.checkPermission(Permission.location);
+    if(!Platform.isIOS){
+      PermissionHelper.checkPermission(Permission.location);
+    }
     super.initState();
     // create an instance of Location
     location = new Location();
@@ -103,7 +106,9 @@ class _HomePageState extends State<HomePage> {
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
-    setInitialLocation();
+    if(!Platform.isIOS){
+      setInitialLocation();
+    }
   }
 
   Future<void> _goTo() async {

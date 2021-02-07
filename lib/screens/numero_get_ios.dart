@@ -5,6 +5,8 @@ import 'package:mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mapane/routes.dart';
+import '../utils/size_config.dart';
+import '../utils/theme_mapane.dart';
 import 'dart:async';
 
 void main() {

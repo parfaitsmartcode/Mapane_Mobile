@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/state/LoadingState.dart';
+import 'dart:io' show Platform; 
 
 class MonCompte extends StatefulWidget {
   @override
@@ -43,13 +44,15 @@ class _MyAppState extends State<MonCompte> {
     super.initState();
     context.read<UserProvider>().getUserPhone();
     context.read<UserProvider>().getUserDomicile();
-    MobileNumber.listenPhonePermission((isPermissionGranted) {
-      if (isPermissionGranted) {
-        initMobileNumberState();
-      } else {}
-    });
+    if(!Platform.isIOS){
+      MobileNumber.listenPhonePermission((isPermissionGranted) {
+        if (isPermissionGranted) {
+          initMobileNumberState();
+        } else {}
+      });
 
-    initMobileNumberState();
+      initMobileNumberState();
+    }
   }
 
   Future<void> initMobileNumberState() async {
@@ -140,7 +143,7 @@ class _MyAppState extends State<MonCompte> {
                                       ),
                                 ),
                                 Text(
-                                  "ee",
+                                  context.watch<UserProvider>().userPhone,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline3
