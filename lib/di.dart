@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+// import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class Di{
 
@@ -7,6 +7,6 @@ class Di{
 
   Dio dio = new Dio();
 
-  IO.Socket socket = IO.io("https://bfd74787a0a5.ngrok.io/");
+  // IO.Socket socket = IO.io("https://bfd74787a0a5.ngrok.io/");
 
 }

@@ -6,6 +6,8 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:Mapane/routes.dart';
 import 'dart:async';
+import '../utils/theme_mapane.dart';
+import '../utils/size_config.dart';
 
 void main() {
   runApp(new MaterialApp(
