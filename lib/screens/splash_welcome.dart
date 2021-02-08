@@ -4,7 +4,7 @@ import 'package:walkthrough/walkthrough.dart';
 import 'dart:async';
 import 'dart:core';
 import 'welcome_map.dart';
-import 'package:Mapane/screens/tabs_page.dart';
+import 'package:mapane/screens/tabs_page.dart';
 
 class SplashWelcome extends StatefulWidget {
   @override

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Mapane/models/alert.dart';
-import 'package:Mapane/models/category.dart';
-import 'package:Mapane/utils/n_exception.dart';
+import 'package:mapane/models/alert.dart';
+import 'package:mapane/models/category.dart';
+import 'package:mapane/utils/n_exception.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
-import 'package:Mapane/state/alert_provider.dart';
+import 'package:mapane/state/alert_provider.dart';
 
 class AlertService {
   Future<List<Alert>> getAlerts() async {

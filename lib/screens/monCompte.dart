@@ -3,16 +3,17 @@ import 'package:flutter/services.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import '../state/user_provider.dart';
-import 'package:Mapane/routes.dart';
+import 'package:mapane/routes.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mobile_number/mobile_number.dart';
-import 'package:Mapane/networking/services/user_service.dart';
-import 'package:Mapane/state/bottom_bar_provider.dart';
-import 'package:Mapane/custom/widgets/popup.dart';
+import 'package:mapane/networking/services/user_service.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/custom/widgets/popup.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-import 'package:Mapane/screens/settings.dart';
-import 'package:Mapane/state/LoadingState.dart';
+import 'package:mapane/screens/settings.dart';
+import 'package:mapane/state/LoadingState.dart';
+import 'dart:io' show Platform; 
 
 class MonCompte extends StatefulWidget {
   @override
@@ -43,13 +44,15 @@ class _MyAppState extends State<MonCompte> {
     super.initState();
     context.read<UserProvider>().getUserPhone();
     context.read<UserProvider>().getUserDomicile();
-    MobileNumber.listenPhonePermission((isPermissionGranted) {
-      if (isPermissionGranted) {
-        initMobileNumberState();
-      } else {}
-    });
+    if(!Platform.isIOS){
+      MobileNumber.listenPhonePermission((isPermissionGranted) {
+        if (isPermissionGranted) {
+          initMobileNumberState();
+        } else {}
+      });
 
-    initMobileNumberState();
+      initMobileNumberState();
+    }
   }
 
   Future<void> initMobileNumberState() async {

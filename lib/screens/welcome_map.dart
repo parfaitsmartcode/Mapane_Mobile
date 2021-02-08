@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:Mapane/routes.dart';
+import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
-import 'package:Mapane/state/alert_provider.dart';
-import 'package:Mapane/utils/size_config.dart';
-import 'package:Mapane/state/LoadingState.dart';
+import 'package:mapane/state/alert_provider.dart';
+import 'package:mapane/utils/size_config.dart';
+import 'package:mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
-import 'package:Mapane/utils/n_exception.dart';
-import 'package:Mapane/models/alert.dart';
+import 'package:mapane/utils/n_exception.dart';
+import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class WelcomeMap extends StatefulWidget {

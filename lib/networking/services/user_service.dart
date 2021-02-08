@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:Mapane/models/user.dart';
+import 'package:mapane/models/user.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:Mapane/utils/shared_preference_helper.dart';
+import 'package:mapane/utils/shared_preference_helper.dart';
 import 'dart:convert';
 
 class UserService {

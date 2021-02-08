@@ -1,12 +1,12 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Mapane/constants/socket.dart';
-import 'package:Mapane/models/alert.dart';
-import 'package:Mapane/models/place.dart';
-import 'package:Mapane/networking/services/alert_service.dart';
-import 'package:Mapane/state/place_provider.dart';
-import 'package:Mapane/utils/n_exception.dart';
+import 'package:mapane/constants/socket.dart';
+import 'package:mapane/models/alert.dart';
+import 'package:mapane/models/place.dart';
+import 'package:mapane/networking/services/alert_service.dart';
+import 'package:mapane/state/place_provider.dart';
+import 'package:mapane/utils/n_exception.dart';
 import '../di.dart';
 import '../service_locator.dart';
 import 'base_provider.dart';

@@ -5,25 +5,26 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:Mapane/constants/assets.dart';
-import 'package:Mapane/custom/widgets/alert.dart';
-import 'package:Mapane/custom/widgets/util_button.dart';
-import 'package:Mapane/models/place.dart';
-import 'package:Mapane/networking/services/alert_service.dart';
-import 'package:Mapane/state/LoadingState.dart';
-import 'package:Mapane/state/alert_provider.dart';
-import 'package:Mapane/state/bottom_bar_provider.dart';
-import 'package:Mapane/state/place_provider.dart';
-import 'package:Mapane/state/search_provider.dart';
-import 'package:Mapane/state/user_provider.dart';
-import 'package:Mapane/utils/PermissionHelper.dart';
-import 'package:Mapane/utils/hexcolor.dart';
-import 'package:Mapane/utils/n_exception.dart';
-import 'package:Mapane/utils/size_config.dart';
+import 'package:mapane/constants/assets.dart';
+import 'package:mapane/custom/widgets/alert.dart';
+import 'package:mapane/custom/widgets/util_button.dart';
+import 'package:mapane/models/place.dart';
+import 'package:mapane/networking/services/alert_service.dart';
+import 'package:mapane/state/LoadingState.dart';
+import 'package:mapane/state/alert_provider.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/place_provider.dart';
+import 'package:mapane/state/search_provider.dart';
+import 'package:mapane/state/user_provider.dart';
+import 'package:mapane/utils/PermissionHelper.dart';
+import 'package:mapane/utils/hexcolor.dart';
+import 'package:mapane/utils/n_exception.dart';
+import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../utils/theme_mapane.dart';
+import 'dart:io' show Platform; 
 
 class HomePage extends StatefulWidget {
   @override
@@ -77,7 +78,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   initState() {
-    PermissionHelper.checkPermission(Permission.location);
+    if(!Platform.isIOS){
+      PermissionHelper.checkPermission(Permission.location);
+    }
     super.initState();
     // create an instance of Location
     location = new Location();
@@ -102,7 +105,9 @@ class _HomePageState extends State<HomePage> {
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
-    setInitialLocation();
+    if(!Platform.isIOS){
+      setInitialLocation();
+    }
   }
 
   Future<void> _goTo() async {

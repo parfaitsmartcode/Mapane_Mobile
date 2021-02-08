@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:Mapane/constants/assets.dart';
-import 'package:Mapane/utils/size_config.dart';
+import 'package:mapane/constants/assets.dart';
+import 'package:mapane/utils/size_config.dart';
 
 class Alert extends StatelessWidget {
   final String title;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:Mapane/models/slider_model.dart';
-import 'package:Mapane/utils/size_config.dart';
-import 'package:Mapane/routes.dart';
+import 'package:mapane/models/slider_model.dart';
+import 'package:mapane/utils/size_config.dart';
+import 'package:mapane/routes.dart';
 import 'dart:io' show Platform;
 
 

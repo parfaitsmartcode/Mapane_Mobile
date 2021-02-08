@@ -1,5 +1,5 @@
-import 'package:Mapane/models/category.dart';
-import 'package:Mapane/models/postedBy.dart';
+import 'package:mapane/models/category.dart';
+import 'package:mapane/models/postedBy.dart';
 
 class Alert{
    String id;

@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Mapane/models/place.dart';
-import 'package:Mapane/models/user.dart';
-import 'package:Mapane/networking/services/search_service.dart';
-import 'package:Mapane/utils/n_exception.dart';
-import 'package:Mapane/networking/services/user_service.dart';
+import 'package:mapane/models/place.dart';
+import 'package:mapane/models/user.dart';
+import 'package:mapane/networking/services/search_service.dart';
+import 'package:mapane/utils/n_exception.dart';
+import 'package:mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:Mapane/utils/shared_preference_helper.dart';
+import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:Mapane/constants/socket.dart';
+import 'package:mapane/constants/socket.dart';
 import 'dart:io' show Platform;
 
 

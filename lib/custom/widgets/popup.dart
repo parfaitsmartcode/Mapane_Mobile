@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:Mapane/utils/size_config.dart';
-import 'package:Mapane/routes.dart';
-import 'package:Mapane/utils/theme_mapane.dart';
+import 'package:mapane/utils/size_config.dart';
+import 'package:mapane/routes.dart';
+import 'package:mapane/utils/theme_mapane.dart';
 
 class Popup extends StatefulWidget {
   @override

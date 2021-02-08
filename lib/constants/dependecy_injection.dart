@@ -1,4 +1,4 @@
-// import 'package:Mapane/constants/socket.dart';
+// import 'package:mapane/constants/socket.dart';
 // import 'package:flutter_simple_dependency_injection/injector.dart';
 
 // // class DependencyInjection {

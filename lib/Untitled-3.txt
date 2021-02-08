@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
-// import 'package:Mapane/utils/size_config.dart';
-// import 'package:Mapane/routes.dart';
+// import 'package:mapane/utils/size_config.dart';
+// import 'package:mapane/routes.dart';
 
 // class Popup extends StatelessWidget {
 //   final String type;

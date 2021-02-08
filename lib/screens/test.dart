@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Mapane/custom/widgets/notification_widget.dart';
+import 'package:mapane/custom/widgets/notification_widget.dart';
 
 class Test extends StatefulWidget {
   @override

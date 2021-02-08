@@ -1,5 +1,5 @@
-// import 'package:Mapane/di.dart';
-// import 'package:Mapane/service_locator.dart';
+// import 'package:mapane/di.dart';
+// import 'package:mapane/service_locator.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as client;
 
 

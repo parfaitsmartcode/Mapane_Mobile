@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Mapane/models/place.dart';
-import 'package:Mapane/networking/services/search_service.dart';
-import 'package:Mapane/state/base_provider.dart';
-import 'package:Mapane/utils/n_exception.dart';
+import 'package:mapane/models/place.dart';
+import 'package:mapane/networking/services/search_service.dart';
+import 'package:mapane/state/base_provider.dart';
+import 'package:mapane/utils/n_exception.dart';
 
 class PlaceProvider extends BaseProvider {
 
