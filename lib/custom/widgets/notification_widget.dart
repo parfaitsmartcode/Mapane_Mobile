@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:mapane/constants/assets.dart';
-import 'package:mapane/utils/hexcolor.dart';
-import 'package:mapane/utils/size_config.dart';
+import 'package:Mapane/constants/assets.dart';
+import 'package:Mapane/utils/hexcolor.dart';
+import 'package:Mapane/utils/size_config.dart';
 
 class NotificationMapane extends StatefulWidget {
   @override

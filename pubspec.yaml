@@ -1,5 +1,5 @@
-name: mapane
-description: A new Flutter application.
+name: Mapane
+description: Votre application d aide au deplacement urbain
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -52,13 +52,21 @@ dependencies:
   flutter_switch: ^0.2.0
   simple_moment: ^1.0.7
   flutter_tindercard: ^0.2.0
+  web_socket_channel: ^1.2.0
   socket_io_client: ^0.9.12
   flutter_spinkit: ^4.1.2
   flutter_simple_dependency_injection: ^1.0.1
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.0"
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/launcher/icon.png"
+  image_path_android: "assets/launcher/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

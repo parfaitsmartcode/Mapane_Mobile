@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/models/alert.dart';
-import 'package:mapane/models/category.dart';
-import 'package:mapane/utils/n_exception.dart';
+import 'package:Mapane/models/alert.dart';
+import 'package:Mapane/models/category.dart';
+import 'package:Mapane/utils/n_exception.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
+import 'package:Mapane/state/alert_provider.dart';
 
 class AlertService {
   Future<List<Alert>> getAlerts() async {
@@ -87,11 +88,14 @@ class AlertService {
             "desc": description,
             "postedBy": userId,
             "category": slug,
-            "address": address
+            "address": address == '' ? ' ' : address
           },
           options: Options(headers:{"content-type": "application/json"})
       );
-      print(response.data);
+      // final alertProvider = AlertProvider();
+      // alertProvider.getAlertByUser("5ff34b88af0f1982ab03f3f9");
+      // alertProvider.getAlertByUserCat("All", 1);
+      return response.data["message"];
     } on DioError catch (e) {
       print(e);
       throw new NException(e);

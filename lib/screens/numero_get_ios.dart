@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mapane/networking/services/user_service.dart';
+import 'package:Mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:mapane/routes.dart';
+import 'package:Mapane/routes.dart';
 import 'dart:async';
 
 void main() {

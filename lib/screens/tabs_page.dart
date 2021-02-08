@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapane/custom/widgets/tab_navigation_item.dart';
-import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:Mapane/custom/widgets/tab_navigation_item.dart';
+import 'package:Mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 

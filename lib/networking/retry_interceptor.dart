@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
-import 'package:mapane/networking/dio_connectivity_reques_retrier.dart';
+import 'package:Mapane/networking/dio_connectivity_reques_retrier.dart';
 
 class RetryOnAuthFailInterceptor extends Interceptor{
   final DioConnectivityRequestRetrier requestRetrier;

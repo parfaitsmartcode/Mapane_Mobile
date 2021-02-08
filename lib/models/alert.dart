@@ -1,5 +1,5 @@
-import 'package:mapane/models/category.dart';
-import 'package:mapane/models/postedBy.dart';
+import 'package:Mapane/models/category.dart';
+import 'package:Mapane/models/postedBy.dart';
 
 class Alert{
    String id;
@@ -10,6 +10,7 @@ class Alert{
    Category category;
    String active;
    String createdAt;
+   String address;
 
   Alert({
     this.id,
@@ -19,7 +20,8 @@ class Alert{
     this.userId,
     this.category,
     this.active,
-    this.createdAt
+    this.createdAt,
+    this.address
 });
 
    factory Alert.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class Alert{
          lat: json['lat'],
          lon: json['long'],
          desc: json['desc'],
+         address: json['address'],
          userId: json['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:json['postedBy']['_id'],phone:json['postedBy']['phone']),
          category: Category(id: json['category']['_id'],name: json['category']['name']),
          active: json['active'],
