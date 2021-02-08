@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mapane/routes.dart';
+import 'package:Mapane/routes.dart';
 import '../utils/theme_mapane.dart';
-import 'package:mapane/state/alert_provider.dart';
-import 'package:mapane/utils/size_config.dart';
-import 'package:mapane/state/LoadingState.dart';
+import 'package:Mapane/state/alert_provider.dart';
+import 'package:Mapane/utils/size_config.dart';
+import 'package:Mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
-import 'package:mapane/utils/n_exception.dart';
-import 'package:mapane/models/alert.dart';
+import 'package:Mapane/utils/n_exception.dart';
+import 'package:Mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class WelcomeMap extends StatefulWidget {
@@ -24,10 +24,8 @@ class _MyAppState extends State<WelcomeMap> {
   String cat = "";
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
-      context.read<AlertProvider>().getAlertByUserCat("All",1);
-    });
+    context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
+    context.read<AlertProvider>().getAlertByUserCat("All", 1);
     super.initState();
   }
 
@@ -95,11 +93,13 @@ class _MyAppState extends State<WelcomeMap> {
                         Container(
                           child: Center(
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 context
                                     .read<AlertProvider>()
                                     .getAlertByUser("5ff34b88af0f1982ab03f3f9");
-                                context.read<AlertProvider>().getAlertByUserCat("All",2);
+                                context
+                                    .read<AlertProvider>()
+                                    .getAlertByUserCat("All", 2);
                               },
                               child: Image.asset(
                                 'assets/images/refresh-icon.png',
@@ -135,8 +135,8 @@ class _MyAppState extends State<WelcomeMap> {
                                   .copyWith(
                                       fontSize: getSize(12, "height", context)),
                               unselectedLabelStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: getSize(12, "height", context)),
+                                  color: Colors.black,
+                                  fontSize: getSize(12, "height", context)),
                               labelColor: Color(0xFF25296A),
                               indicatorColor: Color(0xFF25296A),
                               indicator: BoxDecoration(
@@ -185,8 +185,7 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(46, "width", context),
+                                        vertical: getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -243,8 +242,7 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(46, "width", context),
+                                        vertical: getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -297,8 +295,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                                   alert: alert,
                                                                   type:
                                                                       "embouteillage",
-                                                                      count: alertList
-                                                                .length);
+                                                                  count: alertList
+                                                                      .length);
                                                             },
                                                           )
                                                         : Center(
@@ -317,8 +315,7 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(46, "width", context),
+                                        vertical: getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -389,8 +386,7 @@ class _MyAppState extends State<WelcomeMap> {
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(46, "width", context),
+                                        vertical: getSize(46, "width", context),
                                         horizontal: 0),
                                     child: Column(
                                       children: [
@@ -649,18 +645,32 @@ class AllAlerte extends StatelessWidget {
                         vertical: getSize(11, "height", context),
                         horizontal: 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Bepanda, Douala',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: getSize(14, "height", context),
-                                color: Colors.black.withOpacity(.4))),
-                        Text(moment.from(dateForComparison),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: getSize(14, "height", context),
-                                color: Colors.black.withOpacity(.4))),
+                        SizedBox(
+                          width: getSize(200, "width", context),
+                          child: Text(
+                              alert.address == '' || alert.address == null
+                                  ? 'Adresse Inconnue'
+                                  : alert.address,
+                              maxLines: 2,
+                              softWrap: true,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: getSize(14, "height", context),
+                                  color: Colors.black.withOpacity(.4))),
+                        ),
+                        SizedBox(
+                          width: getSize(28, "width", context),
+                        ),
+                        SizedBox(
+                            width: getSize(80, "width", context),
+                            child: Text(moment.from(dateForComparison),
+                                maxLines: 2,
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: getSize(14, "height", context),
+                                    color: Colors.black.withOpacity(.4)))),
                       ],
                     ),
                   ),
@@ -714,12 +724,11 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Controle routier",2);
+                      .getAlertByUserCat("Controle routier", 2);
                 },
-                leading: Icon(
-                  Icons.map,
-                  color: Color(0xFF25296A),
-                ),
+                leading: Image.asset('assets/images/police.png',
+                    height: getSize(24, "height", context),
+                    width: getSize(24, "width", context)),
                 title: Text('Controle routier',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -730,12 +739,11 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Zone dangereuse",2);
+                      .getAlertByUserCat("Zone dangereuse", 2);
                 },
-                leading: Icon(
-                  Icons.add_location,
-                  color: Color(0xFF25296A),
-                ),
+                leading: Image.asset('assets/images/danger.png',
+                    height: getSize(24, "height", context),
+                    width: getSize(24, "width", context)),
                 title: Text('Zone dangereuse',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -746,12 +754,11 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Accident de circulation",2);
+                      .getAlertByUserCat("Accident de circulation", 2);
                 },
-                leading: Icon(
-                  Icons.airline_seat_recline_extra_rounded,
-                  color: Color(0xFF25296A),
-                ),
+                leading: Image.asset('assets/images/car-accident.png',
+                    height: getSize(24, "height", context),
+                    width: getSize(24, "width", context)),
                 title: Text('Accident de circulation',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -762,12 +769,11 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Route en chantier",2);
+                      .getAlertByUserCat("Route en chantier", 2);
                 },
-                leading: Icon(
-                  Icons.local_taxi_sharp,
-                  color: Color(0xFF25296A),
-                ),
+                leading: Image.asset('assets/images/highway.png',
+                    height: getSize(24, "height", context),
+                    width: getSize(24, "width", context)),
                 title: Text('Route en chantier',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -776,14 +782,11 @@ class _MaterialModalState extends State<MaterialModal> {
             ListTile(
                 onTap: () {
                   Navigator.pop(context);
-                  context
-                      .read<AlertProvider>()
-                      .getAlertByUserCat("Radar",2);
+                  context.read<AlertProvider>().getAlertByUserCat("Radar", 2);
                 },
-                leading: Icon(
-                  Icons.radio_sharp,
-                  color: Color(0xFF25296A),
-                ),
+                leading: Image.asset('assets/images/radar.png',
+                    height: getSize(24, "height", context),
+                    width: getSize(24, "width", context)),
                 title: Text('Radar',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -840,16 +843,30 @@ class _AutreAlerteState extends State<AutreAlerte> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Bepanda, Douala',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: getSize(14, "height", context),
-                          color: Colors.black.withOpacity(.4))),
-                  Text(moment.from(dateForComparison),
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: getSize(14, "height", context),
-                          color: Colors.black.withOpacity(.4))),
+                  SizedBox(
+                    width: getSize(200, "width", context),
+                    child: Text(
+                        widget.alert.address == '' ||
+                                widget.alert.address == null
+                            ? 'Adresse Inconnue'
+                            : widget.alert.address,
+                        maxLines: 2,
+                        softWrap: true,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: getSize(14, "height", context),
+                            color: Colors.black.withOpacity(.4))),
+                  ),
+                  SizedBox(
+                    width: getSize(28, "width", context),
+                  ),
+                  SizedBox(
+                      width: getSize(80, "width", context),
+                      child: Text(moment.from(dateForComparison),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(14, "height", context),
+                              color: Colors.black.withOpacity(.4)))),
                 ],
               ),
             ),

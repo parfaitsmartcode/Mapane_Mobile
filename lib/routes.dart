@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mapane/screens/splash_screen.dart';
-import 'package:mapane/screens/walk.dart';
-import 'package:mapane/screens/numero_get.dart';
-import 'package:mapane/screens/numero_get_ios.dart';
-import 'package:mapane/screens/splash_welcome.dart';
-import 'package:mapane/screens/welcome_map.dart';
-import 'package:mapane/screens/settings.dart';
-import 'package:mapane/screens/tabs_page.dart';
-import 'package:mapane/screens/home_page.dart';
+import 'package:Mapane/screens/splash_screen.dart';
+import 'package:Mapane/screens/walk.dart';
+import 'package:Mapane/screens/numero_get.dart';
+import 'package:Mapane/screens/numero_get_ios.dart';
+import 'package:Mapane/screens/splash_welcome.dart';
+import 'package:Mapane/screens/welcome_map.dart';
+import 'package:Mapane/screens/settings.dart';
+import 'package:Mapane/screens/tabs_page.dart';
+import 'package:Mapane/screens/home_page.dart';
 
 
 class Routes {

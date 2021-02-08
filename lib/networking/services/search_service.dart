@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/di.dart';
-import 'package:mapane/models/place.dart';
-import 'package:mapane/service_locator.dart';
-import 'package:mapane/utils/n_exception.dart';
+import 'package:Mapane/di.dart';
+import 'package:Mapane/models/place.dart';
+import 'package:Mapane/service_locator.dart';
+import 'package:Mapane/utils/n_exception.dart';
 
 class SearchService {
   Future<List<Place>> searchPlaces(String terms) async {

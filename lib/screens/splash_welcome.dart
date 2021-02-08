@@ -4,7 +4,7 @@ import 'package:walkthrough/walkthrough.dart';
 import 'dart:async';
 import 'dart:core';
 import 'welcome_map.dart';
-import 'package:mapane/screens/tabs_page.dart';
+import 'package:Mapane/screens/tabs_page.dart';
 
 class SplashWelcome extends StatefulWidget {
   @override
@@ -294,14 +294,14 @@ class _SplashScreen21State extends State<SplashScreen21> {
           Navigator.of(context)
               .pushReplacementNamed(widget.navigateAfterSeconds);
         } else if (widget.navigateAfterSeconds is Widget) {
-          Navigator.of(context).pushReplacement(widget.pageRoute != null
-              ? widget.pageRoute
-              : new MaterialPageRoute(
-                  settings: widget.routeName != null
-                      ? RouteSettings(name: "${widget.routeName}")
-                      : null,
-                  builder: (BuildContext context) =>
-                      widget.navigateAfterSeconds));
+          Navigator.of(context).pushReplacementNamed('/map');
+              // ? widget.pageRoute
+              // : new MaterialPageRoute(
+              //     settings: widget.routeName != null
+              //         ? RouteSettings(name: "${widget.routeName}")
+              //         : null,
+              //     builder: (BuildContext context) =>
+              //         widget.navigateAfterSeconds));
         } else {
           throw new ArgumentError(
               'widget.navigateAfterSeconds must either be a String or Widget');
@@ -314,13 +314,7 @@ class _SplashScreen21State extends State<SplashScreen21> {
           // named route component
           Navigator.of(context).pushReplacementNamed(navigateTo);
         } else if (navigateTo is Widget) {
-          Navigator.of(context).pushReplacement(widget.pageRoute != null
-              ? widget.pageRoute
-              : new MaterialPageRoute(
-                  settings: widget.routeName != null
-                      ? RouteSettings(name: "${widget.routeName}")
-                      : null,
-                  builder: (BuildContext context) => navigateTo));
+          Navigator.of(context).pushReplacementNamed('/map');
         } else {
           throw new ArgumentError(
               'widget.navigateAfterFuture must either be a String or Widget');

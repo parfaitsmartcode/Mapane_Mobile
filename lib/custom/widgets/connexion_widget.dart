@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:mapane/utils/size_config.dart';
+import 'package:Mapane/utils/size_config.dart';
 import 'dart:ui';
 
 class LostConnexion extends StatelessWidget {

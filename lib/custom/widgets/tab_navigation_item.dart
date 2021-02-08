@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mapane/constants/assets.dart';
-import 'package:mapane/custom/icons/my_flutter_app_icons.dart';
-import 'package:mapane/screens/home_page.dart';
-import 'package:mapane/screens/monCompte.dart';
-import 'package:mapane/screens/welcome_map.dart';
-import 'package:mapane/screens/monCompte.dart';
-import 'package:mapane/utils/hexcolor.dart';
+import 'package:Mapane/constants/assets.dart';
+import 'package:Mapane/custom/icons/my_flutter_app_icons.dart';
+import 'package:Mapane/screens/home_page.dart';
+import 'package:Mapane/screens/monCompte.dart';
+import 'package:Mapane/screens/welcome_map.dart';
+import 'package:Mapane/screens/monCompte.dart';
+import 'package:Mapane/utils/hexcolor.dart';
 
 
 class TabNavigationItem {

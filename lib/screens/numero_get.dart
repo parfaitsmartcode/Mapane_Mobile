@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
-import 'package:mapane/networking/services/user_service.dart';
+import 'package:Mapane/networking/services/user_service.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:mapane/routes.dart';
+import 'package:Mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import 'dart:async';
@@ -301,9 +301,9 @@ class _MyAppState extends State<NumeroGet> {
                                 });
 
                             Timer(
-                                Duration(seconds: 3),
+                                Duration(seconds: 2),
                                 () => Navigator.of(context)
-                                    .pushReplacementNamed(Routes.splash_welcome));
+                                    .pushReplacementNamed('/splash-welcome'));
                           }).catchError((onError) {
                             setState(() {
                               _loading = false;

@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/models/place.dart';
-import 'package:mapane/models/user.dart';
-import 'package:mapane/networking/services/search_service.dart';
-import 'package:mapane/utils/n_exception.dart';
-import 'package:mapane/networking/services/user_service.dart';
+import 'package:Mapane/models/place.dart';
+import 'package:Mapane/models/user.dart';
+import 'package:Mapane/networking/services/search_service.dart';
+import 'package:Mapane/utils/n_exception.dart';
+import 'package:Mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mapane/utils/shared_preference_helper.dart';
+import 'package:Mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:mapane/constants/socket.dart';
+import 'package:Mapane/constants/socket.dart';
 import 'dart:io' show Platform;
 
 
@@ -69,8 +69,11 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     first_time = _preferences.getBool("first_time");
     userPhone = await _preferences.get('user_phone');
+    print("testify");
+    print(userPhone);
+    print(first_time);
     if (first_time != null && !first_time) {// Not first time
-      if (userPhone != null || userPhone != "+237") {
+      if (userPhone != null && userPhone != "+237" && userPhone != "" && userPhone.length > 5) {
         Navigator.of(context).pushReplacementNamed('/map');
       } else {
         if (Platform.isAndroid) {

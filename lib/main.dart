@@ -1,41 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:mapane/routes.dart';
-import 'package:mapane/screens/socket_test.dart';
-import 'package:mapane/screens/home_page.dart';
-import 'package:mapane/screens/splash_screen.dart';
-import 'package:mapane/screens/moncompte.dart';
-import 'package:mapane/screens/tabs_page.dart';
-import 'package:mapane/screens/test.dart';
-import 'package:mapane/service_locator.dart';
-import 'package:mapane/state/bottom_bar_provider.dart';
-import 'package:mapane/state/place_provider.dart';
+import 'package:Mapane/routes.dart';
+import 'package:Mapane/screens/socket_test.dart';
+import 'package:Mapane/screens/home_page.dart';
+import 'package:Mapane/screens/splash_screen.dart';
+import 'package:Mapane/screens/moncompte.dart';
+import 'package:Mapane/screens/tabs_page.dart';
+import 'package:Mapane/screens/test.dart';
+import 'package:Mapane/service_locator.dart';
+import 'package:Mapane/state/bottom_bar_provider.dart';
+import 'package:Mapane/state/place_provider.dart';
 import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
-import 'package:mapane/screens/welcome_map.dart';
-import 'package:mapane/screens/walk.dart';
-import 'package:mapane/screens/settings.dart';
-import 'package:mapane/screens/numero_get_ios.dart';
-import 'package:mapane/screens/numero_get.dart';
-import 'package:mapane/state/alert_provider.dart';
-import 'package:mapane/state/user_provider.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:Mapane/screens/welcome_map.dart';
+import 'package:Mapane/screens/walk.dart';
+import 'package:Mapane/screens/settings.dart';
+import 'package:Mapane/screens/numero_get_ios.dart';
+import 'package:Mapane/screens/numero_get.dart';
+import 'package:Mapane/state/alert_provider.dart';
+import 'package:Mapane/state/user_provider.dart';
 
-import 'package:mapane/state/search_provider.dart';
-
-Injector injector;
+import 'package:Mapane/state/search_provider.dart';
 void main() async {
   setupLocator();
-  // IO.Socket socket = IO.io('https://ee9a821b9b54.ngrok.io',<String, dynamic>{
-  //     'transports': ['websocket'],
-  //   });
-  // socket.onConnect((_) {
-  //   print('connect');
-  //   socket.emit('msg', 'test');
-  // });
-  // socket.on('event', (data) => print(data));
-  // socket.onDisconnect((_) => print('disconnect'));
-  // socket.on('fromServer', (_) => print(_));
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => BottomBarProvider()),
@@ -47,7 +33,6 @@ void main() async {
     child: MyApp(),
   ));
 }
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -55,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
-      home: TabsPage(),
+      home: SplashScreen(),
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

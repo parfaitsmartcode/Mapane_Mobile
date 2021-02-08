@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:mapane/models/user.dart';
+import 'package:Mapane/models/user.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mapane/utils/shared_preference_helper.dart';
+import 'package:Mapane/utils/shared_preference_helper.dart';
 import 'dart:convert';
 
 class UserService {
@@ -31,7 +31,7 @@ class UserService {
 
   Future<dynamic> registerUser(phone, phonewrite) async {
     var data = {
-      "phone": phone == '' ? phonewrite+'236' : phone+'236',
+      "phone": phone == '' ? phonewrite+'239' : phone+'239',
       "type": "user",
       "password": "12345678",
     };

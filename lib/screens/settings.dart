@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mapane/routes.dart';
+import 'package:Mapane/routes.dart';
 import '../utils/theme_mapane.dart';
-import 'package:mapane/utils/size_config.dart';
-import 'package:mapane/state/user_provider.dart';
-import 'package:mapane/custom/widgets/connexion_widget.dart';
+import 'package:Mapane/utils/size_config.dart';
+import 'package:Mapane/state/user_provider.dart';
+import 'package:Mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
-import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:Mapane/state/bottom_bar_provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -177,7 +177,7 @@ class _MyAppState extends State<Settings> {
                                                           FontWeight.w400,
                                                       fontSize: getSize(14,
                                                           "height", context),
-                                                      color: Colors.black),
+                                                      color: Colors.black.withOpacity(.3)),
                                                 ),
                                               ),
                                               Container(
@@ -202,10 +202,10 @@ class _MyAppState extends State<Settings> {
                                                   borderRadius: 100.0,
                                                   onToggle: (val) {
                                                     setState(() {
-                                                      context
-                                                          .read<UserProvider>()
-                                                          .modifyConnectParam(
-                                                              val);
+                                                      // context
+                                                      //     .read<UserProvider>()
+                                                      //     .modifyConnectParam(
+                                                      //         val);
                                                     });
                                                   },
                                                 ),

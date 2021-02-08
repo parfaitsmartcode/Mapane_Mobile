@@ -1,12 +1,12 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/constants/socket.dart';
-import 'package:mapane/models/alert.dart';
-import 'package:mapane/models/place.dart';
-import 'package:mapane/networking/services/alert_service.dart';
-import 'package:mapane/state/place_provider.dart';
-import 'package:mapane/utils/n_exception.dart';
+import 'package:Mapane/constants/socket.dart';
+import 'package:Mapane/models/alert.dart';
+import 'package:Mapane/models/place.dart';
+import 'package:Mapane/networking/services/alert_service.dart';
+import 'package:Mapane/state/place_provider.dart';
+import 'package:Mapane/utils/n_exception.dart';
 import '../di.dart';
 import '../service_locator.dart';
 import 'base_provider.dart';
@@ -65,21 +65,20 @@ class AlertProvider extends BaseProvider{
   makeAlert(String slug,String address,LatLng coord,String userId) async{
 
     print(userId);
-    //locator<Di>().socket.onconnect();
-    /*alertService.createAlert(coord, "test", userId, slug, addresse).then((value) {
-      print(value);
-    });*/
-    SocketHelper.emit("createAlert",arguments: {
-      "lat": 15,//coord.latitude,
-      "long": 17,//coord.longitude,
-      "desc": "test",
-      "postedBy": "userId",
-      "category": 'slug',
-      "address": "address"
-    });
-    SocketHelper.subscribe("createAlertOk", (value){
+    alertService.createAlert(coord, "test", userId, slug, address).then((value) {
       print(value);
     });
+    // SocketHelper.emit("createAlert",arguments: {
+    //   "lat": 15,//coord.latitude,
+    //   "long": 17,//coord.longitude,
+    //   "desc": "test",
+    //   "postedBy": "userId",
+    //   "category": 'slug',
+    //   "address": "address"
+    // });
+    // SocketHelper.subscribe("createAlertOk", (value){
+    //   print(value);
+    // });
   }
 
 }
