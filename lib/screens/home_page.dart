@@ -37,11 +37,15 @@ const LatLng DEST_LOCATION = LatLng(37.335685, -122.0605916);
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
-  double bottomPadding = SizeConfig.blockSizeVertical;
+  double bottomPadding ;
   String addresse = "";
   final _startPointController = TextEditingController();
-  Widget swiperIcon = SvgPicture.asset(
-    Assets.arrowUpIcon,
+  Widget swiperIcon = Container(
+      child: SvgPicture.asset(
+        Assets.arrowUpIcon,
+      ),
+    height: 32.0,
+    width: 32.0,
   );
 
   Set<Marker> _markers = Set<Marker>();
@@ -204,11 +208,15 @@ class _HomePageState extends State<HomePage> {
           icon: sourceIcon));
     });
   }
-
+  updateBottomPadding(){
+    if(bottomPadding == null)
+      bottomPadding = SizeConfig.screenHeight / 50;
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    updateBottomPadding();
+   // bottomPadding = SizeConfig.screenHeight / 42;
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -621,14 +629,15 @@ class _HomePageState extends State<HomePage> {
                                 if (isExpanded) {
                                   isExpanded = false;
                                   alertHeight = 30.0;
-                                  bottomPadding = SizeConfig.blockSizeVertical;
+                                  bottomPadding = SizeConfig.screenHeight / 50;
                                 } else {
                                   isExpanded = true;
                                   alertHeight = 300.0;
                                   bottomPadding =
-                                      SizeConfig.blockSizeVertical * 34.5;
+                                      SizeConfig.screenHeight / 2.90;
                                 }
                               });
+                              print(bottomPadding);
                             },
                             child: swiperIcon,
                           ),
@@ -823,19 +832,28 @@ class _HomePageState extends State<HomePage> {
                     onEnd: () {
                       setState(() {
                         if (!isExpanded) {
-                          swiperIcon = SvgPicture.asset(Assets.arrowUpIcon);
+                          swiperIcon = Container(
+                            child: SvgPicture.asset(
+                              Assets.arrowUpIcon,
+                            ),
+                            height: 32.0,
+                            width: 32.0,
+                          );;
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
-                          //bottomPadding = SizeConfig.blockSizeVertical;
                         } else {
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white);
-                          swiperIcon = SvgPicture.asset(
-                            Assets.arrowDownIcon,
+                          swiperIcon = Container(
+                            child: SvgPicture.asset(
+                              Assets.arrowDownIcon,
+                            ),
+                            height: 32.0,
+                            width: 32.0,
                           );
-                          // bottomPadding = SizeConfig.blockSizeVertical * 34.5;
+
                         }
                       });
                     },
