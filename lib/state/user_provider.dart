@@ -21,6 +21,7 @@ class UserProvider extends BaseProvider{
   bool connectVal;
   bool getval;
   bool first_time;
+  bool loadering;
   String userPhone;
   String userDomicile;
   String userId;
@@ -37,6 +38,7 @@ class UserProvider extends BaseProvider{
       this.userDomicile = " ";
       this.audioVal = false;
       this.connectVal = false;
+      this.loadering = false;
       // this.first_time = true;
   }
 
@@ -50,6 +52,11 @@ class UserProvider extends BaseProvider{
     connectVal = test;
     notifyListeners();
     storeConnectMode(connectVal);
+  }
+
+  modifyLoader(test){
+    loadering = test;
+    notifyListeners();
   }
 
   getUserPhone() async {
@@ -97,7 +104,7 @@ class UserProvider extends BaseProvider{
   }
 
   testSocket() async {
-    SocketHelper.emit("hey");
+    // SocketHelper.emit("hey");
   }
 
   getUserDomicile() async {

@@ -8,7 +8,7 @@ class Alert{
    String desc;
    PostedBy userId;
    Category category;
-   String active;
+   bool active;
    String createdAt;
    String address;
 
