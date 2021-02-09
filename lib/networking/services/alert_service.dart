@@ -21,6 +21,7 @@ class AlertService {
       }).toList();
       return schools;
     } on DioError catch (e) {
+      print(e.message);
       throw new NException(e);
     }
   }
@@ -57,6 +58,7 @@ class AlertService {
       }).toList();
       return schools.where((i) => i.category.name == cat).toList();
     } on DioError catch (e) {
+      print(e.message);
       throw new NException(e);
     }
   }

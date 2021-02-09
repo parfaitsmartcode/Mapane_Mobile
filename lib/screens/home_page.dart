@@ -46,11 +46,15 @@ const LatLng DEST_LOCATION = LatLng(37.335685, -122.0605916);
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
-  double bottomPadding = SizeConfig.blockSizeVertical;
+  double bottomPadding;
   String addresse = "";
   final _startPointController = TextEditingController();
-  Widget swiperIcon = SvgPicture.asset(
-    Assets.arrowUpIcon,
+  Widget swiperIcon = Container(
+    child: SvgPicture.asset(
+      Assets.arrowUpIcon,
+    ),
+    height: 32.0,
+    width: 32.0,
   );
 
   List<String> toPrint = ["trying to connect"];
@@ -78,15 +82,20 @@ class _HomePageState extends State<HomePage> {
   bool loadera = false;
 
   Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 16,
-  );
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
+  CameraPosition _kPosition = CameraPosition(
+      bearing: CAMERA_BEARING,
       target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+      tilt: CAMERA_TILT,
+      zoom: CAMERA_ZOOM);
+
+  Future<void> _goToMyPosition() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kPosition));
+  }
+  Future<void> _goTo(CameraPosition position) async{
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(position));
+  }
 
   @override
   initState() {
@@ -112,9 +121,18 @@ class _HomePageState extends State<HomePage> {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
       currentLocation = cLoc;
-      if (test)
+      if (test) {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
+        CameraPosition cPosition = CameraPosition(
+          zoom: CAMERA_ZOOM,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        );
+        _goTo(cPosition);
+      }
+
       updatePinOnMap();
     });
     // set custom marker pins
@@ -561,11 +579,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _goTo() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
-
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
@@ -632,23 +645,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void updatePinOnMap() async {
-    // create a new CameraPosition instance
-    // every time the location changes, so the camera
-    // follows the pin as it moves with an animation
-    CameraPosition cPosition = CameraPosition(
-      zoom: CAMERA_ZOOM,
-      tilt: CAMERA_TILT,
-      bearing: CAMERA_BEARING,
-      target: LatLng(currentLocation.latitude, currentLocation.longitude),
-    );
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-    // do this inside the setState() so Flutter gets notified
-    // that a widget update is due
     setState(() {
       // updated position
       var pinPosition =
           LatLng(currentLocation.latitude, currentLocation.longitude);
+      _kPosition = CameraPosition(
+          zoom: CAMERA_ZOOM,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: pinPosition);
 
       // the trick is to remove the marker (by id)
       // and add it again at the updated location
@@ -660,10 +665,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  updateBottomPadding() {
+    if (bottomPadding == null) bottomPadding = SizeConfig.screenHeight / 50;
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    updateBottomPadding();
+    // bottomPadding = SizeConfig.screenHeight / 42;
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -813,6 +823,24 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+              ),
+              AnimatedPadding(
+                duration: Duration(milliseconds: 500),
+                padding: EdgeInsets.only(
+                    bottom: !isExpanded
+                        ? SizeConfig.blockSizeVertical * 22
+                        : SizeConfig.blockSizeVertical * 52,
+                    right: SizeConfig.blockSizeHorizontal * 6),
+                child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: UtilButton(
+                      height: getSize(46, "width", context),
+                      width: getSize(46, "width", context),
+                      icon: Icon(Icons.my_location),
+                      onTap: () {
+                        _goToMyPosition();
+                      },
+                    )),
               ),
               AnimatedPadding(
                 duration: Duration(milliseconds: 500),
@@ -1078,14 +1106,15 @@ class _HomePageState extends State<HomePage> {
                                 if (isExpanded) {
                                   isExpanded = false;
                                   alertHeight = 30.0;
-                                  bottomPadding = SizeConfig.blockSizeVertical;
+                                  bottomPadding = SizeConfig.screenHeight / 50;
                                 } else {
                                   isExpanded = true;
                                   alertHeight = 300.0;
                                   bottomPadding =
-                                      SizeConfig.blockSizeVertical * 34.5;
+                                      SizeConfig.screenHeight / 2.90;
                                 }
                               });
+                              print(bottomPadding);
                             },
                             child: swiperIcon,
                           ),
@@ -1103,9 +1132,14 @@ class _HomePageState extends State<HomePage> {
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 4,
-                                            childAspectRatio: 0.75,
-                                            crossAxisSpacing: 15.0,
-                                            mainAxisSpacing: 20.0),
+                                            childAspectRatio:
+                                                MediaQuery.of(context)
+                                                        .devicePixelRatio /
+                                                    4,
+                                            crossAxisSpacing:
+                                                SizeConfig.screenHeight / 55,
+                                            mainAxisSpacing:
+                                                SizeConfig.screenWidth / 19.6),
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -3575,19 +3609,27 @@ class _HomePageState extends State<HomePage> {
                     onEnd: () {
                       setState(() {
                         if (!isExpanded) {
-                          swiperIcon = SvgPicture.asset(Assets.arrowUpIcon);
+                          swiperIcon = Container(
+                            child: SvgPicture.asset(
+                              Assets.arrowUpIcon,
+                            ),
+                            height: 32.0,
+                            width: 32.0,
+                          );
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
-                          //bottomPadding = SizeConfig.blockSizeVertical;
                         } else {
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white);
-                          swiperIcon = SvgPicture.asset(
-                            Assets.arrowDownIcon,
+                          swiperIcon = Container(
+                            child: SvgPicture.asset(
+                              Assets.arrowDownIcon,
+                            ),
+                            height: 32.0,
+                            width: 32.0,
                           );
-                          // bottomPadding = SizeConfig.blockSizeVertical * 34.5;
                         }
                       });
                     },
