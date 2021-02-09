@@ -27,8 +27,8 @@ import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter/foundation.dart' show kIsWeb;
+// import 'package:flutter_tts/flutter_tts.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -37,6 +37,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+// enum TtsState { playing, stopped, paused, continued }
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
@@ -92,7 +93,8 @@ class _HomePageState extends State<HomePage> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kPosition));
   }
-  Future<void> _goTo(CameraPosition position) async{
+
+  Future<void> _goTo(CameraPosition position) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
@@ -175,9 +177,8 @@ class _HomePageState extends State<HomePage> {
       print("createAlertOkUser");
       print(data);
       if (data.containsKey('message')) {
-        if (data['id'] == userId)
-          if(data['message'] == "alerte inactive"){
-            showGeneralDialog(
+        if (data['id'] == userId) if (data['message'] == "alerte inactive") {
+          showGeneralDialog(
               context: context,
               barrierDismissible: true,
               barrierLabel:
@@ -307,8 +308,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               });
-          }else{
-            showGeneralDialog(
+        } else {
+          showGeneralDialog(
               context: context,
               barrierDismissible: true,
               barrierLabel:
@@ -396,7 +397,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               });
-          }
+        }
       } else {
         if (data['alert']['postedBy'] == userId)
           showGeneralDialog(
@@ -543,8 +544,9 @@ class _HomePageState extends State<HomePage> {
     await manager.clearInstance(sockets[identifier]);
     setState(() => _isProbablyConnected[identifier] = false);
   }
-  manageLoader(){
-    Navigator.pop(context);
+
+  manageLoader() {
+    // Navigator.pop(context);
     setState(() => loadera = false);
   }
 
@@ -552,7 +554,7 @@ class _HomePageState extends State<HomePage> {
     print(_isProbablyConnected[identifier]);
     print("Emission prepared");
     if (sockets[identifier] != null) {
-      if(_isProbablyConnected[identifier]){
+      if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
             "lat": latlon.latitude,
@@ -563,7 +565,7 @@ class _HomePageState extends State<HomePage> {
             "address": address == '' ? ' ' : address
           })
         ]);
-      }else{
+      } else {
         initSocket(identifier);
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
@@ -613,7 +615,20 @@ class _HomePageState extends State<HomePage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         icon: sourceIcon));
-    // destination pin
+    // destination
+    // context.watch<AlertProvider>().loadingState == LoadingState.loading ? print("test") :
+    //     context
+    //         .select((AlertProvider provider) => provider)
+    //         .alertList
+    //         .fold((NException error) {
+    //           return false;
+    //         // ignore: missing_return
+    //         }, (alertList) {
+    //       for (var i = 0; i < alertList.length; i++) {
+    //         print("hoalal");
+    //         print(alertList[i].category.name);
+    //       }
+    //     });
     _markers.add(Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
