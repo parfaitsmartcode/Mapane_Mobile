@@ -616,23 +616,37 @@ class _HomePageState extends State<HomePage> {
         position: pinPosition,
         icon: sourceIcon));
     // destination
-    // context.watch<AlertProvider>().loadingState == LoadingState.loading ? print("test") :
-    //     context
-    //         .select((AlertProvider provider) => provider)
-    //         .alertList
-    //         .fold((NException error) {
-    //           return false;
-    //         // ignore: missing_return
-    //         }, (alertList) {
-    //       for (var i = 0; i < alertList.length; i++) {
-    //         print("hoalal");
-    //         print(alertList[i].category.name);
-    //       }
-    //     });
+     /*context.watch<AlertProvider>().loadingState == LoadingState.loading ? print("test") :
+         context
+             .select((AlertProvider provider) => provider)
+             .alertList
+             .fold((NException error) {
+               return false;
+             // ignore: missing_return
+             }, (alertList) {
+           for (var i = 0; i < alertList.length; i++) {
+             print("hoalal");
+             print(alertList[i].category.name);
+           }
+         });*/
+    context.read<AlertProvider>().alertList.fold((l) => null, (r) {
+      print(r);
+      int i = 1;
+      r.forEach((element) {
+        print(double.parse(element.lat));
+        _markers.add(Marker(
+          position: LatLng(double.parse(element.lat),double.parse(element.lon)),
+          markerId: MarkerId('alert'+ i.toString()),
+          icon: sourceIcon
+        ));
+        i++;
+      });
+    });
     _markers.add(Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
         icon: destinationIcon));
+
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
     setPolylines();
@@ -677,6 +691,7 @@ class _HomePageState extends State<HomePage> {
           markerId: MarkerId("sourcePin"),
           position: pinPosition, // updated position
           icon: sourceIcon));
+      showPinsOnMap();
     });
   }
 
