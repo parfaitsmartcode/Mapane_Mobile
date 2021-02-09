@@ -27,6 +27,8 @@ import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_tts/flutter_tts.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -92,6 +94,7 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(Permission.location);
     }
     super.initState();
+    context.read<AlertProvider>().getAlertList();
     manager = SocketIOManager();
     initSocket("default");
     // create an instance of Location

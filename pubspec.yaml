@@ -55,6 +55,7 @@ dependencies:
   adhara_socket_io: ^0.4.2+1
   flutter_spinkit: ^4.1.2
   flutter_simple_dependency_injection: ^1.0.1
+  flutter_tts: ^2.1.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.0"
