@@ -27,8 +27,8 @@ import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
 import 'dart:io' show Platform;
-// import 'package:flutter/foundation.dart' show kIsWeb;
-// import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_tts/flutter_tts.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -37,7 +37,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-// enum TtsState { playing, stopped, paused, continued }
+enum TtsState { playing, stopped, paused, continued }
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
