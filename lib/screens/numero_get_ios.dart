@@ -1,15 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:Mapane/networking/services/user_service.dart';;
+import 'package:Mapane/networking/services/user_service.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:Mapane/routes.dart';
 import 'dart:async';
-
-import 'package:mapane/utils/size_config.dart';
-import 'package:mapane/utils/size_config.dart';
-import 'package:mapane/utils/theme_mapane.dart';
-import 'package:mapane/utils/theme_mapane.dart';
+import 'package:Mapane/utils/size_config.dart';
+import 'package:Mapane/utils/theme_mapane.dart';
 
 void main() {
   runApp(new MaterialApp(

@@ -39,13 +39,13 @@ const LatLng DEST_LOCATION = LatLng(37.335685, -122.0605916);
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
-  double bottomPadding ;
+  double bottomPadding;
   String addresse = "";
   final _startPointController = TextEditingController();
   Widget swiperIcon = Container(
-      child: SvgPicture.asset(
-        Assets.arrowUpIcon,
-      ),
+    child: SvgPicture.asset(
+      Assets.arrowUpIcon,
+    ),
     height: 32.0,
     width: 32.0,
   );
@@ -69,15 +69,20 @@ class _HomePageState extends State<HomePage> {
   String userId;
 
   Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 16,
-  );
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
+  CameraPosition _kPosition = CameraPosition(
+      bearing: CAMERA_BEARING,
       target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+      tilt: CAMERA_TILT,
+      zoom: CAMERA_ZOOM);
+
+  Future<void> _goToMyPosition() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kPosition));
+  }
+  Future<void> _goTo(CameraPosition position) async{
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(position));
+  }
 
   @override
   initState() {
@@ -98,20 +103,24 @@ class _HomePageState extends State<HomePage> {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
       currentLocation = cLoc;
-      if (test)
+      if (test) {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
+        CameraPosition cPosition = CameraPosition(
+          zoom: CAMERA_ZOOM,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        );
+        _goTo(cPosition);
+      }
+
       updatePinOnMap();
     });
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
     setInitialLocation();
-  }
-
-  Future<void> _goTo() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 
   void setSourceAndDestinationIcons() async {
@@ -180,23 +189,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void updatePinOnMap() async {
-    // create a new CameraPosition instance
-    // every time the location changes, so the camera
-    // follows the pin as it moves with an animation
-    CameraPosition cPosition = CameraPosition(
-      zoom: CAMERA_ZOOM,
-      tilt: CAMERA_TILT,
-      bearing: CAMERA_BEARING,
-      target: LatLng(currentLocation.latitude, currentLocation.longitude),
-    );
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-    // do this inside the setState() so Flutter gets notified
-    // that a widget update is due
     setState(() {
       // updated position
       var pinPosition =
           LatLng(currentLocation.latitude, currentLocation.longitude);
+      _kPosition = CameraPosition(
+          zoom: CAMERA_ZOOM,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: pinPosition);
 
       // the trick is to remove the marker (by id)
       // and add it again at the updated location
@@ -207,15 +208,16 @@ class _HomePageState extends State<HomePage> {
           icon: sourceIcon));
     });
   }
-  updateBottomPadding(){
-    if(bottomPadding == null)
-      bottomPadding = SizeConfig.screenHeight / 50;
+
+  updateBottomPadding() {
+    if (bottomPadding == null) bottomPadding = SizeConfig.screenHeight / 50;
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     updateBottomPadding();
-   // bottomPadding = SizeConfig.screenHeight / 42;
+    // bottomPadding = SizeConfig.screenHeight / 42;
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -365,6 +367,24 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+              ),
+              AnimatedPadding(
+                duration: Duration(milliseconds: 500),
+                padding: EdgeInsets.only(
+                    bottom: !isExpanded
+                        ? SizeConfig.blockSizeVertical * 22
+                        : SizeConfig.blockSizeVertical * 52,
+                    right: SizeConfig.blockSizeHorizontal * 6),
+                child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: UtilButton(
+                      height: getSize(46, "width", context),
+                      width: getSize(46, "width", context),
+                      icon: Icon(Icons.my_location),
+                      onTap: () {
+                        _goToMyPosition();
+                      },
+                    )),
               ),
               AnimatedPadding(
                 duration: Duration(milliseconds: 500),
@@ -656,9 +676,14 @@ class _HomePageState extends State<HomePage> {
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 4,
-                                            childAspectRatio: 0.75,
-                                            crossAxisSpacing: 15.0,
-                                            mainAxisSpacing: 20.0),
+                                            childAspectRatio:
+                                                MediaQuery.of(context)
+                                                        .devicePixelRatio /
+                                                    4,
+                                            crossAxisSpacing:
+                                                SizeConfig.screenHeight / 55,
+                                            mainAxisSpacing:
+                                                SizeConfig.screenWidth / 19.6),
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -1059,198 +1084,209 @@ class _HomePageState extends State<HomePage> {
                                             addresse,
                                           )
                                               .then((value) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.96),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  303,
-                                                                  "width",
-                                                                  context),
-                                                              // height: getSize(256, "height", context),
-                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        20,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        33,
+                                            showGeneralDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .modalBarrierDismissLabel,
+                                                barrierColor: AppColors
+                                                    .whiteColor
+                                                    .withOpacity(0.96),
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                pageBuilder: (BuildContext
+                                                        buildContext,
+                                                    Animation animation,
+                                                    Animation
+                                                        secondaryAnimation) {
+                                                  return Center(
+                                                    child: Card(
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0,
+                                                              vertical: 0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            width: getSize(
+                                                                303,
+                                                                "width",
+                                                                context),
+                                                            // height: getSize(256, "height", context),
+                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .whiteColor,
+                                                              borderRadius: BorderRadius
+                                                                  .circular(getSize(
+                                                                      20,
+                                                                      "height",
+                                                                      context)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Color(
+                                                                          0xFF000000)
+                                                                      .withOpacity(
+                                                                          0.11),
+                                                                  spreadRadius:
+                                                                      5,
+                                                                  blurRadius:
+                                                                      10,
+                                                                  offset: Offset(
+                                                                      0,
+                                                                      5), // changes position of shadow
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Container(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  vertical: getSize(
+                                                                      33,
+                                                                      "height",
+                                                                      context),
+                                                                  horizontal: getSize(
+                                                                      28,
+                                                                      "width",
+                                                                      context)),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        100,
                                                                         "height",
                                                                         context),
-                                                                    horizontal: getSize(
-                                                                        28,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      height: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical: getSize(
-                                                                              0,
-                                                                              "height",
-                                                                              context),
-                                                                          horizontal: getSize(
-                                                                              0,
-                                                                              "width",
-                                                                              context)),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                        color: AppColors
-                                                                            .greenColor
-                                                                            .withOpacity(0.35),
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        overflow:
-                                                                            Overflow.visible,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Positioned(
-                                                                            child: Center(
-                                                                                child: Image.asset(
-                                                                              'assets/images/Map pin-3.png',
-                                                                              height: getSize(45.6, "height", context),
-                                                                              width: getSize(37.77, "width", context),
-                                                                            )),
-                                                                          ),
-                                                                          Positioned(
-                                                                            left: getSize(
-                                                                                60,
-                                                                                "width",
-                                                                                context),
-                                                                            top: getSize(
-                                                                                61,
+                                                                    height: getSize(
+                                                                        100,
+                                                                        "height",
+                                                                        context),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical: getSize(
+                                                                            0,
+                                                                            "height",
+                                                                            context),
+                                                                        horizontal: getSize(
+                                                                            0,
+                                                                            "width",
+                                                                            context)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                      color: AppColors
+                                                                          .greenColor
+                                                                          .withOpacity(
+                                                                              0.35),
+                                                                    ),
+                                                                    child:
+                                                                        Stack(
+                                                                      overflow:
+                                                                          Overflow
+                                                                              .visible,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Positioned(
+                                                                          child: Center(
+                                                                              child: Image.asset(
+                                                                            'assets/images/Map pin-3.png',
+                                                                            height: getSize(
+                                                                                45.6,
                                                                                 "height",
                                                                                 context),
+                                                                            width: getSize(
+                                                                                37.77,
+                                                                                "width",
+                                                                                context),
+                                                                          )),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left: getSize(
+                                                                              60,
+                                                                              "width",
+                                                                              context),
+                                                                          top: getSize(
+                                                                              61,
+                                                                              "height",
+                                                                              context),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
                                                                             child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
-                                                                              child: SizedBox(
-                                                                                width: getSize(31, "height", context),
-                                                                                height: getSize(31, "height", context),
-                                                                                child: Card(
-                                                                                  elevation: 2.5,
-                                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(9, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    ),
+                                                                                SizedBox(
+                                                                              width: getSize(31, "height", context),
+                                                                              height: getSize(31, "height", context),
+                                                                              child: Card(
+                                                                                elevation: 2.5,
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                                child: Center(
+                                                                                  child: Icon(
+                                                                                    Icons.check,
+                                                                                    size: getSize(9, "height", context),
+                                                                                    color: AppColors.greenColor,
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          )
-                                                                        ],
-                                                                      ),
+                                                                          ),
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          21,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Text(
-                                                                      "Alerte envoyé",
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        21,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Text(
+                                                                    "Alerte envoyé",
+                                                                    style: AppTheme
+                                                                        .defaultParagraph,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        12,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        220,
+                                                                        "width",
+                                                                        context),
+                                                                    child: Text(
+                                                                      "Votre alerte a été signalé à tous les utilisateurs de Mapane",
                                                                       style: AppTheme
-                                                                          .defaultParagraph,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          12,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          220,
-                                                                          "width",
-                                                                          context),
-                                                                      child:
-                                                                          Text(
-                                                                        "Votre alerte a été signalé à tous les utilisateurs de Mapane",
-                                                                        style: AppTheme
-                                                                            .bodyText1
-                                                                            .copyWith(
-                                                                          color: AppColors
-                                                                              .blackColor
-                                                                              .withOpacity(0.5),
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.center,
+                                                                          .bodyText1
+                                                                          .copyWith(
+                                                                        color: AppColors
+                                                                            .blackColor
+                                                                            .withOpacity(0.5),
                                                                       ),
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    );
-                                                  });
-                                            }).catchError((onError) {
+                                                    ),
+                                                  );
+                                                });
+                                          }).catchError((onError) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -1438,198 +1474,209 @@ class _HomePageState extends State<HomePage> {
                                             addresse,
                                           )
                                               .then((value) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.96),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  303,
-                                                                  "width",
-                                                                  context),
-                                                              // height: getSize(256, "height", context),
-                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        20,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        33,
+                                            showGeneralDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .modalBarrierDismissLabel,
+                                                barrierColor: AppColors
+                                                    .whiteColor
+                                                    .withOpacity(0.96),
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                pageBuilder: (BuildContext
+                                                        buildContext,
+                                                    Animation animation,
+                                                    Animation
+                                                        secondaryAnimation) {
+                                                  return Center(
+                                                    child: Card(
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0,
+                                                              vertical: 0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            width: getSize(
+                                                                303,
+                                                                "width",
+                                                                context),
+                                                            // height: getSize(256, "height", context),
+                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .whiteColor,
+                                                              borderRadius: BorderRadius
+                                                                  .circular(getSize(
+                                                                      20,
+                                                                      "height",
+                                                                      context)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Color(
+                                                                          0xFF000000)
+                                                                      .withOpacity(
+                                                                          0.11),
+                                                                  spreadRadius:
+                                                                      5,
+                                                                  blurRadius:
+                                                                      10,
+                                                                  offset: Offset(
+                                                                      0,
+                                                                      5), // changes position of shadow
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Container(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  vertical: getSize(
+                                                                      33,
+                                                                      "height",
+                                                                      context),
+                                                                  horizontal: getSize(
+                                                                      28,
+                                                                      "width",
+                                                                      context)),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        100,
                                                                         "height",
                                                                         context),
-                                                                    horizontal: getSize(
-                                                                        28,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      height: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical: getSize(
-                                                                              0,
-                                                                              "height",
-                                                                              context),
-                                                                          horizontal: getSize(
-                                                                              0,
-                                                                              "width",
-                                                                              context)),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                        color: AppColors
-                                                                            .greenColor
-                                                                            .withOpacity(0.35),
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        overflow:
-                                                                            Overflow.visible,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Positioned(
-                                                                            child: Center(
-                                                                                child: Image.asset(
-                                                                              'assets/images/Map pin-3.png',
-                                                                              height: getSize(45.6, "height", context),
-                                                                              width: getSize(37.77, "width", context),
-                                                                            )),
-                                                                          ),
-                                                                          Positioned(
-                                                                            left: getSize(
-                                                                                60,
-                                                                                "width",
-                                                                                context),
-                                                                            top: getSize(
-                                                                                61,
+                                                                    height: getSize(
+                                                                        100,
+                                                                        "height",
+                                                                        context),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical: getSize(
+                                                                            0,
+                                                                            "height",
+                                                                            context),
+                                                                        horizontal: getSize(
+                                                                            0,
+                                                                            "width",
+                                                                            context)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                      color: AppColors
+                                                                          .greenColor
+                                                                          .withOpacity(
+                                                                              0.35),
+                                                                    ),
+                                                                    child:
+                                                                        Stack(
+                                                                      overflow:
+                                                                          Overflow
+                                                                              .visible,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Positioned(
+                                                                          child: Center(
+                                                                              child: Image.asset(
+                                                                            'assets/images/Map pin-3.png',
+                                                                            height: getSize(
+                                                                                45.6,
                                                                                 "height",
                                                                                 context),
+                                                                            width: getSize(
+                                                                                37.77,
+                                                                                "width",
+                                                                                context),
+                                                                          )),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left: getSize(
+                                                                              60,
+                                                                              "width",
+                                                                              context),
+                                                                          top: getSize(
+                                                                              61,
+                                                                              "height",
+                                                                              context),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
                                                                             child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
-                                                                              child: SizedBox(
-                                                                                width: getSize(31, "height", context),
-                                                                                height: getSize(31, "height", context),
-                                                                                child: Card(
-                                                                                  elevation: 2.5,
-                                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(9, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    ),
+                                                                                SizedBox(
+                                                                              width: getSize(31, "height", context),
+                                                                              height: getSize(31, "height", context),
+                                                                              child: Card(
+                                                                                elevation: 2.5,
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                                child: Center(
+                                                                                  child: Icon(
+                                                                                    Icons.check,
+                                                                                    size: getSize(9, "height", context),
+                                                                                    color: AppColors.greenColor,
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          )
-                                                                        ],
-                                                                      ),
+                                                                          ),
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          21,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Text(
-                                                                      "Alerte envoyé",
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        21,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Text(
+                                                                    "Alerte envoyé",
+                                                                    style: AppTheme
+                                                                        .defaultParagraph,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        12,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        220,
+                                                                        "width",
+                                                                        context),
+                                                                    child: Text(
+                                                                      "Votre alerte a été signalé à tous les utilisateurs de Mapane",
                                                                       style: AppTheme
-                                                                          .defaultParagraph,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          12,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          220,
-                                                                          "width",
-                                                                          context),
-                                                                      child:
-                                                                          Text(
-                                                                        "Votre alerte a été signalé à tous les utilisateurs de Mapane",
-                                                                        style: AppTheme
-                                                                            .bodyText1
-                                                                            .copyWith(
-                                                                          color: AppColors
-                                                                              .blackColor
-                                                                              .withOpacity(0.5),
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.center,
+                                                                          .bodyText1
+                                                                          .copyWith(
+                                                                        color: AppColors
+                                                                            .blackColor
+                                                                            .withOpacity(0.5),
                                                                       ),
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    );
-                                                  });
-                                            }).catchError((onError) {
+                                                    ),
+                                                  );
+                                                });
+                                          }).catchError((onError) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -1811,16 +1858,17 @@ class _HomePageState extends State<HomePage> {
                                             Assets.radarIcon,
                                           ),
                                           radius: 30.0,
-                                          onTap: () {alertService
-                                              .createAlert(
-                                            LatLng(currentLocation.latitude,
-                                                currentLocation.longitude),
-                                            "test",
-                                            userId,
-                                            "Radar1",
-                                            addresse,
-                                          )
-                                              .then((value) {
+                                          onTap: () {
+                                            alertService
+                                                .createAlert(
+                                              LatLng(currentLocation.latitude,
+                                                  currentLocation.longitude),
+                                              "test",
+                                              userId,
+                                              "Radar1",
+                                              addresse,
+                                            )
+                                                .then((value) {
                                               showGeneralDialog(
                                                   context: context,
                                                   barrierDismissible: true,
@@ -2013,6 +2061,189 @@ class _HomePageState extends State<HomePage> {
                                                     );
                                                   });
                                             }).catchError((onError) {
+                                              showGeneralDialog(
+                                                  context: context,
+                                                  barrierDismissible: true,
+                                                  barrierLabel:
+                                                      MaterialLocalizations.of(
+                                                              context)
+                                                          .modalBarrierDismissLabel,
+                                                  barrierColor: AppColors
+                                                      .whiteColor
+                                                      .withOpacity(0.96),
+                                                  transitionDuration:
+                                                      const Duration(
+                                                          milliseconds: 200),
+                                                  pageBuilder: (BuildContext
+                                                          buildContext,
+                                                      Animation animation,
+                                                      Animation
+                                                          secondaryAnimation) {
+                                                    return Center(
+                                                      child: Card(
+                                                        shadowColor:
+                                                            Colors.transparent,
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 0,
+                                                                vertical: 0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                              width: getSize(
+                                                                  303,
+                                                                  "width",
+                                                                  context),
+                                                              // height: getSize(256, "height", context),
+                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: AppColors
+                                                                    .whiteColor,
+                                                                borderRadius: BorderRadius
+                                                                    .circular(getSize(
+                                                                        20,
+                                                                        "height",
+                                                                        context)),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Color(
+                                                                            0xFF000000)
+                                                                        .withOpacity(
+                                                                            0.11),
+                                                                    spreadRadius:
+                                                                        5,
+                                                                    blurRadius:
+                                                                        10,
+                                                                    offset: Offset(
+                                                                        0,
+                                                                        5), // changes position of shadow
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              child: Container(
+                                                                padding: EdgeInsets.symmetric(
+                                                                    vertical: getSize(
+                                                                        33,
+                                                                        "height",
+                                                                        context),
+                                                                    horizontal: getSize(
+                                                                        28,
+                                                                        "width",
+                                                                        context)),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: getSize(
+                                                                          100,
+                                                                          "height",
+                                                                          context),
+                                                                      height: getSize(
+                                                                          100,
+                                                                          "height",
+                                                                          context),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          vertical: getSize(
+                                                                              36,
+                                                                              "height",
+                                                                              context),
+                                                                          horizontal: getSize(
+                                                                              30,
+                                                                              "width",
+                                                                              context)),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(100),
+                                                                        color: Colors
+                                                                            .red
+                                                                            .withOpacity(0.35),
+                                                                      ),
+                                                                      child: Center(
+                                                                          child: Icon(
+                                                                        Icons
+                                                                            .close,
+                                                                        size: getSize(
+                                                                            38,
+                                                                            "height",
+                                                                            context),
+                                                                        color: Colors
+                                                                            .white,
+                                                                      )),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: getSize(
+                                                                          21,
+                                                                          "height",
+                                                                          context),
+                                                                    ),
+                                                                    Text(
+                                                                      "Erreur",
+                                                                      style: AppTheme
+                                                                          .defaultParagraph,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: getSize(
+                                                                          12,
+                                                                          "height",
+                                                                          context),
+                                                                    ),
+                                                                    Container(
+                                                                      width: getSize(
+                                                                          220,
+                                                                          "width",
+                                                                          context),
+                                                                      child:
+                                                                          Text(
+                                                                        onError.response == null ||
+                                                                                onError.response == ""
+                                                                            ? 'Une erreur est survenue, verifier votre connexion.'
+                                                                            : onError.response.data["message"],
+                                                                        style: AppTheme
+                                                                            .bodyText1
+                                                                            .copyWith(
+                                                                          color: AppColors
+                                                                              .blackColor
+                                                                              .withOpacity(0.5),
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Alert(
+                                        title: "Accident de circulation",
+                                        color: HexColor("#2C2BFB")
+                                            .withOpacity(0.25),
+                                        picture: SvgPicture.asset(
+                                          Assets.accidentIcon,
+                                        ),
+                                        radius: 30.0,
+                                        onTap: () {
+                                          alertService
+                                              .createAlert(
+                                            LatLng(currentLocation.latitude,
+                                                currentLocation.longitude),
+                                            "test",
+                                            userId,
+                                            "Accident-de-circulation-1",
+                                            addresse,
+                                          )
+                                              .then((value) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -2098,11 +2329,11 @@ class _HomePageState extends State<HomePage> {
                                                                         context),
                                                                     padding: EdgeInsets.symmetric(
                                                                         vertical: getSize(
-                                                                            36,
+                                                                            0,
                                                                             "height",
                                                                             context),
                                                                         horizontal: getSize(
-                                                                            30,
+                                                                            0,
                                                                             "width",
                                                                             context)),
                                                                     decoration:
@@ -2110,22 +2341,65 @@ class _HomePageState extends State<HomePage> {
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               100),
-                                                                      color: Colors
-                                                                          .red
+                                                                      color: AppColors
+                                                                          .greenColor
                                                                           .withOpacity(
                                                                               0.35),
                                                                     ),
-                                                                    child: Center(
-                                                                        child: Icon(
-                                                                      Icons
-                                                                          .close,
-                                                                      size: getSize(
-                                                                          38,
-                                                                          "height",
-                                                                          context),
-                                                                      color: Colors
-                                                                          .white,
-                                                                    )),
+                                                                    child:
+                                                                        Stack(
+                                                                      overflow:
+                                                                          Overflow
+                                                                              .visible,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Positioned(
+                                                                          child: Center(
+                                                                              child: Image.asset(
+                                                                            'assets/images/Map pin-3.png',
+                                                                            height: getSize(
+                                                                                45.6,
+                                                                                "height",
+                                                                                context),
+                                                                            width: getSize(
+                                                                                37.77,
+                                                                                "width",
+                                                                                context),
+                                                                          )),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left: getSize(
+                                                                              60,
+                                                                              "width",
+                                                                              context),
+                                                                          top: getSize(
+                                                                              61,
+                                                                              "height",
+                                                                              context),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
+                                                                            child:
+                                                                                SizedBox(
+                                                                              width: getSize(31, "height", context),
+                                                                              height: getSize(31, "height", context),
+                                                                              child: Card(
+                                                                                elevation: 2.5,
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                                child: Center(
+                                                                                  child: Icon(
+                                                                                    Icons.check,
+                                                                                    size: getSize(9, "height", context),
+                                                                                    color: AppColors.greenColor,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                   SizedBox(
                                                                     height: getSize(
@@ -2134,7 +2408,7 @@ class _HomePageState extends State<HomePage> {
                                                                         context),
                                                                   ),
                                                                   Text(
-                                                                    "Erreur",
+                                                                    "Alerte envoyé",
                                                                     style: AppTheme
                                                                         .defaultParagraph,
                                                                   ),
@@ -2150,13 +2424,7 @@ class _HomePageState extends State<HomePage> {
                                                                         "width",
                                                                         context),
                                                                     child: Text(
-                                                                      onError.response == null ||
-                                                                              onError.response ==
-                                                                                  ""
-                                                                          ? 'Une erreur est survenue, verifier votre connexion.'
-                                                                          : onError
-                                                                              .response
-                                                                              .data["message"],
+                                                                      "Votre alerte a été signalé à tous les utilisateurs de Mapane",
                                                                       style: AppTheme
                                                                           .bodyText1
                                                                           .copyWith(
@@ -2178,222 +2446,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   );
                                                 });
-                                          });
-                                        
-                                          },
-                                        ),
-                                      ),
-                                      Alert(
-                                        title: "Accident de circulation",
-                                        color: HexColor("#2C2BFB")
-                                            .withOpacity(0.25),
-                                        picture: SvgPicture.asset(
-                                          Assets.accidentIcon,
-                                        ),
-                                        radius: 30.0,
-                                        onTap: () {
-                                          alertService
-                                              .createAlert(
-                                            LatLng(currentLocation.latitude,
-                                                currentLocation.longitude),
-                                            "test",
-                                            userId,
-                                            "Accident-de-circulation-1",
-                                            addresse,
-                                          )
-                                              .then((value) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.96),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  303,
-                                                                  "width",
-                                                                  context),
-                                                              // height: getSize(256, "height", context),
-                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        20,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        33,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        28,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      height: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical: getSize(
-                                                                              0,
-                                                                              "height",
-                                                                              context),
-                                                                          horizontal: getSize(
-                                                                              0,
-                                                                              "width",
-                                                                              context)),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                        color: AppColors
-                                                                            .greenColor
-                                                                            .withOpacity(0.35),
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        overflow:
-                                                                            Overflow.visible,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Positioned(
-                                                                            child: Center(
-                                                                                child: Image.asset(
-                                                                              'assets/images/Map pin-3.png',
-                                                                              height: getSize(45.6, "height", context),
-                                                                              width: getSize(37.77, "width", context),
-                                                                            )),
-                                                                          ),
-                                                                          Positioned(
-                                                                            left: getSize(
-                                                                                60,
-                                                                                "width",
-                                                                                context),
-                                                                            top: getSize(
-                                                                                61,
-                                                                                "height",
-                                                                                context),
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
-                                                                              child: SizedBox(
-                                                                                width: getSize(31, "height", context),
-                                                                                height: getSize(31, "height", context),
-                                                                                child: Card(
-                                                                                  elevation: 2.5,
-                                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(9, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          21,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Text(
-                                                                      "Alerte envoyé",
-                                                                      style: AppTheme
-                                                                          .defaultParagraph,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          12,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          220,
-                                                                          "width",
-                                                                          context),
-                                                                      child:
-                                                                          Text(
-                                                                        "Votre alerte a été signalé à tous les utilisateurs de Mapane",
-                                                                        style: AppTheme
-                                                                            .bodyText1
-                                                                            .copyWith(
-                                                                          color: AppColors
-                                                                              .blackColor
-                                                                              .withOpacity(0.5),
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }).catchError((onError) {
+                                          }).catchError((onError) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -2581,198 +2634,209 @@ class _HomePageState extends State<HomePage> {
                                             addresse,
                                           )
                                               .then((value) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.96),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  303,
-                                                                  "width",
-                                                                  context),
-                                                              // height: getSize(256, "height", context),
-                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        20,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        33,
+                                            showGeneralDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .modalBarrierDismissLabel,
+                                                barrierColor: AppColors
+                                                    .whiteColor
+                                                    .withOpacity(0.96),
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                pageBuilder: (BuildContext
+                                                        buildContext,
+                                                    Animation animation,
+                                                    Animation
+                                                        secondaryAnimation) {
+                                                  return Center(
+                                                    child: Card(
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0,
+                                                              vertical: 0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            width: getSize(
+                                                                303,
+                                                                "width",
+                                                                context),
+                                                            // height: getSize(256, "height", context),
+                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .whiteColor,
+                                                              borderRadius: BorderRadius
+                                                                  .circular(getSize(
+                                                                      20,
+                                                                      "height",
+                                                                      context)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Color(
+                                                                          0xFF000000)
+                                                                      .withOpacity(
+                                                                          0.11),
+                                                                  spreadRadius:
+                                                                      5,
+                                                                  blurRadius:
+                                                                      10,
+                                                                  offset: Offset(
+                                                                      0,
+                                                                      5), // changes position of shadow
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Container(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  vertical: getSize(
+                                                                      33,
+                                                                      "height",
+                                                                      context),
+                                                                  horizontal: getSize(
+                                                                      28,
+                                                                      "width",
+                                                                      context)),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        100,
                                                                         "height",
                                                                         context),
-                                                                    horizontal: getSize(
-                                                                        28,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      height: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical: getSize(
-                                                                              0,
-                                                                              "height",
-                                                                              context),
-                                                                          horizontal: getSize(
-                                                                              0,
-                                                                              "width",
-                                                                              context)),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                        color: AppColors
-                                                                            .greenColor
-                                                                            .withOpacity(0.35),
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        overflow:
-                                                                            Overflow.visible,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Positioned(
-                                                                            child: Center(
-                                                                                child: Image.asset(
-                                                                              'assets/images/Map pin-3.png',
-                                                                              height: getSize(45.6, "height", context),
-                                                                              width: getSize(37.77, "width", context),
-                                                                            )),
-                                                                          ),
-                                                                          Positioned(
-                                                                            left: getSize(
-                                                                                60,
-                                                                                "width",
-                                                                                context),
-                                                                            top: getSize(
-                                                                                61,
+                                                                    height: getSize(
+                                                                        100,
+                                                                        "height",
+                                                                        context),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical: getSize(
+                                                                            0,
+                                                                            "height",
+                                                                            context),
+                                                                        horizontal: getSize(
+                                                                            0,
+                                                                            "width",
+                                                                            context)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                      color: AppColors
+                                                                          .greenColor
+                                                                          .withOpacity(
+                                                                              0.35),
+                                                                    ),
+                                                                    child:
+                                                                        Stack(
+                                                                      overflow:
+                                                                          Overflow
+                                                                              .visible,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Positioned(
+                                                                          child: Center(
+                                                                              child: Image.asset(
+                                                                            'assets/images/Map pin-3.png',
+                                                                            height: getSize(
+                                                                                45.6,
                                                                                 "height",
                                                                                 context),
+                                                                            width: getSize(
+                                                                                37.77,
+                                                                                "width",
+                                                                                context),
+                                                                          )),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left: getSize(
+                                                                              60,
+                                                                              "width",
+                                                                              context),
+                                                                          top: getSize(
+                                                                              61,
+                                                                              "height",
+                                                                              context),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
                                                                             child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
-                                                                              child: SizedBox(
-                                                                                width: getSize(31, "height", context),
-                                                                                height: getSize(31, "height", context),
-                                                                                child: Card(
-                                                                                  elevation: 2.5,
-                                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(9, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    ),
+                                                                                SizedBox(
+                                                                              width: getSize(31, "height", context),
+                                                                              height: getSize(31, "height", context),
+                                                                              child: Card(
+                                                                                elevation: 2.5,
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                                child: Center(
+                                                                                  child: Icon(
+                                                                                    Icons.check,
+                                                                                    size: getSize(9, "height", context),
+                                                                                    color: AppColors.greenColor,
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          )
-                                                                        ],
-                                                                      ),
+                                                                          ),
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          21,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Text(
-                                                                      "Alerte envoyé",
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        21,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Text(
+                                                                    "Alerte envoyé",
+                                                                    style: AppTheme
+                                                                        .defaultParagraph,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        12,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        220,
+                                                                        "width",
+                                                                        context),
+                                                                    child: Text(
+                                                                      "Votre alerte a été signalé à tous les utilisateurs de Mapane",
                                                                       style: AppTheme
-                                                                          .defaultParagraph,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          12,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          220,
-                                                                          "width",
-                                                                          context),
-                                                                      child:
-                                                                          Text(
-                                                                        "Votre alerte a été signalé à tous les utilisateurs de Mapane",
-                                                                        style: AppTheme
-                                                                            .bodyText1
-                                                                            .copyWith(
-                                                                          color: AppColors
-                                                                              .blackColor
-                                                                              .withOpacity(0.5),
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.center,
+                                                                          .bodyText1
+                                                                          .copyWith(
+                                                                        color: AppColors
+                                                                            .blackColor
+                                                                            .withOpacity(0.5),
                                                                       ),
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    );
-                                                  });
-                                            }).catchError((onError) {
+                                                    ),
+                                                  );
+                                                });
+                                          }).catchError((onError) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -2960,198 +3024,209 @@ class _HomePageState extends State<HomePage> {
                                             addresse,
                                           )
                                               .then((value) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.96),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  303,
-                                                                  "width",
-                                                                  context),
-                                                              // height: getSize(256, "height", context),
-                                                              // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        20,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        33,
+                                            showGeneralDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .modalBarrierDismissLabel,
+                                                barrierColor: AppColors
+                                                    .whiteColor
+                                                    .withOpacity(0.96),
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                pageBuilder: (BuildContext
+                                                        buildContext,
+                                                    Animation animation,
+                                                    Animation
+                                                        secondaryAnimation) {
+                                                  return Center(
+                                                    child: Card(
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0,
+                                                              vertical: 0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            width: getSize(
+                                                                303,
+                                                                "width",
+                                                                context),
+                                                            // height: getSize(256, "height", context),
+                                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .whiteColor,
+                                                              borderRadius: BorderRadius
+                                                                  .circular(getSize(
+                                                                      20,
+                                                                      "height",
+                                                                      context)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Color(
+                                                                          0xFF000000)
+                                                                      .withOpacity(
+                                                                          0.11),
+                                                                  spreadRadius:
+                                                                      5,
+                                                                  blurRadius:
+                                                                      10,
+                                                                  offset: Offset(
+                                                                      0,
+                                                                      5), // changes position of shadow
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Container(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  vertical: getSize(
+                                                                      33,
+                                                                      "height",
+                                                                      context),
+                                                                  horizontal: getSize(
+                                                                      28,
+                                                                      "width",
+                                                                      context)),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        100,
                                                                         "height",
                                                                         context),
-                                                                    horizontal: getSize(
-                                                                        28,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      height: getSize(
-                                                                          100,
-                                                                          "height",
-                                                                          context),
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          vertical: getSize(
-                                                                              0,
-                                                                              "height",
-                                                                              context),
-                                                                          horizontal: getSize(
-                                                                              0,
-                                                                              "width",
-                                                                              context)),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
-                                                                        color: AppColors
-                                                                            .greenColor
-                                                                            .withOpacity(0.35),
-                                                                      ),
-                                                                      child:
-                                                                          Stack(
-                                                                        overflow:
-                                                                            Overflow.visible,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Positioned(
-                                                                            child: Center(
-                                                                                child: Image.asset(
-                                                                              'assets/images/Map pin-3.png',
-                                                                              height: getSize(45.6, "height", context),
-                                                                              width: getSize(37.77, "width", context),
-                                                                            )),
-                                                                          ),
-                                                                          Positioned(
-                                                                            left: getSize(
-                                                                                60,
-                                                                                "width",
-                                                                                context),
-                                                                            top: getSize(
-                                                                                61,
+                                                                    height: getSize(
+                                                                        100,
+                                                                        "height",
+                                                                        context),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical: getSize(
+                                                                            0,
+                                                                            "height",
+                                                                            context),
+                                                                        horizontal: getSize(
+                                                                            0,
+                                                                            "width",
+                                                                            context)),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                      color: AppColors
+                                                                          .greenColor
+                                                                          .withOpacity(
+                                                                              0.35),
+                                                                    ),
+                                                                    child:
+                                                                        Stack(
+                                                                      overflow:
+                                                                          Overflow
+                                                                              .visible,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Positioned(
+                                                                          child: Center(
+                                                                              child: Image.asset(
+                                                                            'assets/images/Map pin-3.png',
+                                                                            height: getSize(
+                                                                                45.6,
                                                                                 "height",
                                                                                 context),
+                                                                            width: getSize(
+                                                                                37.77,
+                                                                                "width",
+                                                                                context),
+                                                                          )),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left: getSize(
+                                                                              60,
+                                                                              "width",
+                                                                              context),
+                                                                          top: getSize(
+                                                                              61,
+                                                                              "height",
+                                                                              context),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
                                                                             child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(vertical: getSize(9, "width", context), horizontal: getSize(9, "height", context)),
-                                                                              child: SizedBox(
-                                                                                width: getSize(31, "height", context),
-                                                                                height: getSize(31, "height", context),
-                                                                                child: Card(
-                                                                                  elevation: 2.5,
-                                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.check,
-                                                                                      size: getSize(9, "height", context),
-                                                                                      color: AppColors.greenColor,
-                                                                                    ),
+                                                                                SizedBox(
+                                                                              width: getSize(31, "height", context),
+                                                                              height: getSize(31, "height", context),
+                                                                              child: Card(
+                                                                                elevation: 2.5,
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                                child: Center(
+                                                                                  child: Icon(
+                                                                                    Icons.check,
+                                                                                    size: getSize(9, "height", context),
+                                                                                    color: AppColors.greenColor,
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          )
-                                                                        ],
-                                                                      ),
+                                                                          ),
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          21,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Text(
-                                                                      "Alerte envoyé",
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        21,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Text(
+                                                                    "Alerte envoyé",
+                                                                    style: AppTheme
+                                                                        .defaultParagraph,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: getSize(
+                                                                        12,
+                                                                        "height",
+                                                                        context),
+                                                                  ),
+                                                                  Container(
+                                                                    width: getSize(
+                                                                        220,
+                                                                        "width",
+                                                                        context),
+                                                                    child: Text(
+                                                                      "Votre alerte a été signalé à tous les utilisateurs de Mapane",
                                                                       style: AppTheme
-                                                                          .defaultParagraph,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: getSize(
-                                                                          12,
-                                                                          "height",
-                                                                          context),
-                                                                    ),
-                                                                    Container(
-                                                                      width: getSize(
-                                                                          220,
-                                                                          "width",
-                                                                          context),
-                                                                      child:
-                                                                          Text(
-                                                                        "Votre alerte a été signalé à tous les utilisateurs de Mapane",
-                                                                        style: AppTheme
-                                                                            .bodyText1
-                                                                            .copyWith(
-                                                                          color: AppColors
-                                                                              .blackColor
-                                                                              .withOpacity(0.5),
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.center,
+                                                                          .bodyText1
+                                                                          .copyWith(
+                                                                        color: AppColors
+                                                                            .blackColor
+                                                                            .withOpacity(0.5),
                                                                       ),
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    );
-                                                  });
-                                            }).catchError((onError) {
+                                                    ),
+                                                  );
+                                                });
+                                          }).catchError((onError) {
                                             showGeneralDialog(
                                                 context: context,
                                                 barrierDismissible: true,
@@ -3345,7 +3420,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             height: 32.0,
                             width: 32.0,
-                          );;
+                          );
                           context
                               .read<BottomBarProvider>()
                               .modifyColor(Colors.white.withOpacity(0.3));
@@ -3360,7 +3435,6 @@ class _HomePageState extends State<HomePage> {
                             height: 32.0,
                             width: 32.0,
                           );
-
                         }
                       });
                     },
