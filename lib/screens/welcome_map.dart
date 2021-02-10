@@ -284,6 +284,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                             shrinkWrap: true,
                                                             itemCount: alertList
                                                                 .length,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -349,7 +351,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                                 .where((i) =>
                                                                     i.category
                                                                         .name ==
-                                                                    "route barrée")
+                                                                    "travaux")
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -357,6 +359,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                             shrinkWrap: true,
                                                             itemCount: alertList
                                                                 .length,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -724,7 +728,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Controle routier", 2);
+                      .getAlertByUserCat("controle routier", 2);
                 },
                 leading: Image.asset('assets/images/police.png',
                     height: getSize(24, "height", context),
@@ -739,7 +743,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Zone dangereuse", 2);
+                      .getAlertByUserCat("zone dangereuse", 2);
                 },
                 leading: Image.asset('assets/images/danger.png',
                     height: getSize(24, "height", context),

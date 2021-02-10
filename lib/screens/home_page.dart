@@ -587,8 +587,8 @@ class _HomePageState extends State<HomePage> {
       if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
+            "lat": 34.4472044,
+            "long": 86.0244645,
             "desc": "test",
             "postedBy": posted,
             "category": category,
@@ -599,8 +599,8 @@ class _HomePageState extends State<HomePage> {
         initSocket(identifier);
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
+            "lat": 34.4472044,
+            "long": 86.0244645,
             "desc": "test",
             "postedBy": posted,
             "category": category,
@@ -986,7 +986,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
                         ? SizeConfig.blockSizeVertical * 22
-                        : SizeConfig.blockSizeVertical * 52,
+                        : getSize(420, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                     alignment: Alignment.bottomRight,
@@ -1004,7 +1004,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
                         ? SizeConfig.blockSizeVertical * 15
-                        : SizeConfig.blockSizeVertical * 45,
+                        : getSize(370, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                   alignment: Alignment.bottomRight,
