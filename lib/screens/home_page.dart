@@ -1256,27 +1256,29 @@ class _HomePageState extends State<HomePage> {
                         AnimatedPositioned(
                           duration: Duration(milliseconds: 500),
                           bottom: bottomPadding,
-                          left: (MediaQuery.of(context).size.width / 2) -
-                              getSize(12, "height", context),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (isExpanded) {
-                                  isExpanded = false;
-                                  alertHeight = getSize(30, "height", context);
-                                  print(getSize(17, "height", context));
-                                  bottomPadding =
-                                      getSize(17, "height", context);
-                                } else {
-                                  isExpanded = true;
-                                  alertHeight = getSize(300, "height", context);
-                                  bottomPadding =
-                                      getSize(285, "height", context);
-                                }
-                              });
-                              print(bottomPadding);
-                            },
-                            child: swiperIcon,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: getSize(375, "width", context),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (isExpanded) {
+                                    isExpanded = false;
+                                    alertHeight = getSize(30, "height", context);
+                                    print(getSize(17, "height", context));
+                                    bottomPadding =
+                                        getSize(17, "height", context);
+                                  } else {
+                                    isExpanded = true;
+                                    alertHeight = getSize(300, "height", context);
+                                    bottomPadding =
+                                        getSize(285, "height", context);
+                                  }
+                                });
+                                print(bottomPadding);
+                              },
+                              child: swiperIcon,
+                            ),
                           ),
                         ),
                         isExpanded
