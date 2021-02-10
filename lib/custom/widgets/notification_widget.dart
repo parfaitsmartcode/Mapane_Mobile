@@ -76,13 +76,10 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: HexColor("#707070").withOpacity(0.4),
+                        color: HexColor("#ffffff"),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: SvgPicture.asset(
-                        Assets.mapIn,
-                        color: Colors.white,
-                      ),
+                      child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
                     ),
                   ),
                 ),
@@ -125,7 +122,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                   ),
                 ),
                 Positioned(
-                  top: SizeConfig.screenHeight / 8.5,
+                  top: getSize(95, "height", context),
                   left: SizeConfig.screenWidth / 6,
                   child: SizedBox(
                     height: 35.0,
