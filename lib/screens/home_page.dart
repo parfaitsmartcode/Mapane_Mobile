@@ -1257,7 +1257,7 @@ class _HomePageState extends State<HomePage> {
                           duration: Duration(milliseconds: 500),
                           bottom: bottomPadding,
                           left: (MediaQuery.of(context).size.width / 2) -
-                              getSize(17, "width", context),
+                              getSize(12, "height", context),
                           child: InkWell(
                             onTap: () {
                               setState(() {
