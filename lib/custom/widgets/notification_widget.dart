@@ -23,155 +23,157 @@ class _NotificationMapaneState extends State<NotificationMapane>
   Widget build(BuildContext context) {
     CardController controller; //Use this to trigger swap.
     SizeConfig().init(context);
-    return new Scaffold(
-      body: new Center(
-        child: Container(
-          height: 120,
-          width: 327,
-          child: new TinderSwapCard(
-            swipeUp: true,
-            swipeDown: true,
-            orientation: AmassOrientation.TOP,
-            totalNum: welcomeImages.length,
-            stackNum: welcomeImages.length,
-            swipeEdge: 1.0,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-            maxHeight: MediaQuery.of(context).size.width * 0.9,
-            minWidth: MediaQuery.of(context).size.width * 0.8,
-            minHeight: MediaQuery.of(context).size.width * 0.8,
-            cardBuilder: (context, index) => Card(
-                elevation: 5.0,
-                semanticContainer: true,
-                color: HexColor("#4B4B4B"),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Stack(
-                  overflow: Overflow.visible,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.blockSizeVertical * 1.5,
-                          right: SizeConfig.blockSizeHorizontal),
-                      child: InkWell(
-                        child: Align(
-                          alignment: Alignment.topRight,
+    return  Container(
+      height: 127,
+      //width: 400,
+      child: new TinderSwapCard(
+        swipeUp: false,
+        swipeDown: false,
+        orientation: AmassOrientation.TOP,
+        totalNum: welcomeImages.length,
+        stackNum: welcomeImages.length,
+        swipeEdge: 4.0,
+        maxWidth: MediaQuery.of(context).size.width * 0.9,
+        maxHeight: MediaQuery.of(context).size.width * 0.9,
+        minWidth: MediaQuery.of(context).size.width * 0.8,
+        minHeight: MediaQuery.of(context).size.width * 0.8,
+        cardBuilder: (context, index) => Card(
+            elevation: 5.0,
+            semanticContainer: true,
+            color: HexColor("#4B4B4B"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            child: Stack(
+              overflow: Overflow.visible,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.blockSizeVertical * 1.5,
+                      right: SizeConfig.blockSizeHorizontal),
+                  child: InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
                           child: Icon(
                             Icons.close,
                             color: Colors.white,
-                            size: 15.0,
+                            size: 18.0,
                           ),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 3),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: HexColor("#707070").withOpacity(0.4),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: SvgPicture.asset(
-                            Assets.mapIn,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          right: SizeConfig.blockSizeHorizontal * 13),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Accident de la circulation",
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
-                              overflow: TextOverflow.clip,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.blockSizeVertical * 0.5,
-                            ),
-                            Text(
-                              "Acciden de la circulation",
-                              style: TextStyle(
-                                  fontSize: 12.0, color: Colors.white),
-                              overflow: TextOverflow.clip,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.blockSizeVertical * 0.5,
-                            ),
-                            Text(
-                              "il y a 14 min",
-                              style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: HexColor("#707070").withOpacity(0.49)),
-                              overflow: TextOverflow.clip,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: SizeConfig.blockSizeVertical * 11.5,
-                      left: SizeConfig.blockSizeHorizontal * 14,
-                      child: SizedBox(
-                        height: 35.0,
-                        width: 200,
-                        child: Card(
-                          elevation: 1,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10))),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Localiser"
-                              ),
-                              VerticalDivider(
-                                thickness: 1.5,
-                                endIndent: 2,
-                                indent: 2,
-                              ),
-                              Text(
-                                "Tout fermer"
-                              ),
-                              Icon(
-                                Icons.close,
-                                size: 20.0,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ) //Image.network('${welcomeImages[index]}',fit: BoxFit.cover,),
+                  ),
                 ),
-            cardController: controller = CardController(),
-            swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-              /// Get swiping card's alignment
-              if (align.x < 0) {
-                //Card is LEFT swiping
-              } else if (align.x > 0) {
-                //Card is RIGHT swiping
-              }
-            },
-            swipeCompleteCallback:
-                (CardSwipeOrientation orientation, int index) {
-              /// Get orientation & index of swiped card!
-            },
-          ),
-        ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.blockSizeHorizontal * 3),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: HexColor("#707070").withOpacity(0.4),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: SvgPicture.asset(
+                        Assets.mapIn,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: SizeConfig.blockSizeHorizontal * 13),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Accident de la circulation",
+                          style: TextStyle(
+                              fontSize: 16.0, color: Colors.white),
+                          overflow: TextOverflow.clip,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.blockSizeVertical * 0.5,
+                        ),
+                        Text(
+                          "Accident de la circulation",
+                          style: TextStyle(
+                              fontSize: 12.0, color: Colors.white),
+                          overflow: TextOverflow.clip,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.blockSizeVertical * 0.5,
+                        ),
+                        Text(
+                          "il y a 14 min",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: HexColor("#707070").withOpacity(0.49)),
+                          overflow: TextOverflow.clip,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: SizeConfig.screenHeight / 8.5,
+                  left: SizeConfig.screenWidth / 6,
+                  child: SizedBox(
+                    height: 35.0,
+                    width: 200,
+                    child: Card(
+                      elevation: 1,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Localiser"
+                          ),
+                          VerticalDivider(
+                            thickness: 1.5,
+                            endIndent: 2,
+                            indent: 2,
+                          ),
+                          Text(
+                            "Tout fermer"
+                          ),
+                          Icon(
+                            Icons.close,
+                            size: 20.0,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ) //Image.network('${welcomeImages[index]}',fit: BoxFit.cover,),
+            ),
+        cardController: controller = CardController(),
+        swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
+          /// Get swiping card's alignment
+          if (align.x < 0) {
+            //Card is LEFT swiping
+          } else if (align.x > 0) {
+            //Card is RIGHT swiping
+          }
+        },
+        swipeCompleteCallback:
+            (CardSwipeOrientation orientation, int index) {
+          /// Get orientation & index of swiped card!
+        },
       ),
     );
   }
