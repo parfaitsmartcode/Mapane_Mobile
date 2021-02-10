@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:mapane/custom/widgets/alert.dart';
+import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/place.dart';
 import 'package:mapane/networking/services/alert_service.dart';
@@ -140,11 +141,14 @@ class _HomePageState extends State<HomePage> {
       bool test = true;
       if (currentLocation != null) test = false;
 
-      if (!test)
+      if (!test){
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
+        print("le cas false");
+      }
       currentLocation = cLoc;
       if (test) {
+        print("ici");
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
         CameraPosition cPosition = CameraPosition(
@@ -743,21 +747,7 @@ class _HomePageState extends State<HomePage> {
         position: pinPosition,
         icon: sourceIcon));
     // destination
-    /*context.watch<AlertProvider>().loadingState == LoadingState.loading ? print("test") :
-         context
-             .select((AlertProvider provider) => provider)
-             .alertList
-             .fold((NException error) {
-               return false;
-             // ignore: missing_return
-             }, (alertList) {
-           for (var i = 0; i < alertList.length; i++) {
-             print("hoalal");
-             print(alertList[i].category.name);
-           }
-         });*/
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
-      print(r);
       int i = 1;
       r.forEach((element) {
         print(double.parse(element.lat));
@@ -765,7 +755,12 @@ class _HomePageState extends State<HomePage> {
             position:
                 LatLng(double.parse(element.lat), double.parse(element.lon)),
             markerId: MarkerId('alert' + i.toString()),
-            icon: sourceIcon));
+            icon: sourceIcon,
+          infoWindow: InfoWindow(
+            title: "desc",
+            snippet: "test"
+          ),
+        ));
         i++;
       });
     });
@@ -830,7 +825,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     updateBottomPadding();
-    // bottomPadding = SizeConfig.screenHeight / 42;
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -868,6 +862,10 @@ class _HomePageState extends State<HomePage> {
                     showPinsOnMap();
                   },
                 ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: NotificationMapane()
               ),
               Padding(
                 padding: EdgeInsets.only(
