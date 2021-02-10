@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   BitmapDescriptor routebarreeMarker;
   BitmapDescriptor routechantierMarker;
   BitmapDescriptor dangerMarker;
+  BitmapDescriptor proximityMarker;
   BitmapDescriptor destinationIcon;
 // the user's initial location and current location
 // as it moves
@@ -737,6 +738,8 @@ class _HomePageState extends State<HomePage> {
         ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.dangerMarker2);
+    proximityMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.proximityMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),

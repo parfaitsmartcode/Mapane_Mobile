@@ -28,6 +28,7 @@ class Assets {
   static const String routebarreeMarker = "assets/markers/route-barree.png";
   static const String routechantierMarker = "assets/markers/route-chantier.png";
   static const String dangerMarker = "assets/markers/zone-dangereuse.png";
+  static const String proximityMarker = "assets/markers/proximity-alert.png";
   
   static const String embouteillageMarker2 = "assets/markers/embouteillage1.png";
   static const String radarMarker2 = "assets/markers/radar1.png";
