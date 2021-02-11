@@ -30,6 +30,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -775,19 +776,18 @@ class _HomePageState extends State<HomePage> {
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       r.forEach((element) {
-        // print("obosso");
-        // print(element.category.name);
-        // print(double.parse(element.lat));
+        var moment = Moment.now();
+        var dateForComparison = DateTime.parse(element.createdAt);
         _markers.add(Marker(
             position:
                 LatLng(double.parse(element.lat), double.parse(element.lon)),
             markerId: MarkerId('alert' + i.toString()),
             icon: getAppropriateIcon(element.category.name),
           infoWindow: InfoWindow(
-            title: "desc",
-            snippet: "test"
+            title: element.category.name.capitalize(),
+            snippet: element.address+" - "+moment.from(dateForComparison
           ),
-        ));
+        )));
         i++;
       });
     });
