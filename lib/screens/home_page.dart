@@ -776,6 +776,7 @@ class _HomePageState extends State<HomePage> {
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       r.forEach((element) {
+        // print("Testitude $element.address");
         var moment = Moment.now();
         var dateForComparison = DateTime.parse(element.createdAt);
         _markers.add(Marker(

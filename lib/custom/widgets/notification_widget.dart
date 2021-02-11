@@ -92,7 +92,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        Text( 
                           "Accident de la circulation",
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),

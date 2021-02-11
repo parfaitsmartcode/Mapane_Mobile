@@ -30,13 +30,13 @@ class Assets {
   static const String dangerMarker = "assets/markers/zone-dangereuse.png";
   static const String proximityMarker = "assets/markers/proximity-alert.png";
   
-  static const String embouteillageMarker2 = "assets/markers/embouteillage1.png";
-  static const String radarMarker2 = "assets/markers/radar1.png";
-  static const String accidentMarker2 = "assets/markers/accident-circulation1.png";
+  static const String embouteillageMarker2 = "assets/markers/group-14.png";
+  static const String radarMarker2 = "assets/markers/group-15.png";
+  static const String accidentMarker2 = "assets/markers/group-19.png";
   static const String controleMarker2 = "assets/markers/controle-routier1.png";
-  static const String routebarreeMarker2 = "assets/markers/route block1.png";
-  static const String routechantierMarker2 = "assets/markers/chantier1.png";
-  static const String dangerMarker2 = "assets/markers/zone-danger1.png";
+  static const String routebarreeMarker2 = "assets/markers/group-18.png";
+  static const String routechantierMarker2 = "assets/markers/group-17.png";
+  static const String dangerMarker2 = "assets/markers/group-16.png";
   
   static const String embouteillageMarker3 = "assets/markers/traffic.png";
   static const String radarMarker3 = "assets/markers/radar2.png";
