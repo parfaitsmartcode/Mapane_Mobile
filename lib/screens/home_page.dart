@@ -995,9 +995,9 @@ class _HomePageState extends State<HomePage> {
                                   userPlace.city != null &&
                                   userPlace.country != null) {
                                 addresse = userPlace.name +
-                                    "," +
+                                    ", " +
                                     userPlace.city +
-                                    "," +
+                                    ", " +
                                     userPlace.country;
                               }
                               return userPlace == null
