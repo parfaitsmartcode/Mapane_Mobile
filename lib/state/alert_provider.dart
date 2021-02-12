@@ -16,8 +16,21 @@ class AlertProvider extends BaseProvider{
 
   Either<NException,List<Alert>> alertList = Right([]);
   Either<NException,List<Alert>> alertListCat = Right([]);
-
   List<Alert> notifications = List<Alert>();
+  
+  pushNotification(Alert alert){
+    this.notifications.add(alert);
+    notifyListeners();
+  }
+
+  popNotification(int index) {
+    this.notifications.removeAt(index);
+    notifyListeners();
+  }
+  popAllNotifications(){
+    this.notifications.clear();
+    notifyListeners();
+  }
 
   getAlertList(){
     this.toggleLoadingState();

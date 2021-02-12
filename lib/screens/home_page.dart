@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   SocketIOManager manager;
   Map<String, SocketIO> sockets = {};
   Map<String, bool> _isProbablyConnected = {};
-  List<Alert> notifications = new List<Alert>();
+  //List<Alert> notifications = new List<Alert>();
   Set<Marker> _markers = Set<Marker>();
 // for my drawn routes on the map
   Set<Polyline> _polylines = Set<Polyline>();
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
     socket.on("createAlertOk", (data) {
       var readText =
           'Une nouvelle alerte créee au niveau de ' + data['alert']['address'];
-      print("notifications ");
+      context.read<AlertProvider>().pushNotification(Alert.fromJson(data['alert']));
       _speak(readText);
     });
     socket.on("createAlertOkUser", (data) {
