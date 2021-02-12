@@ -205,9 +205,10 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
+      print("createAlertOk pour dire que alerte created successfully");
       var readText =
-          'Une nouvelle alerte créee au niveau de ' + data['alert']['address'];
-      print("notifications ");
+          'Alerte de test brakata à ' + data['alert']['address'];
+      print("notifications de testement");
       _speak(readText);
     });
     socket.on("createAlertOkUser", (data) {
