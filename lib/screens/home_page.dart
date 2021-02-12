@@ -6,11 +6,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
-import 'package:mapane/custom/widgets/alert.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
-import 'package:mapane/models/place.dart';
-import 'package:mapane/networking/services/alert_service.dart';
+import 'package:mapane/models/alert.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
@@ -64,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   SocketIOManager manager;
   Map<String, SocketIO> sockets = {};
   Map<String, bool> _isProbablyConnected = {};
-
+  List<Alert> notifications = new List<Alert>();
   Set<Marker> _markers = Set<Marker>();
 // for my drawn routes on the map
   Set<Polyline> _polylines = Set<Polyline>();
@@ -209,6 +207,7 @@ class _HomePageState extends State<HomePage> {
     socket.on("createAlertOk", (data) {
       var readText =
           'Une nouvelle alerte créee au niveau de ' + data['alert']['address'];
+      print("notifications ");
       _speak(readText);
     });
     socket.on("createAlertOkUser", (data) {
@@ -921,12 +920,24 @@ class _HomePageState extends State<HomePage> {
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     // my map has completed being created;
-                    // i'm ready to show the pins on the map
                     showPinsOnMap();
                   },
                 ),
               ),
-              Align(alignment: Alignment.center, child: NotificationMapane()),
+              Align(
+                alignment: Alignment.center,
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: context.watch<AlertProvider>().notifications.isEmpty ?
+                  Container() :
+                  NotificationMapane(
+                    CAMERA_ZOOM: CAMERA_ZOOM,
+                    CAMERA_TILT: CAMERA_TILT,
+                      CAMERA_BEARING: CAMERA_BEARING,
+                      completer: _controller,
+                  ),
+                )
+              ),
               Padding(
                 padding: EdgeInsets.only(
                     top: SizeConfig.blockSizeVertical * 2,

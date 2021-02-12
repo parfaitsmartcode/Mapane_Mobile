@@ -17,6 +17,8 @@ class AlertProvider extends BaseProvider{
   Either<NException,List<Alert>> alertList = Right([]);
   Either<NException,List<Alert>> alertListCat = Right([]);
 
+  List<Alert> notifications = List<Alert>();
+
   getAlertList(){
     this.toggleLoadingState();
     alertService.getAlerts().then((alerts){
