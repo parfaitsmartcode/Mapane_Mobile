@@ -189,7 +189,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                           InkWell(
                             onTap: (){
                               setState(() {
-                                context.read<AlertProvider>().notifications = [];
+                                context.read<AlertProvider>().popAllNotifications();
                               });
                             },
                             child: Text(
@@ -199,7 +199,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                           InkWell(
                             onTap: (){
                               setState(() {
-                                context.read<AlertProvider>().notifications.removeAt(index);
+                                context.read<AlertProvider>().popNotification(index);
                               });
                             },
                             child: Icon(
