@@ -30,6 +30,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -72,6 +73,15 @@ class _HomePageState extends State<HomePage> {
   String googleAPIKey = "AIzaSyA1vPvfFjBhjgx0rOJcP8_K9vv5Xa2y1ZU";
 // for my custom marker pins
   BitmapDescriptor sourceIcon;
+  
+  BitmapDescriptor embouteillageMarker;
+  BitmapDescriptor radarMarker;
+  BitmapDescriptor accidentMarker;
+  BitmapDescriptor controleMarker;
+  BitmapDescriptor routebarreeMarker;
+  BitmapDescriptor routechantierMarker;
+  BitmapDescriptor dangerMarker;
+  BitmapDescriptor proximityMarker;
   BitmapDescriptor destinationIcon;
 // the user's initial location and current location
 // as it moves
@@ -591,8 +601,8 @@ class _HomePageState extends State<HomePage> {
       if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
+            "lat": 34.4472044,
+            "long": 86.0244645,
             "desc": "test",
             "postedBy": posted,
             "category": category,
@@ -603,8 +613,8 @@ class _HomePageState extends State<HomePage> {
         initSocket(identifier);
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
+            "lat": 34.4472044,
+            "long": 86.0244645,
             "desc": "test",
             "postedBy": posted,
             "category": category,
@@ -715,6 +725,22 @@ class _HomePageState extends State<HomePage> {
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
+    embouteillageMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.embouteillageMarker2);
+    radarMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.radarMarker2);
+    accidentMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.accidentMarker2);
+    controleMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.controleMarker2);
+    routebarreeMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.routebarreeMarker2);
+    routechantierMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.routechantierMarker2);
+    dangerMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.dangerMarker2);
+    proximityMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.proximityMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -750,17 +776,19 @@ class _HomePageState extends State<HomePage> {
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       r.forEach((element) {
-        print(double.parse(element.lat));
+        // print("Testitude $element.address");
+        var moment = Moment.now();
+        var dateForComparison = DateTime.parse(element.createdAt);
         _markers.add(Marker(
             position:
                 LatLng(double.parse(element.lat), double.parse(element.lon)),
             markerId: MarkerId('alert' + i.toString()),
-            icon: sourceIcon,
+            icon: getAppropriateIcon(element.category.name),
           infoWindow: InfoWindow(
-            title: "desc",
-            snippet: "test"
+            title: element.category.name.capitalize(),
+            snippet: element.address+" - "+moment.from(dateForComparison
           ),
-        ));
+        )));
         i++;
       });
     });
@@ -772,6 +800,33 @@ class _HomePageState extends State<HomePage> {
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
     setPolylines();
+  }
+  getAppropriateIcon(alert){
+    switch (alert) {
+      case "embouteillage":
+        return embouteillageMarker;
+        break;
+      case "travaux":
+        return routechantierMarker;
+        break;
+      case "zone dangereuse":
+        return dangerMarker;
+        break;
+      case "controle routier":
+        return controleMarker;
+        break;
+      case "Radar":
+        return radarMarker;
+        break;
+      case "Accident de circulation":
+        return accidentMarker;
+        break;
+      case "route barrée":
+        return routebarreeMarker;
+        break;
+      default:
+        return embouteillageMarker;
+    }
   }
 
   void setPolylines() async {
@@ -983,7 +1038,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
                         ? SizeConfig.blockSizeVertical * 22
-                        : SizeConfig.blockSizeVertical * 52,
+                        : getSize(420, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                     alignment: Alignment.bottomRight,
@@ -1001,7 +1056,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
                         ? SizeConfig.blockSizeVertical * 15
-                        : SizeConfig.blockSizeVertical * 45,
+                        : getSize(370, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                   alignment: Alignment.bottomRight,

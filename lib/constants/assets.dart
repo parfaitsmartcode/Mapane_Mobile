@@ -21,6 +21,30 @@ class Assets {
   static const String arrowDownIcon = "assets/icons/Dropdown-button.svg";
   static const String arrowUpIcon = "assets/icons/Dropup-button.svg";
   static const String locationMarker = "assets/markers/user-localisation.png";
+  static const String embouteillageMarker = "assets/markers/embouteillage-marker.png";
+  static const String radarMarker = "assets/markers/radar.png";
+  static const String accidentMarker = "assets/markers/accident-circulation.png";
+  static const String controleMarker = "assets/markers/controle-routier.png";
+  static const String routebarreeMarker = "assets/markers/route-barree.png";
+  static const String routechantierMarker = "assets/markers/route-chantier.png";
+  static const String dangerMarker = "assets/markers/zone-dangereuse.png";
+  static const String proximityMarker = "assets/markers/proximity-alert.png";
+  
+  static const String embouteillageMarker2 = "assets/markers/group-14.png";
+  static const String radarMarker2 = "assets/markers/group-15.png";
+  static const String accidentMarker2 = "assets/markers/group-19.png";
+  static const String controleMarker2 = "assets/markers/controle-routier1.png";
+  static const String routebarreeMarker2 = "assets/markers/group-18.png";
+  static const String routechantierMarker2 = "assets/markers/group-17.png";
+  static const String dangerMarker2 = "assets/markers/group-16.png";
+  
+  static const String embouteillageMarker3 = "assets/markers/traffic.png";
+  static const String radarMarker3 = "assets/markers/radar2.png";
+  static const String accidentMarker3 = "assets/markers/car-accident.png";
+  static const String controleMarker3 = "assets/markers/police.png";
+  static const String routebarreeMarker3 = "assets/markers/road-block.png";
+  static const String routechantierMarker3 = "assets/markers/highway.png";
+  static const String dangerMarker3 = "assets/markers/danger.png";
   static const String mapPin= "assets/icons/Map pin.svg";
 
 }
