@@ -9,6 +9,8 @@ import 'package:mapane/constants/assets.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/alert.dart';
+import 'package:mapane/models/category.dart';
+import 'package:mapane/models/postedBy.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
@@ -209,9 +211,22 @@ class _HomePageState extends State<HomePage> {
       var readText =
           'Alerte de test brakata à ' + data['alert']['address'];
       print("notifications de testement");
-      print(data['alert']);
+      //Alert test = Alert.fromJson(data['alert']);
+      print(data['alert']['address']);
+      /*context.read<AlertProvider>().pushNotification(Alert(
+        id: data['_id'],
+        lat: data['lat'],
+        lon: data['long'],
+        desc: data['desc'],
+        address: data['address'],
+        userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
+        category: Category(id: data['category']['_id'],name: data['category']['name']),
+        active: data['active'],
+        createdAt: data['createdAt'],
+      ));*/
+      context.read<AlertProvider>().getAlertList();
       _speak(readText);
-      context.read<AlertProvider>().pushNotification(data['alert']);
+
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
@@ -785,6 +800,7 @@ class _HomePageState extends State<HomePage> {
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
+      print("lise des alertes " + r.length.toString());
       r.forEach((element) {
         // print("Testitude $element.address");
         var moment = Moment.now();
@@ -808,6 +824,7 @@ class _HomePageState extends State<HomePage> {
 
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
+    print(_markers);
     setPolylines();
   }
 

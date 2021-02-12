@@ -18,7 +18,7 @@ class AlertProvider extends BaseProvider{
   Either<NException,List<Alert>> alertListCat = Right([]);
   List<Alert> notifications = List<Alert>();
   
-  pushNotification(alert){
+  pushNotification(Alert alert){
     print(alert);
     this.notifications.add(alert);
     notifyListeners();
