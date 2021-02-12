@@ -21,6 +21,7 @@ class WelcomeMap extends StatefulWidget {
 
 class _MyAppState extends State<WelcomeMap> {
   bool _isloading = false;
+  int _currentIndexTab = 0;
   String cat = "";
   @override
   void initState() {
@@ -125,6 +126,9 @@ class _MyAppState extends State<WelcomeMap> {
                       children: <Widget>[
                         Container(
                           child: TabBar(
+                              onTap: (int index){
+                                setState(() => _currentIndexTab = index);
+                              },
                               indicatorSize: TabBarIndicatorSize.label,
                               indicatorPadding: EdgeInsets.zero,
                               labelPadding: EdgeInsets.symmetric(

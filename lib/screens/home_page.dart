@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
   String googleAPIKey = "AIzaSyA1vPvfFjBhjgx0rOJcP8_K9vv5Xa2y1ZU";
 // for my custom marker pins
   BitmapDescriptor sourceIcon;
-  
+
   BitmapDescriptor embouteillageMarker;
   BitmapDescriptor radarMarker;
   BitmapDescriptor accidentMarker;
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
       bool test = true;
       if (currentLocation != null) test = false;
 
-      if (!test){
+      if (!test) {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
         print("le cas false");
@@ -726,21 +726,29 @@ class _HomePageState extends State<HomePage> {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
     embouteillageMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.embouteillageMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.embouteillageMarker2);
     radarMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.radarMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.radarMarker2);
     accidentMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.accidentMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.accidentMarker2);
     controleMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.controleMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.routebarreeMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.routechantierMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.dangerMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.dangerMarker2);
     proximityMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)), Assets.proximityMarker);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        Assets.proximityMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -784,11 +792,10 @@ class _HomePageState extends State<HomePage> {
                 LatLng(double.parse(element.lat), double.parse(element.lon)),
             markerId: MarkerId('alert' + i.toString()),
             icon: getAppropriateIcon(element.category.name),
-          infoWindow: InfoWindow(
-            title: element.category.name.capitalize(),
-            snippet: element.address+" - "+moment.from(dateForComparison
-          ),
-        )));
+            infoWindow: InfoWindow(
+              title: element.category.name.capitalize(),
+              snippet: element.address + " - " + moment.from(dateForComparison),
+            )));
         i++;
       });
     });
@@ -801,7 +808,8 @@ class _HomePageState extends State<HomePage> {
     // for more info follow this tutorial
     setPolylines();
   }
-  getAppropriateIcon(alert){
+
+  getAppropriateIcon(alert) {
     switch (alert) {
       case "embouteillage":
         return embouteillageMarker;
@@ -918,10 +926,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: NotificationMapane()
-              ),
+              Align(alignment: Alignment.center, child: NotificationMapane()),
               Padding(
                 padding: EdgeInsets.only(
                     top: SizeConfig.blockSizeVertical * 2,
@@ -1317,13 +1322,15 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   if (isExpanded) {
                                     isExpanded = false;
-                                    alertHeight = getSize(30, "height", context);
+                                    alertHeight =
+                                        getSize(30, "height", context);
                                     print(getSize(17, "height", context));
                                     bottomPadding =
                                         getSize(17, "height", context);
                                   } else {
                                     isExpanded = true;
-                                    alertHeight = getSize(300, "height", context);
+                                    alertHeight =
+                                        getSize(300, "height", context);
                                     bottomPadding =
                                         getSize(285, "height", context);
                                   }
@@ -1499,7 +1506,6 @@ class _HomePageState extends State<HomePage> {
                                                 ],
                                               )),
                                         ),
-                                        
                                         GestureDetector(
                                           onTap: () {
                                             setState(() => loadera = true);
@@ -1605,7 +1611,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -1613,8 +1619,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/controle-routier.png',
                                                             height: getSize(
@@ -1625,13 +1631,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -1641,7 +1647,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
@@ -1760,7 +1767,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -1768,8 +1775,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/zone-danger.png',
                                                             height: getSize(
@@ -1780,13 +1787,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -1796,7 +1803,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
@@ -1915,7 +1923,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -1923,8 +1931,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/radar-test.png',
                                                             height: getSize(
@@ -1935,13 +1943,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -1951,7 +1959,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
@@ -2078,7 +2087,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -2086,8 +2095,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/accident-circulation.png',
                                                             height: getSize(
@@ -2098,13 +2107,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -2114,7 +2123,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
@@ -2233,7 +2243,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -2241,8 +2251,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/route block.png',
                                                             height: getSize(
@@ -2253,13 +2263,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -2269,7 +2279,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
@@ -2388,7 +2399,7 @@ class _HomePageState extends State<HomePage> {
                                                   });
                                             }
                                           },
-                                                                                  child: Container(
+                                          child: Container(
                                               width:
                                                   getSize(75, "width", context),
                                               child: Column(
@@ -2396,8 +2407,8 @@ class _HomePageState extends State<HomePage> {
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         child: Image.asset(
                                                             'assets/images/chantier.png',
                                                             height: getSize(
@@ -2408,13 +2419,13 @@ class _HomePageState extends State<HomePage> {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height: getSize(
-                                                          15, "height", context)),
+                                                      height: getSize(15,
+                                                          "height", context)),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: getSize(
-                                                            75, "width", context),
+                                                        width: getSize(75,
+                                                            "width", context),
                                                         height: getSize(32,
                                                             "height", context),
                                                         child: Text(
@@ -2424,7 +2435,8 @@ class _HomePageState extends State<HomePage> {
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.black
+                                                              color: Colors
+                                                                  .black
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapane/custom/widgets/tab_navigation_item.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:mapane/state/alert_provider.dart';
 
 
 class TabsPage extends StatefulWidget {
@@ -27,7 +28,13 @@ class _TabsPageState extends State<TabsPage> {
         backgroundColor: context.watch<BottomBarProvider>().bottomBarColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        onTap: (int index) => setState(() => _currentIndex = index),
+        onTap: (int index) {
+          setState(() => _currentIndex = index);
+          if(index == 0){
+            // context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
+            // context.read<AlertProvider>().getAlertByUserCat("All", 1);
+          }
+        },
         items: [
           for (int i = 0; i < TabNavigationItem.items.length; i++)
             BottomNavigationBarItem(
