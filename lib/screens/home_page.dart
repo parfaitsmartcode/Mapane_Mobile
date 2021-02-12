@@ -858,7 +858,6 @@ class _HomePageState extends State<HomePage> {
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     // my map has completed being created;
-                    // i'm ready to show the pins on the map
                     showPinsOnMap();
                   },
                 ),

@@ -2,10 +2,15 @@ import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:mapane/constants/assets.dart';
+import 'package:mapane/models/alert.dart';
 import 'package:mapane/utils/hexcolor.dart';
 import 'package:mapane/utils/size_config.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 class NotificationMapane extends StatefulWidget {
+  final List<Alert> items;
+
+  NotificationMapane({Key key, this.items}) : super(key: key);
   @override
   _NotificationMapaneState createState() => _NotificationMapaneState();
 }
@@ -23,6 +28,8 @@ class _NotificationMapaneState extends State<NotificationMapane>
   Widget build(BuildContext context) {
     CardController controller; //Use this to trigger swap.
     SizeConfig().init(context);
+    Moment.setLocaleGlobally(new LocaleFr());
+    var moment = Moment.now();
     return  Container(
       height: 127,
       //width: 400,
@@ -30,8 +37,8 @@ class _NotificationMapaneState extends State<NotificationMapane>
         swipeUp: false,
         swipeDown: false,
         orientation: AmassOrientation.TOP,
-        totalNum: welcomeImages.length,
-        stackNum: welcomeImages.length,
+        totalNum: widget.items.length,
+        stackNum: widget.items.length,
         swipeEdge: 4.0,
         maxWidth: MediaQuery.of(context).size.width * 0.9,
         maxHeight: MediaQuery.of(context).size.width * 0.9,
@@ -96,7 +103,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Accident de la circulation",
+                          widget.items[index].category.name,
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
                           overflow: TextOverflow.clip,
@@ -105,7 +112,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                           height: SizeConfig.blockSizeVertical * 0.5,
                         ),
                         Text(
-                          "Accident de la circulation",
+                          widget.items[index].address,
                           style: TextStyle(
                               fontSize: 12.0, color: Colors.white),
                           overflow: TextOverflow.clip,
@@ -114,7 +121,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                           height: SizeConfig.blockSizeVertical * 0.5,
                         ),
                         Text(
-                          "il y a 14 min",
+                          moment.from(DateTime.parse(widget.items[index].createdAt)),
                           style: TextStyle(
                               fontSize: 12.0,
                               color: HexColor("#707070").withOpacity(0.49)),
