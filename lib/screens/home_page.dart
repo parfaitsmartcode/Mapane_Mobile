@@ -205,12 +205,12 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      print("createAlertOk pour dire que alerte created successfully");
-      var readText =
-          'Alerte de test brakata à ' + data['alert']['address'];
-      print("notifications de testement");
-      print(data['alert']);
-      _speak(readText);
+      // print("createAlertOk pour dire que alerte created successfully");
+      // var readText =
+      //     'Alerte de test brakata à ' + data['alert']['address'];
+      // print("notifications de testement");
+      // print(data['alert']);
+      // _speak(readText);
       context.read<AlertProvider>().pushNotification(data['alert']);
     });
     socket.on("createAlertOkUser", (data) {
@@ -786,7 +786,8 @@ class _HomePageState extends State<HomePage> {
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       r.forEach((element) {
-        // print("Testitude $element.address");
+        var test = element.address;
+        print("Testitude $test");
         var moment = Moment.now();
         var dateForComparison = DateTime.parse(element.createdAt);
         _markers.add(Marker(

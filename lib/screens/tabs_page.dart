@@ -31,8 +31,8 @@ class _TabsPageState extends State<TabsPage> {
         onTap: (int index) {
           setState(() => _currentIndex = index);
           if(index == 0){
-            // context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
-            // context.read<AlertProvider>().getAlertByUserCat("All", 1);
+            context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
+            context.read<AlertProvider>().getAlertByUserCat("All", 1);
           }
         },
         items: [
