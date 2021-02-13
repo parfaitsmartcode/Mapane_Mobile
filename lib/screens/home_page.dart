@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
+import 'package:mapane/custom/widgets/notif.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/alert.dart';
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   SocketIOManager manager;
   Map<String, SocketIO> sockets = {};
   Map<String, bool> _isProbablyConnected = {};
-  //List<Alert> notifications = new List<Alert>();
+  Alert notifications = new Alert();
   Set<Marker> _markers = Set<Marker>();
 // for my drawn routes on the map
   Set<Polyline> _polylines = Set<Polyline>();
@@ -129,7 +130,11 @@ class _HomePageState extends State<HomePage> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
-
+  activateNotif(Alert alert){
+    setState(() {
+      notifications = alert;
+    });
+  }
   @override
   initState() {
     if (!Platform.isIOS) {
@@ -210,9 +215,36 @@ class _HomePageState extends State<HomePage> {
       print("createAlertOk pour dire que alerte created successfully");
       var readText =
           'Alerte de test brakata à ' + data['alert']['address'];
+      print(readText);
+      _speak(readText);
       print("notifications de testement");
       //Alert test = Alert.fromJson(data['alert']);
-      print(data['alert']['address']);
+      print(data['alert']);
+
+      activateNotif(Alert(
+        id: data['_id'],
+        lat: data['lat'],
+        lon: data['long'],
+        desc: data['desc'],
+        address: data['address'],
+        userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
+        category: Category(id: data['category']['_id'],name: data['category']['name']),
+        active: data['active'],
+        createdAt: data['createdAt'],
+      ));
+      /*setState(() {
+        notifications = Alert(
+          id: data['_id'],
+          lat: data['lat'],
+          lon: data['long'],
+          desc: data['desc'],
+          address: data['address'],
+          userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
+          category: Category(id: data['category']['_id'],name: data['category']['name']),
+          active: data['active'],
+          createdAt: data['createdAt'],
+        );
+      });*/
       /*context.read<AlertProvider>().pushNotification(Alert(
         id: data['_id'],
         lat: data['lat'],
@@ -224,8 +256,8 @@ class _HomePageState extends State<HomePage> {
         active: data['active'],
         createdAt: data['createdAt'],
       ));*/
-      context.read<AlertProvider>().getAlertList();
-      _speak(readText);
+      //context.read<AlertProvider>().getAlertList();
+
 
     });
     socket.on("createAlertOkUser", (data) {
@@ -805,6 +837,7 @@ class _HomePageState extends State<HomePage> {
         // print("Testitude $element.address");
         var moment = Moment.now();
         var dateForComparison = DateTime.parse(element.createdAt);
+
         _markers.add(Marker(
             position:
                 LatLng(double.parse(element.lat), double.parse(element.lon)),
@@ -824,7 +857,6 @@ class _HomePageState extends State<HomePage> {
 
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
-    print(_markers);
     setPolylines();
   }
 
@@ -923,6 +955,14 @@ class _HomePageState extends State<HomePage> {
         bottom: false,
         child: Scaffold(
           backgroundColor: Colors.white.withOpacity(0.5),
+          /*floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.add
+            ),
+            onPressed: (){
+             activateNotif();
+            },
+          ),*/
           extendBody: true,
           body: Stack(
             children: [
@@ -948,14 +988,31 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
-                  child: context.watch<AlertProvider>().notifications.isEmpty ?
+                  child: notifications.lon == null ?
                   Container() :
-                  NotificationMapane(
+                      Notif(
+                        alert: notifications,
+                        onClose: (){
+                          setState(() {
+                            notifications = Alert();
+                          });
+                        },
+                        move: () {
+                          CameraPosition cPosition = CameraPosition(
+                            zoom: CAMERA_ZOOM,
+                            tilt: CAMERA_TILT,
+                            bearing: CAMERA_BEARING,
+                            target: LatLng(double.parse(notifications.lat), double.parse(notifications.lon)),
+                          );
+                          _goTo(cPosition);
+                        },
+                      )
+                  /*NotificationMapane(
                     CAMERA_ZOOM: CAMERA_ZOOM,
                     CAMERA_TILT: CAMERA_TILT,
                       CAMERA_BEARING: CAMERA_BEARING,
                       completer: _controller,
-                  ),
+                  ),*/
                 )
               ),
               Padding(
