@@ -10,6 +10,7 @@ import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:mapane/constants/socket.dart';
+import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 
 
@@ -94,6 +95,14 @@ class UserProvider extends BaseProvider{
       Navigator.of(context).pushReplacementNamed('/walk');
     }
     return first_time;
+  }
+
+  checkreturngetnumberpage(context) async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    userPhone = await _preferences.get('user_phone');
+    if (userPhone != null && userPhone != "+237" && userPhone != "" && userPhone.length > 5) {
+      SystemNavigator.pop();
+    }
   }
 
   setFirstTime() async {

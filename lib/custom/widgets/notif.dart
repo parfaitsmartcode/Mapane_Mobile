@@ -55,23 +55,26 @@ class _NotifState extends State<Notif> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 3),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: HexColor("#ffffff"),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: getSize(20, "width", context)),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          color: HexColor("#ffffff"),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
+                      ),
                     ),
-                    child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
                   ),
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.only(
                     right: SizeConfig.blockSizeHorizontal * 13),
@@ -91,11 +94,16 @@ class _NotifState extends State<Notif> {
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 0.5,
                       ),
-                      Text(
-                        widget.alert.address,
-                        style: TextStyle(
-                            fontSize: 12.0, color: Colors.white),
-                        overflow: TextOverflow.clip,
+                      SizedBox(
+                        width: getSize(210, "width", context),
+                        child: Text(
+                          widget.alert.address,
+                          maxLines: 2,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontSize: 12.0, color: Colors.white),
+                          overflow: TextOverflow.clip,
+                        ),
                       ),
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 0.5,
@@ -111,9 +119,11 @@ class _NotifState extends State<Notif> {
                   ),
                 ),
               ),
+                ],
+              ),
               Positioned(
                 top: getSize(95, "height", context),
-                left: SizeConfig.screenWidth / 6,
+                left: getSize(82, "width", context),
                 child: SizedBox(
                   height: 35.0,
                   width: 200,

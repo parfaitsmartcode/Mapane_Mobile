@@ -9,6 +9,9 @@ import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import 'dart:async';
+import 'package:provider/provider.dart';
+import 'package:mapane/screens/splash_welcome.dart';
+import '../state/user_provider.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -46,6 +49,7 @@ class _MyAppState extends State<NumeroGet> {
   @override
   void initState() {
     super.initState();
+    // context.read<UserProvider>().checkreturngetnumberpage(context);
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
         initMobileNumberState();

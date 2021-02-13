@@ -131,6 +131,8 @@ class _HomePageState extends State<HomePage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
   activateNotif(Alert alert){
+    print("dans la sauce");
+    print(alert);
     setState(() {
       notifications = alert;
     });
@@ -141,8 +143,8 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(Permission.location);
     }
     super.initState();
-    initTts();
     context.read<AlertProvider>().getAlertList();
+    initTts();
     manager = SocketIOManager();
     initSocket("default");
     // create an instance of Location
@@ -212,25 +214,25 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      print("createAlertOk pour dire que alerte created successfully");
-      var readText =
-          'Alerte de test brakata à ' + data['alert']['address'];
-      print(readText);
-      _speak(readText);
-      print("notifications de testement");
+      // print("createAlertOk pour dire que alerte created successfully");
+      // var readText =
+      //     'Alerte de test brakata à ' + data['alert']['address'];
+      // print(readText);
+      // _speak(readText);
+      // print("notifications de testement");
       //Alert test = Alert.fromJson(data['alert']);
-      print(data['alert']);
+      // print(data['alert']);
 
       activateNotif(Alert(
-        id: data['_id'],
-        lat: data['lat'],
-        lon: data['long'],
-        desc: data['desc'],
-        address: data['address'],
-        userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
-        category: Category(id: data['category']['_id'],name: data['category']['name']),
-        active: data['active'],
-        createdAt: data['createdAt'],
+        id: data['alert']['_id'],
+        lat: data['alert']['lat'],
+        lon: data['alert']['long'],
+        desc: data['alert']['desc'],
+        address: data['alert']['address'],
+        userId: PostedBy(id:'0',phone:'1234'),
+        category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
+        active: data['alert']['active'],
+        createdAt: data['alert']['createdAt'],
       ));
       /*setState(() {
         notifications = Alert(
@@ -775,28 +777,28 @@ class _HomePageState extends State<HomePage> {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
     embouteillageMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.embouteillageMarker2);
     radarMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.radarMarker2);
     accidentMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.accidentMarker2);
     controleMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.dangerMarker2);
     proximityMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(15)),
+        ImageConfiguration(devicePixelRatio: 2.5),
         Assets.proximityMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
@@ -833,23 +835,22 @@ class _HomePageState extends State<HomePage> {
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       print("lise des alertes " + r.length.toString());
-      r.forEach((element) {
-        var test = element.address;
-        print("Testitude $test");
-        var moment = Moment.now();
-        var dateForComparison = DateTime.parse(element.createdAt);
+      if (r.length > 0) {
+        print("Il y'a les alertes");
+        r.forEach((element) {
+          // var test = element.address;
+          // print("Testitude $test");
+          // var moment = Moment.now();
+          // var dateForComparison = DateTime.parse(element.createdAt);
 
-        _markers.add(Marker(
-            position:
-                LatLng(double.parse(element.lat), double.parse(element.lon)),
-            markerId: MarkerId('alert' + i.toString()),
-            icon: getAppropriateIcon(element.category.name),
-            infoWindow: InfoWindow(
-              title: element.category.name.capitalize(),
-              snippet: element.address + " - " + moment.from(dateForComparison),
-            )));
-        i++;
-      });
+          _markers.add(Marker(
+              position:
+                  LatLng(double.parse(element.lat), double.parse(element.lon)),
+              markerId: MarkerId('alerte ' + element.id),
+              icon: getAppropriateIcon(element.category.name)));
+          i++;
+        });
+      }
     });
     _markers.add(Marker(
         markerId: MarkerId('destPin'),
@@ -989,7 +990,7 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
-                  child: notifications.lon == null ?
+                  child: notifications.lat == null ?
                   Container() :
                       Notif(
                         alert: notifications,
