@@ -50,25 +50,7 @@ class MyApp extends StatelessWidget {
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
       routes: Routes.routes,
-      home: Notif(
-        alert: Alert(
-          id: "test",
-          lat: "12",
-          lon: "12",
-          desc: "desc",
-          address: "test",
-          userId: PostedBy(id:'0',phone:'1234'),
-          category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
-          active: true,
-          createdAt: "lol",
-        ),
-        onClose: (){
-          print('close');
-        },
-        move: () {
-          print("move");
-        },
-      ),//SplashScreen(),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
