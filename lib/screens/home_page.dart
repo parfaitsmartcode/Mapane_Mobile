@@ -214,6 +214,7 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
+      // context.read<AlertProvider>().getAlertList();
       // print("createAlertOk pour dire que alerte created successfully");
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
@@ -2077,7 +2078,7 @@ class _HomePageState extends State<HomePage> {
                                             setState(() => loadera = true);
                                             sendAlert(
                                                 "default",
-                                                "accident-de-circulation-1",
+                                                "Accident-de-circulation-1",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
@@ -2233,7 +2234,7 @@ class _HomePageState extends State<HomePage> {
                                             setState(() => loadera = true);
                                             sendAlert(
                                                 "default",
-                                                "travaux2",
+                                                "route-barree2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
@@ -2389,7 +2390,7 @@ class _HomePageState extends State<HomePage> {
                                             setState(() => loadera = true);
                                             sendAlert(
                                                 "default",
-                                                "route-en-chantier-2",
+                                                "travaux2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,

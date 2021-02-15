@@ -530,7 +530,7 @@ class _MyAppState extends State<NumeroGet> {
         .map(
           (SimCard sim) => Column(
             children: [
-              ListTile(
+              sim.number == "" && sim.number == null ? ListTile(
                   leading: Image.asset(
                     'assets/images/Flag-CM.png',
                     height: 25,
@@ -560,7 +560,7 @@ class _MyAppState extends State<NumeroGet> {
                               size: 23.0,
                               color: Color(0xFF25296A),
                             )
-                          : Text('')),
+                          : Text('')) : Row(),
               _simCard.indexOf(sim) != taille - 1
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.5),
