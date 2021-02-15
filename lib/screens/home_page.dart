@@ -652,8 +652,8 @@ class _HomePageState extends State<HomePage> {
       if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": 34.4472044,
-            "long": 86.0244645,
+            "lat": latlon.latitude,
+            "long": latlon.longitude,
             "desc": "test",
             "postedBy": posted,
             "category": category,
@@ -664,8 +664,8 @@ class _HomePageState extends State<HomePage> {
         initSocket(identifier);
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": 34.4472044,
-            "long": 86.0244645,
+            "lat": latlon.latitude,
+            "long": latlon.longitude,
             "desc": "test",
             "postedBy": posted,
             "category": category,
