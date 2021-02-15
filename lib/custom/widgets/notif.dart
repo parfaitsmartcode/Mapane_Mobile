@@ -10,7 +10,7 @@ class Notif extends StatefulWidget {
   final Function move;
   final Alert alert;
 
-  Notif({this.alert,this.onClose,this.move});
+  Notif({this.alert, this.onClose, this.move});
 
   @override
   _NotifState createState() => _NotifState();
@@ -19,7 +19,6 @@ class Notif extends StatefulWidget {
 class _NotifState extends State<Notif> {
   @override
   Widget build(BuildContext context) {
-
     SizeConfig().init(context);
     Moment.setLocaleGlobally(new LocaleFr());
     var moment = Moment.now();
@@ -27,7 +26,7 @@ class _NotifState extends State<Notif> {
     return Scaffold(
       body: Center(
         child: Container(
-          height: 127,
+          height: getSize(96, "height", context),
           child: Card(
               elevation: 5.0,
               semanticContainer: true,
@@ -63,7 +62,7 @@ class _NotifState extends State<Notif> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                            left: getSize(20, "width", context)),
+                            left: getSize(10, "width", context)),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
@@ -72,107 +71,120 @@ class _NotifState extends State<Notif> {
                             width: 60,
                             decoration: BoxDecoration(
                               color: HexColor("#ffffff"),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
-                            child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
+                            child: Image.asset(Assets.embouteillageMarker3,
+                                height: getSize(35, "height", context),
+                                width: getSize(35, "width", context)),
                           ),
                         ),
                       ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: SizeConfig.blockSizeHorizontal * 13),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.alert.category.name,
-
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.white),
-                            overflow: TextOverflow.clip,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: SizeConfig.blockSizeHorizontal * 13),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.alert.category.name,
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.white),
+                                overflow: TextOverflow.clip,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.blockSizeVertical * 0.5,
+                              ),
+                              SizedBox(
+                                width: getSize(210, "width", context),
+                                child: Text(
+                                  widget.alert.address,
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                      fontSize: 12.0, color: Colors.white),
+                                  overflow: TextOverflow.clip,
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.blockSizeVertical * 0.5,
+                              ),
+                              Text(
+                                "lol", //moment.from(DateTime.parse(widget.alert.createdAt)),
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    color:
+                                        HexColor("#707070").withOpacity(0.49)),
+                                overflow: TextOverflow.clip,
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 0.5,
-                          ),
-                          SizedBox(
-                            width: getSize(210, "width", context),
-                            child: Text(
-                              widget.alert.address,
-                              maxLines: 2,
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 12.0, color: Colors.white),
-                              overflow: TextOverflow.clip,
-                            ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.blockSizeVertical * 0.5,
-                          ),
-                          Text(
-                            "lol",//moment.from(DateTime.parse(widget.alert.createdAt)),
-                            style: TextStyle(
-                                fontSize: 12.0,
-                                color: HexColor("#707070").withOpacity(0.49)),
-                            overflow: TextOverflow.clip,
-                          )
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                     ],
                   ),
                   Positioned(
                     top: getSize(75, "height", context),
-                    left: getSize(82, "width", context),
-                    child: SizedBox(
-                      height: getSize(35,"height",context),
-                      width: getSize(230,"width",context),
-                      child: Card(
-                        elevation: 1,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FlatButton(
-                              onPressed: widget.move,
-                              child: Text(
-                                  "Localiser",
-                                style: TextStyle(
-                                  color: Colors.black
+                    width: getSize(327, "width", context),
+                    left: getSize(35, "width", context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: getSize(35, "height", context),
+                          width: getSize(250, "width", context),
+                          child: Card(
+                            elevation: 1,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FlatButton(
+                                  onPressed: widget.move,
+                                  child: Text(
+                                    "Localiser",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: getSize(12, "height", context),
+                                        fontWeight: FontWeight.normal),
+                                  ),
                                 ),
-                              ),
+                                VerticalDivider(
+                                  thickness: 1.5,
+                                  endIndent: 2,
+                                  indent: 2,
+                                ),
+                                FlatButton(
+                                  onPressed: widget.onClose,
+                                  child: Text("Tout fermer",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: getSize(12, "height", context),
+                                          fontWeight: FontWeight.normal)),
+                                ),
+                                InkWell(
+                                  onTap: widget.onClose,
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 20.0,
+                                  ),
+                                )
+                              ],
                             ),
-                            VerticalDivider(
-                              thickness: 1.5,
-                              endIndent: 2,
-                              indent: 2,
-                            ),
-                            FlatButton(
-                              onPressed: widget.onClose,
-                              child: Text(
-                                  "Fermer"
-                              ),
-                            ),
-                            InkWell(
-                              onTap: widget.onClose,
-                              child: Icon(
-                                Icons.close,
-                                size: 20.0,
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   )
                 ],
               ) //Image.network('${welcomeImages[index]}',fit: BoxFit.cover,),
-          ),
+              ),
         ),
       ),
     );

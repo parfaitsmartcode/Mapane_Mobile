@@ -214,7 +214,7 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      // context.read<AlertProvider>().getAlertList();
+      context.read<AlertProvider>().getAlertList();
       // print("createAlertOk pour dire que alerte created successfully");
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
@@ -993,22 +993,25 @@ class _HomePageState extends State<HomePage> {
                   duration: Duration(milliseconds: 500),
                   child: notifications.lat == null ?
                   Container() :
-                      Notif(
-                        alert: notifications,
-                        onClose: (){
-                          setState(() {
-                            notifications = Alert();
-                          });
-                        },
-                        move: () {
-                          CameraPosition cPosition = CameraPosition(
-                            zoom: CAMERA_ZOOM,
-                            tilt: CAMERA_TILT,
-                            bearing: CAMERA_BEARING,
-                            target: LatLng(double.parse(notifications.lat), double.parse(notifications.lon)),
-                          );
-                          _goTo(cPosition);
-                        },
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: getSize(24, "width", context)),
+                        child: Notif(
+                          alert: notifications,
+                          onClose: (){
+                            setState(() {
+                              notifications = Alert();
+                            });
+                          },
+                          move: () {
+                            CameraPosition cPosition = CameraPosition(
+                              zoom: CAMERA_ZOOM,
+                              tilt: CAMERA_TILT,
+                              bearing: CAMERA_BEARING,
+                              target: LatLng(double.parse(notifications.lat), double.parse(notifications.lon)),
+                            );
+                            _goTo(cPosition);
+                          },
+                        ),
                       )
                   /*NotificationMapane(
                     CAMERA_ZOOM: CAMERA_ZOOM,
