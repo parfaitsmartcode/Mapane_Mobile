@@ -131,8 +131,6 @@ class _HomePageState extends State<HomePage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
   activateNotif(Alert alert){
-    print("dans la sauce");
-    print(alert);
     setState(() {
       notifications = alert;
     });
@@ -222,7 +220,7 @@ class _HomePageState extends State<HomePage> {
       // _speak(readText);
       // print("notifications de testement");
       //Alert test = Alert.fromJson(data['alert']);
-      // print(data['alert']);
+       print(data['alert']);
 
       activateNotif(Alert(
         id: data['alert']['_id'],
@@ -994,7 +992,7 @@ class _HomePageState extends State<HomePage> {
                   child: notifications.lat == null ?
                   Container() :
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: getSize(24, "width", context)),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Notif(
                           alert: notifications,
                           onClose: (){
