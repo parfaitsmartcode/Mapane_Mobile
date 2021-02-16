@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
       //Alert test = Alert.fromJson(data['alert']);
        print(data['alert']);
 
-      activateNotif(Alert(
+      /*activateNotif(Alert(
         id: data['alert']['_id'],
         lat: data['alert']['lat'],
         lon: data['alert']['long'],
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
         category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
         active: data['alert']['active'],
         createdAt: data['alert']['createdAt'],
-      ));
+      ));*/
       /*setState(() {
         notifications = Alert(
           id: data['_id'],
@@ -246,17 +246,18 @@ class _HomePageState extends State<HomePage> {
           createdAt: data['createdAt'],
         );
       });*/
-      /*context.read<AlertProvider>().pushNotification(Alert(
-        id: data['_id'],
-        lat: data['lat'],
-        lon: data['long'],
-        desc: data['desc'],
-        address: data['address'],
-        userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
-        category: Category(id: data['category']['_id'],name: data['category']['name']),
-        active: data['active'],
-        createdAt: data['createdAt'],
-      ));*/
+      context.read<AlertProvider>().pushNotification(Alert(
+        id: data['alert']['_id'],
+        lat: data['alert']['lat'],
+        lon: data['alert']['long'],
+        desc: data['alert']['desc'],
+        address: data['alert']['address'],
+        userId: PostedBy(id:'0',phone:'1234'),
+        category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
+        active: data['alert']['active'],
+        createdAt: data['alert']['createdAt'],
+      ));
+      print(context.read<AlertProvider>().notifications);
       //context.read<AlertProvider>().getAlertList();
 
 
@@ -989,34 +990,34 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
-                  child: notifications.lat == null ?
+                  child: context.watch<AlertProvider>().notifications.isEmpty ?
                   Container() :
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Notif(
-                          alert: notifications,
+                        child: context.watch<AlertProvider>().notifications.length == 1 ?
+
+                        Notif(
+                          alert: context.watch<AlertProvider>().notifications[0],
                           onClose: (){
-                            setState(() {
-                              notifications = Alert();
-                            });
+                            context.read<AlertProvider>().popNotification(0);
                           },
                           move: () {
                             CameraPosition cPosition = CameraPosition(
                               zoom: CAMERA_ZOOM,
                               tilt: CAMERA_TILT,
                               bearing: CAMERA_BEARING,
-                              target: LatLng(double.parse(notifications.lat), double.parse(notifications.lon)),
+                              target: LatLng(double.parse(context.read<AlertProvider>().notifications[0].lat), double.parse(context.read<AlertProvider>().notifications[0].lon)),
                             );
                             _goTo(cPosition);
                           },
+                        ) :
+                        NotificationMapane(
+                          CAMERA_ZOOM: CAMERA_ZOOM,
+                          CAMERA_TILT: CAMERA_TILT,
+                          CAMERA_BEARING: CAMERA_BEARING,
+                          completer: _controller,
                         ),
                       )
-                  /*NotificationMapane(
-                    CAMERA_ZOOM: CAMERA_ZOOM,
-                    CAMERA_TILT: CAMERA_TILT,
-                      CAMERA_BEARING: CAMERA_BEARING,
-                      completer: _controller,
-                  ),*/
                 )
               ),
               Padding(
