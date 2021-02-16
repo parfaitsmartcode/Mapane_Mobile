@@ -785,7 +785,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Travaux", 2);
+                      .getAlertByUserCat("Route en chantier", 2);
                 },
                 leading: Image.asset('assets/images/highway.png',
                     height: getSize(24, "height", context),

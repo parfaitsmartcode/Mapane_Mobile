@@ -33,26 +33,26 @@ class _NotificationMapaneState extends State<NotificationMapane>
 
   getAppropriateIcon(alert){
     switch (alert) {
-      case "embouteillage":
+      case "Embouteillage":
         return Assets.embouteillageMarker3;
         break;
-      case "travaux":
-        return Assets.embouteillageMarker3;
+      case "Route en chantier":
+        return Assets.routechantierMarker3;
         break;
-      case "zone dangereuse":
-        return Assets.embouteillageMarker3;
+      case "Route barrée":
+        return Assets.routebarreeMarker3;
         break;
-      case "controle routier":
-        return Assets.embouteillageMarker3;
+      case "Controle routier":
+        return Assets.controleMarker3;
+        break;
+      case "Zone dangereuse":
+        return Assets.dangerMarker3;
         break;
       case "Radar":
-        return Assets.embouteillageMarker3;
+        return Assets.radarMarker3;
         break;
       case "Accident de circulation":
-        return Assets.embouteillageMarker3;
-        break;
-      case "route barrée":
-        return Assets.embouteillageMarker3;
+        return Assets.accidentMarker3;
         break;
       default:
         return Assets.embouteillageMarker3;
@@ -75,10 +75,10 @@ class _NotificationMapaneState extends State<NotificationMapane>
         totalNum: context.watch<AlertProvider>().notifications.length,
         stackNum: context.watch<AlertProvider>().notifications.length,
         swipeEdge: 4.0,
-        maxWidth: MediaQuery.of(context).size.width * 0.9,
-        maxHeight: MediaQuery.of(context).size.width * 0.9,
-        minWidth: MediaQuery.of(context).size.width * 0.8,
-        minHeight: MediaQuery.of(context).size.width * 0.8,
+        maxWidth: getSize(327, "width", context),
+        maxHeight: getSize(96, "height", context),
+        minWidth: getSize(326, "width", context),
+        minHeight: getSize(95, "height", context),
         cardBuilder: (context, index) => Card(
             elevation: 5.0,
             semanticContainer: true,
@@ -126,7 +126,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                             color: HexColor("#ffffff"),
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
+                          child: Image.asset(getAppropriateIcon(context.watch<AlertProvider>().notifications[index].category.name),height:getSize(35, "height", context),width: getSize(35, "width", context)),
                         ),
                       ),
                     ),
@@ -134,7 +134,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      right: SizeConfig.blockSizeHorizontal * 13),
+                      right: getSize(16, "width", context)),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Column(
@@ -154,7 +154,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                         SizedBox(
                           width: getSize(210, "width", context),
                           child: Text(
-                            context.watch<AlertProvider>().notifications[index].address,
+                            context.watch<AlertProvider>().notifications[index].address.split(",")[0]+","+context.watch<AlertProvider>().notifications[index].address.split(",")[1],
                             maxLines: 2,
                             softWrap: true,
                             style: TextStyle(
@@ -179,7 +179,6 @@ class _NotificationMapaneState extends State<NotificationMapane>
                 Positioned(
                   top: getSize(75, "height", context),
                   width: getSize(327, "width", context),
-                  left: getSize(35, "width", context),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

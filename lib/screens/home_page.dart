@@ -821,16 +821,16 @@ class _HomePageState extends State<HomePage> {
 
   getAppropriateIcon(alert) {
     switch (alert) {
-      case "embouteillage":
+      case "Embouteillage":
         return embouteillageMarker;
         break;
-      case "travaux":
+      case "Route en chantier":
         return routechantierMarker;
         break;
-      case "zone dangereuse":
+      case "Zone dangereuse":
         return dangerMarker;
         break;
-      case "controle routier":
+      case "Controle routier":
         return controleMarker;
         break;
       case "Radar":
@@ -839,7 +839,7 @@ class _HomePageState extends State<HomePage> {
       case "Accident de circulation":
         return accidentMarker;
         break;
-      case "route barrée":
+      case "Route barrée":
         return routebarreeMarker;
         break;
       default:
@@ -2349,7 +2349,7 @@ class _HomePageState extends State<HomePage> {
                                             setState(() => loadera = true);
                                             sendAlert(
                                                 "default",
-                                                "travaux2",
+                                                "Route-en-chantier-2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,

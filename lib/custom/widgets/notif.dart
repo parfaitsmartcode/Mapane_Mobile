@@ -17,6 +17,35 @@ class Notif extends StatefulWidget {
 }
 
 class _NotifState extends State<Notif> {
+
+  getAppropriateIcon(alert){
+    switch (alert) {
+      case "Embouteillage":
+        return Assets.embouteillageMarker3;
+        break;
+      case "Route en chantier":
+        return Assets.routechantierMarker3;
+        break;
+      case "Route barrée":
+        return Assets.routebarreeMarker3;
+        break;
+      case "Controle routier":
+        return Assets.controleMarker3;
+        break;
+      case "Zone dangereuse":
+        return Assets.dangerMarker3;
+        break;
+      case "Radar":
+        return Assets.radarMarker3;
+        break;
+      case "Accident de circulation":
+        return Assets.accidentMarker3;
+        break;
+      default:
+        return Assets.embouteillageMarker3;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -71,7 +100,7 @@ class _NotifState extends State<Notif> {
                           color: HexColor("#ffffff"),
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        child: Image.asset(Assets.embouteillageMarker3,
+                        child: Image.asset(getAppropriateIcon(widget.alert.category.name),
                             height: getSize(35, "height", context),
                             width: getSize(35, "width", context)),
                       ),
