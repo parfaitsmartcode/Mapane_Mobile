@@ -212,55 +212,12 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      context.read<AlertProvider>().getAlertList();
-      // print("createAlertOk pour dire que alerte created successfully");
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
       // print(readText);
       // _speak(readText);
-      // print("notifications de testement");
-      //Alert test = Alert.fromJson(data['alert']);
-       print(data['alert']);
-
-      /*activateNotif(Alert(
-        id: data['alert']['_id'],
-        lat: data['alert']['lat'],
-        lon: data['alert']['long'],
-        desc: data['alert']['desc'],
-        address: data['alert']['address'],
-        userId: PostedBy(id:'0',phone:'1234'),
-        category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
-        active: data['alert']['active'],
-        createdAt: data['alert']['createdAt'],
-      ));*/
-      /*setState(() {
-        notifications = Alert(
-          id: data['_id'],
-          lat: data['lat'],
-          lon: data['long'],
-          desc: data['desc'],
-          address: data['address'],
-          userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
-          category: Category(id: data['category']['_id'],name: data['category']['name']),
-          active: data['active'],
-          createdAt: data['createdAt'],
-        );
-      });*/
-      context.read<AlertProvider>().pushNotification(Alert(
-        id: data['alert']['_id'],
-        lat: data['alert']['lat'],
-        lon: data['alert']['long'],
-        desc: data['alert']['desc'],
-        address: data['alert']['address'],
-        userId: PostedBy(id:'0',phone:'1234'),
-        category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
-        active: data['alert']['active'],
-        createdAt: data['alert']['createdAt'],
-      ));
-      print(context.read<AlertProvider>().notifications);
-      //context.read<AlertProvider>().getAlertList();
-
-
+      context.read<AlertProvider>().pushNotification(Alert.fromJson(data['alert']));
+      context.read<AlertProvider>().getAlertList();
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
