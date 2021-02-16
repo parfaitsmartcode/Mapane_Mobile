@@ -280,7 +280,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                                 .where((i) =>
                                                                     i.category
                                                                         .name ==
-                                                                    "embouteillage")
+                                                                    "Embouteillage")
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -355,7 +355,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                                 .where((i) =>
                                                                     i.category
                                                                         .name ==
-                                                                    "travaux")
+                                                                    "Route barrée")
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -732,7 +732,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("controle routier", 2);
+                      .getAlertByUserCat("Controle routier", 2);
                 },
                 leading: Image.asset('assets/images/police.png',
                     height: getSize(24, "height", context),
@@ -747,7 +747,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("zone dangereuse", 2);
+                      .getAlertByUserCat("Zone dangereuse", 2);
                 },
                 leading: Image.asset('assets/images/danger.png',
                     height: getSize(24, "height", context),
@@ -777,7 +777,7 @@ class _MaterialModalState extends State<MaterialModal> {
                   Navigator.pop(context);
                   context
                       .read<AlertProvider>()
-                      .getAlertByUserCat("Route en chantier", 2);
+                      .getAlertByUserCat("Travaux", 2);
                 },
                 leading: Image.asset('assets/images/highway.png',
                     height: getSize(24, "height", context),

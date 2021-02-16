@@ -218,11 +218,11 @@ class _HomePageState extends State<HomePage> {
       // print("createAlertOk pour dire que alerte created successfully");
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
-      // print(readText);
+      print("testobrada");
       // _speak(readText);
       // print("notifications de testement");
       //Alert test = Alert.fromJson(data['alert']);
-      // print(data['alert']);
+      print(data['alert']);
 
       activateNotif(Alert(
         id: data['alert']['_id'],
