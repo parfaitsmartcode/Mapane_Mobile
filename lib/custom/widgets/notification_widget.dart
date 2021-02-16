@@ -64,16 +64,16 @@ class _NotificationMapaneState extends State<NotificationMapane>
     CardController controller = CardController(); //Use this to trigger swap.
     SizeConfig().init(context);
     Moment.setLocaleGlobally(new LocaleFr());
+    print(context.watch<AlertProvider>().notifications[0].lat);
     var moment = Moment.now();
     return  Container(
-      height: 127,
-      //width: 400,
+      height: getSize(96, "height", context),
       child: new TinderSwapCard(
         swipeUp: false,
         swipeDown: false,
         orientation: AmassOrientation.TOP,
-        totalNum: context.read<AlertProvider>().notifications.length,
-        stackNum: context.read<AlertProvider>().notifications.length,
+        totalNum: context.watch<AlertProvider>().notifications.length,
+        stackNum: context.watch<AlertProvider>().notifications.length,
         swipeEdge: 4.0,
         maxWidth: MediaQuery.of(context).size.width * 0.9,
         maxHeight: MediaQuery.of(context).size.width * 0.9,
@@ -98,6 +98,9 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       child: Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
+                          onTap: (){
+                            context.read<AlertProvider>().popNotification(index);
+                          },
                           child: Icon(
                             Icons.close,
                             color: Colors.white,
@@ -108,22 +111,26 @@ class _NotificationMapaneState extends State<NotificationMapane>
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: SizeConfig.blockSizeHorizontal * 3),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: HexColor("#ffffff"),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: getSize(10, "width", context)),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: HexColor("#ffffff"),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
+                        ),
                       ),
-                      child: Image.asset(Assets.embouteillageMarker3,height:getSize(35, "height", context),width: getSize(35, "width", context)),
                     ),
-                  ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -135,7 +142,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                       Text(
-                        context.read<AlertProvider>().notifications[index].category.name,
+                        context.watch<AlertProvider>().notifications[index].category.name,
 
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
@@ -144,17 +151,22 @@ class _NotificationMapaneState extends State<NotificationMapane>
                         SizedBox(
                           height: SizeConfig.blockSizeVertical * 0.5,
                         ),
-                        Text(
-                          context.read<AlertProvider>().notifications[index].address,
-                          style: TextStyle(
-                              fontSize: 12.0, color: Colors.white),
-                          overflow: TextOverflow.clip,
+                        SizedBox(
+                          width: getSize(210, "width", context),
+                          child: Text(
+                            context.watch<AlertProvider>().notifications[index].address,
+                            maxLines: 2,
+                            softWrap: true,
+                            style: TextStyle(
+                                fontSize: 12.0, color: Colors.white),
+                            overflow: TextOverflow.clip,
+                          ),
                         ),
                         SizedBox(
                           height: SizeConfig.blockSizeVertical * 0.5,
                         ),
                         Text(
-                          moment.from(DateTime.parse(context.read<AlertProvider>().notifications[index].createdAt)),
+                          moment.from(DateTime.parse(context.watch<AlertProvider>().notifications[index].createdAt)),
                           style: TextStyle(
                               fontSize: 12.0,
                               color: HexColor("#707070").withOpacity(0.49)),
@@ -165,51 +177,66 @@ class _NotificationMapaneState extends State<NotificationMapane>
                   ),
                 ),
                 Positioned(
-                  top: getSize(95, "height", context),
-                  left: SizeConfig.screenWidth / 6,
-                  child: SizedBox(
-                    height: 35.0,
-                    width: 200,
-                    child: Card(
-                      elevation: 1,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Localiser"
+                  top: getSize(75, "height", context),
+                  width: getSize(327, "width", context),
+                  left: getSize(35, "width", context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: getSize(35, "height", context),
+                        width: getSize(250, "width", context),
+                        child: Card(
+                          elevation: 1,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FlatButton(
+                                onPressed: () async{
+                                  CameraPosition cPosition = CameraPosition(
+                                    zoom: widget.CAMERA_ZOOM,
+                                    tilt: widget.CAMERA_TILT,
+                                    bearing: widget.CAMERA_BEARING,
+                                    target: LatLng(double.parse(context.read<AlertProvider>().notifications[index].lat), double.parse(context.read<AlertProvider>().notifications[index].lon)),
+                                  );
+                                  final GoogleMapController controller = await widget.completer.future;
+                                  controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+                                },
+                                child: Text(
+                                  "Localiser",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: getSize(12, "height", context),
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                              VerticalDivider(
+                                thickness: 1.5,
+                                endIndent: 2,
+                                indent: 2,
+                              ),
+                              FlatButton(
+                                onPressed: (){
+                                  context.read<AlertProvider>().popNotification(index);
+                                },
+                                child: Text("Tout fermer",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: getSize(12, "height", context),
+                                        fontWeight: FontWeight.normal)),
+                              ),
+                              Icon(
+                                Icons.close,
+                                size: 20.0,
+                              )
+                            ],
                           ),
-                          VerticalDivider(
-                            thickness: 1.5,
-                            endIndent: 2,
-                            indent: 2,
-                          ),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                context.read<AlertProvider>().popAllNotifications();
-                              });
-                            },
-                            child: Text(
-                              "Tout fermer"
-                            ),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                context.read<AlertProvider>().popNotification(index);
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              size: 20.0,
-                            ),
-                          )
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 )
               ],

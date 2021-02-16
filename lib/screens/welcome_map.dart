@@ -229,6 +229,14 @@ class _MyAppState extends State<WelcomeMap> {
                                                             (context, index) {
                                                           final Alert alert =
                                                               alertList[index];
+                                                              // print("heykkkk");
+                                                              // print(alertList
+                                                              //   .where((i) =>
+                                                              //       i.category
+                                                              //           .name ==
+                                                              //       "Embouteillage")
+                                                              //   .toList()
+                                                              //   .length);
                                                           return AllAlerte(
                                                               alert: alert,
                                                               type: "All",
@@ -300,7 +308,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                               return AllAlerte(
                                                                   alert: alert,
                                                                   type:
-                                                                      "embouteillage",
+                                                                      "Embouteillage",
                                                                   count: alertList
                                                                       .length);
                                                             },
@@ -375,7 +383,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                               return AllAlerte(
                                                                   alert: alert,
                                                                   type:
-                                                                      "route barrée");
+                                                                      "Route barrée");
                                                             },
                                                           )
                                                         : Center(

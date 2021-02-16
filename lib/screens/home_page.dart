@@ -131,8 +131,6 @@ class _HomePageState extends State<HomePage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
   activateNotif(Alert alert){
-    print("dans la sauce");
-    print(alert);
     setState(() {
       notifications = alert;
     });
@@ -214,54 +212,12 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      context.read<AlertProvider>().getAlertList();
-      // print("createAlertOk pour dire que alerte created successfully");
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
       print("testobrada");
       // _speak(readText);
-      // print("notifications de testement");
-      //Alert test = Alert.fromJson(data['alert']);
-      print(data['alert']);
-
-      activateNotif(Alert(
-        id: data['alert']['_id'],
-        lat: data['alert']['lat'],
-        lon: data['alert']['long'],
-        desc: data['alert']['desc'],
-        address: data['alert']['address'],
-        userId: PostedBy(id:'0',phone:'1234'),
-        category: Category(id: '0aez0ezaaz0eds2edaz',name: 'Embouteillage'),
-        active: data['alert']['active'],
-        createdAt: data['alert']['createdAt'],
-      ));
-      /*setState(() {
-        notifications = Alert(
-          id: data['_id'],
-          lat: data['lat'],
-          lon: data['long'],
-          desc: data['desc'],
-          address: data['address'],
-          userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
-          category: Category(id: data['category']['_id'],name: data['category']['name']),
-          active: data['active'],
-          createdAt: data['createdAt'],
-        );
-      });*/
-      /*context.read<AlertProvider>().pushNotification(Alert(
-        id: data['_id'],
-        lat: data['lat'],
-        lon: data['long'],
-        desc: data['desc'],
-        address: data['address'],
-        userId: data['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:data['postedBy']['_id'],phone:data['postedBy']['phone']),
-        category: Category(id: data['category']['_id'],name: data['category']['name']),
-        active: data['active'],
-        createdAt: data['createdAt'],
-      ));*/
-      //context.read<AlertProvider>().getAlertList();
-
-
+      context.read<AlertProvider>().pushNotification(Alert.fromJson(data['alert']));
+      context.read<AlertProvider>().getAlertList();
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
@@ -991,34 +947,34 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
-                  child: notifications.lat == null ?
+                  child: context.watch<AlertProvider>().notifications.isEmpty ?
                   Container() :
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: getSize(24, "width", context)),
-                        child: Notif(
-                          alert: notifications,
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: context.watch<AlertProvider>().notifications.length == 1 ?
+
+                        Notif(
+                          alert: context.watch<AlertProvider>().notifications[0],
                           onClose: (){
-                            setState(() {
-                              notifications = Alert();
-                            });
+                            context.read<AlertProvider>().popNotification(0);
                           },
                           move: () {
                             CameraPosition cPosition = CameraPosition(
                               zoom: CAMERA_ZOOM,
                               tilt: CAMERA_TILT,
                               bearing: CAMERA_BEARING,
-                              target: LatLng(double.parse(notifications.lat), double.parse(notifications.lon)),
+                              target: LatLng(double.parse(context.read<AlertProvider>().notifications[0].lat), double.parse(context.read<AlertProvider>().notifications[0].lon)),
                             );
                             _goTo(cPosition);
                           },
+                        ) :
+                        NotificationMapane(
+                          CAMERA_ZOOM: CAMERA_ZOOM,
+                          CAMERA_TILT: CAMERA_TILT,
+                          CAMERA_BEARING: CAMERA_BEARING,
+                          completer: _controller,
                         ),
                       )
-                  /*NotificationMapane(
-                    CAMERA_ZOOM: CAMERA_ZOOM,
-                    CAMERA_TILT: CAMERA_TILT,
-                      CAMERA_BEARING: CAMERA_BEARING,
-                      completer: _controller,
-                  ),*/
                 )
               ),
               Padding(
