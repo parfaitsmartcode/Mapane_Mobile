@@ -10,8 +10,6 @@ import 'package:mapane/custom/widgets/notif.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/alert.dart';
-import 'package:mapane/models/category.dart';
-import 'package:mapane/models/postedBy.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
@@ -32,7 +30,6 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:simple_moment/simple_moment.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -45,8 +42,8 @@ enum TtsState { playing, stopped, paused, continued }
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
-const LatLng SOURCE_LOCATION = LatLng(42.747932, -71.167889);
-const LatLng DEST_LOCATION = LatLng(37.335685, -122.0605916);
+const LatLng SOURCE_LOCATION = LatLng(4.0747638,9.7497398);
+const LatLng DEST_LOCATION = LatLng(4.0771125,9.7486008);
 
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
@@ -762,7 +759,7 @@ class _HomePageState extends State<HomePage> {
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/destination_map_marker.png');
+        Assets.proximityMarker);
   }
 
   void setInitialLocation() async {
@@ -797,11 +794,6 @@ class _HomePageState extends State<HomePage> {
       if (r.length > 0) {
         print("Il y'a les alertes");
         r.forEach((element) {
-          // var test = element.address;
-          // print("Testitude $test");
-          // var moment = Moment.now();
-          // var dateForComparison = DateTime.parse(element.createdAt);
-
           _markers.add(Marker(
               position:
                   LatLng(double.parse(element.lat), double.parse(element.lon)),
@@ -864,6 +856,7 @@ class _HomePageState extends State<HomePage> {
         _polylines.add(Polyline(
             width: 5, // set the width of the polylines
             polylineId: PolylineId("poly"),
+            visible: true,
             color: Color.fromARGB(255, 40, 122, 198),
             points: polylineCoordinates));
       });
@@ -900,18 +893,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     updateBottomPadding();
-    CameraPosition initialCameraPosition = CameraPosition(
-        zoom: CAMERA_ZOOM,
-        tilt: CAMERA_TILT,
-        bearing: CAMERA_BEARING,
-        target: SOURCE_LOCATION);
-    if (currentLocation != null) {
-      initialCameraPosition = CameraPosition(
-          target: LatLng(currentLocation.latitude, currentLocation.longitude),
-          zoom: CAMERA_ZOOM,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING);
-    }
     return SafeArea(
         bottom: false,
         child: Scaffold(
@@ -937,7 +918,7 @@ class _HomePageState extends State<HomePage> {
                   tiltGesturesEnabled: false,
                   polylines: _polylines,
                   mapType: MapType.normal,
-                  initialCameraPosition: initialCameraPosition,
+                  initialCameraPosition: _kPosition,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     // my map has completed being created;
