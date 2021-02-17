@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:walkthrough/flutterwalkthrough.dart';
 import 'package:walkthrough/walkthrough.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../state/user_provider.dart';
 import 'dart:core';
 import 'walk.dart';
-import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -15,6 +15,7 @@ import 'package:mapane/models/postedBy.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/network_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -142,6 +143,7 @@ class _HomePageState extends State<HomePage> {
     }
     super.initState();
     context.read<AlertProvider>().getAlertList();
+    context.read<NetworkProvider>().init();
     initTts();
     manager = SocketIOManager();
     initSocket("default");
