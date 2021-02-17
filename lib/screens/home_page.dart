@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
     }
     super.initState();
     context.read<AlertProvider>().getAlertList();
-    context.read<NetworkProvider>().init();
+    //context.read<NetworkProvider>().init();
     initTts();
     manager = SocketIOManager();
     initSocket("default");
@@ -1005,7 +1005,6 @@ class _HomePageState extends State<HomePage> {
                               .fold((NException error) {
                               return Column(
                                 children: [
-                                  AspectRatio(aspectRatio: 5 / 1),
                                   Text(
                                     error.message,
                                   )

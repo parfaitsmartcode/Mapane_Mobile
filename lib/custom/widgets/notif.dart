@@ -17,8 +17,7 @@ class Notif extends StatefulWidget {
 }
 
 class _NotifState extends State<Notif> {
-
-  getAppropriateIcon(alert){
+  getAppropriateIcon(alert) {
     switch (alert) {
       case "Embouteillage":
         return Assets.embouteillageMarker3;
@@ -100,7 +99,8 @@ class _NotifState extends State<Notif> {
                           color: HexColor("#ffffff"),
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        child: Image.asset(getAppropriateIcon(widget.alert.category.name),
+                        child: Image.asset(
+                            getAppropriateIcon(widget.alert.category.name),
                             height: getSize(35, "height", context),
                             width: getSize(35, "width", context)),
                       ),
@@ -127,7 +127,7 @@ class _NotifState extends State<Notif> {
                           SizedBox(
                             width: getSize(210, "width", context),
                             child: Text(
-                              widget.alert.address,
+                              widget.alert.address.split(",")[0]+" ,"+widget.alert.address.split(",")[1],
                               maxLines: 2,
                               softWrap: true,
                               style: TextStyle(
@@ -152,14 +152,14 @@ class _NotifState extends State<Notif> {
                 ],
               ),
               Positioned(
-                top: getSize(75, "height", context),
+                top: getSize(72, "height", context),
                 width: getSize(327, "width", context),
                 left: getSize(35, "width", context),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: getSize(35, "height", context),
+                      height: getSize(40, "height", context),
                       width: getSize(250, "width", context),
                       child: Card(
                         elevation: 1,
@@ -170,14 +170,16 @@ class _NotifState extends State<Notif> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            FlatButton(
-                              onPressed: widget.move,
-                              child: Text(
-                                "Localiser",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: getSize(12, "height", context),
-                                    fontWeight: FontWeight.normal),
+                            Expanded(
+                              child: FlatButton(
+                                onPressed: widget.move,
+                                child: Text(
+                                  "Localiser",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: getSize(12, "height", context),
+                                      fontWeight: FontWeight.normal),
+                                ),
                               ),
                             ),
                             VerticalDivider(
@@ -190,7 +192,8 @@ class _NotifState extends State<Notif> {
                               child: Text("Tout fermer",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: getSize(12, "height", context),
+                                      fontSize:
+                                          getSize(12, "height", context),
                                       fontWeight: FontWeight.normal)),
                             ),
                             InkWell(
