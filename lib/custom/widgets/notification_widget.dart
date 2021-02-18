@@ -177,13 +177,13 @@ class _NotificationMapaneState extends State<NotificationMapane>
                   ),
                 ),
                 Positioned(
-                  top: getSize(75, "height", context),
+                  top: getSize(72, "height", context),
                   width: getSize(327, "width", context),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: getSize(35, "height", context),
+                        height: getSize(40, "height", context),
                         width: getSize(250, "width", context),
                         child: Card(
                           elevation: 1,
@@ -193,23 +193,25 @@ class _NotificationMapaneState extends State<NotificationMapane>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FlatButton(
-                                onPressed: () async{
-                                  CameraPosition cPosition = CameraPosition(
-                                    zoom: widget.CAMERA_ZOOM,
-                                    tilt: widget.CAMERA_TILT,
-                                    bearing: widget.CAMERA_BEARING,
-                                    target: LatLng(double.parse(context.read<AlertProvider>().notifications[index].lat), double.parse(context.read<AlertProvider>().notifications[index].lon)),
-                                  );
-                                  final GoogleMapController controller = await widget.completer.future;
-                                  controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-                                },
-                                child: Text(
-                                  "Localiser",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: getSize(12, "height", context),
-                                      fontWeight: FontWeight.normal),
+                              Expanded(
+                                child: FlatButton(
+                                  onPressed: () async{
+                                    CameraPosition cPosition = CameraPosition(
+                                      zoom: widget.CAMERA_ZOOM,
+                                      tilt: widget.CAMERA_TILT,
+                                      bearing: widget.CAMERA_BEARING,
+                                      target: LatLng(double.parse(context.read<AlertProvider>().notifications[index].lat), double.parse(context.read<AlertProvider>().notifications[index].lon)),
+                                    );
+                                    final GoogleMapController controller = await widget.completer.future;
+                                    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+                                  },
+                                  child: Text(
+                                    "Localiser",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: getSize(12, "height", context),
+                                        fontWeight: FontWeight.normal),
+                                  ),
                                 ),
                               ),
                               VerticalDivider(

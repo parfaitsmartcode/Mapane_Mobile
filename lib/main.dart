@@ -1,30 +1,17 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/routes.dart';
-import 'package:mapane/screens/socket_test.dart';
-import 'package:mapane/screens/home_page.dart';
 import 'package:mapane/screens/splash_screen.dart';
-import 'package:mapane/screens/moncompte.dart';
-import 'package:mapane/screens/tabs_page.dart';
-import 'package:mapane/screens/test.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/network_provider.dart';
 import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
-import 'package:mapane/screens/welcome_map.dart';
-import 'package:mapane/screens/walk.dart';
-import 'package:mapane/screens/settings.dart';
-import 'package:mapane/screens/numero_get_ios.dart';
-import 'package:mapane/screens/numero_get.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 
-import 'custom/widgets/notif.dart';
-import 'models/alert.dart';
-import 'models/category.dart';
-import 'models/postedBy.dart';
 
 void main() {
   setupLocator();
@@ -35,7 +22,8 @@ void main() {
         ChangeNotifierProvider(create:(_) => AlertProvider()),
         ChangeNotifierProvider(create:(_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
-        ChangeNotifierProvider(create: (_) => PlaceProvider())
+        ChangeNotifierProvider(create: (_) => PlaceProvider()),
+        ChangeNotifierProvider(create: (_) => NetworkProvider())
       ],
       child:  MyApp(),
     )
@@ -49,6 +37,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       routes: Routes.routes,
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,

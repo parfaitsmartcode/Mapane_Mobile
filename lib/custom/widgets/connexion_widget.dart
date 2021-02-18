@@ -10,10 +10,9 @@ class LostConnexion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Color.fromRGBO(248, 248, 248, 0.5),
-        body: Container(
+    return Container(
           constraints: BoxConstraints.expand(),
+          color: Color.fromRGBO(248, 248, 248, 0.5),
           child: ClipRRect(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
@@ -92,7 +91,7 @@ class LostConnexion extends StatelessWidget {
               ]),
             ),
           ),
-        ));
+        );
   }
 }
 
@@ -164,10 +163,9 @@ class LoadingConnexion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Color.fromRGBO(248, 248, 248, 0.5),
-        body: Container(
+    return Container(
           constraints: BoxConstraints.expand(),
+          color: Color.fromRGBO(248, 248, 248, 0.5),
           child: ClipRRect(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
@@ -218,6 +216,6 @@ class LoadingConnexion extends StatelessWidget {
               ]),
             ),
           ),
-        ));
+        );
   }
 }
