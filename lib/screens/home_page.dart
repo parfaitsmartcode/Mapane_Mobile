@@ -215,6 +215,7 @@ class _HomePageState extends State<HomePage> {
       // var readText =
       //     'Alerte de test brakata à ' + data['alert']['address'];
       print("testobrada");
+      print(data['alert']);
       // _speak(readText);
       context.read<AlertProvider>().pushNotification(Alert.fromJson(data['alert']));
       context.read<AlertProvider>().getAlertList();
@@ -448,7 +449,7 @@ class _HomePageState extends State<HomePage> {
               });
         }
       } else {
-        if (data['alert']['postedBy'] == userId)
+        if (data['alert']['postedBy']['_id'] == userId)
           showGeneralDialog(
               context: context,
               barrierDismissible: true,
