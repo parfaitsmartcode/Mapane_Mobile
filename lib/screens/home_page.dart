@@ -787,7 +787,7 @@ class _HomePageState extends State<HomePage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         icon: sourceIcon));
-        
+
     context.read<AlertProvider>().getAlertList();
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
@@ -804,10 +804,8 @@ class _HomePageState extends State<HomePage> {
               markerId: MarkerId('alerte ' + element.id),
               icon: getAppropriateIcon(element.category.name),
               infoWindow: InfoWindow(
-                title: element.category.name,
-                snippet: 'Alerte créee '+moment.from(dateForComparison)
-              )
-            ));
+                  title: element.category.name,
+                  snippet: 'Alerte créee ' + moment.from(dateForComparison))));
           i++;
         });
       }
@@ -968,7 +966,9 @@ class _HomePageState extends State<HomePage> {
                                                       .lon)),
                                             );
                                             _goTo(cPosition);
-                                            context.read<AlertProvider>().popNotification(0);
+                                            context
+                                                .read<AlertProvider>()
+                                                .popNotification(0);
                                           },
                                         )
                                       : NotificationMapane(
@@ -1065,15 +1065,16 @@ class _HomePageState extends State<HomePage> {
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
                       GestureDetector(
-                        onTap: (){
-                          context.read<UserProvider>().modifyAudioParam(!context.read<UserProvider>().audioVal);
+                        onTap: () {
+                          context.read<UserProvider>().modifyAudioParam(
+                              !context.read<UserProvider>().audioVal);
                         },
                         child: UtilButton(
                           height: getSize(38, "width", context),
                           width: getSize(38, "width", context),
-                          icon: context.watch<UserProvider>().audioVal ? SvgPicture.asset(
-                            Assets.soundIcon
-                          ) : Icon(Icons.volume_off),
+                          icon: context.watch<UserProvider>().audioVal
+                              ? SvgPicture.asset(Assets.soundIcon)
+                              : Icon(Icons.volume_off),
                         ),
                       ),
                       GestureDetector(
@@ -1148,15 +1149,14 @@ class _HomePageState extends State<HomePage> {
                               overflow: Overflow.visible,
                               children: [
                                 Positioned(
-                                  bottom: getSize(320,"height",context),
+                                    bottom: getSize(320, "height", context),
                                     child: Container(
-                                      width: getSize(375,"width",context) ,
+                                      width: getSize(375, "width", context),
                                       alignment: Alignment.center,
                                       child: SvgPicture.asset(
                                         Assets.arrowDownIcon,
                                       ),
-                                    )
-                                ),
+                                    )),
                                 Padding(
                                   padding: EdgeInsets.only(
                                       top: SizeConfig.blockSizeVertical * 5,
@@ -1166,9 +1166,7 @@ class _HomePageState extends State<HomePage> {
                                   child: TextField(
                                     textInputAction: TextInputAction.go,
                                     controller: _startPointController,
-                                    style: TextStyle(
-                                      fontSize: 17.0
-                                    ),
+                                    style: TextStyle(fontSize: 17.0),
                                     onSubmitted: (value) {
                                       print(value);
                                       context
@@ -1282,12 +1280,21 @@ class _HomePageState extends State<HomePage> {
                                                                   itemBuilder:
                                                                       (context,
                                                                           index) {
-                                                                    String osm_value = placesResult[index].osm_value != null ? placesResult[index].osm_value +
-                                                                        ","   : " ";
-                                                                    String city = placesResult[index].city != null ? placesResult[index].city +
-                                                                        "," : " ";
-                                                                    String country = placesResult[index].country != null ? placesResult[index].country +
-                                                                        "," : " ";
+                                                                    String osm_value = placesResult[index].osm_value !=
+                                                                            null
+                                                                        ? placesResult[index].osm_value +
+                                                                            ","
+                                                                        : " ";
+                                                                    String city = placesResult[index].city !=
+                                                                            null
+                                                                        ? placesResult[index].city +
+                                                                            ","
+                                                                        : " ";
+                                                                    String country = placesResult[index].country !=
+                                                                            null
+                                                                        ? placesResult[index].country +
+                                                                            ","
+                                                                        : " ";
                                                                     return ListTile(
                                                                       leading:
                                                                           SvgPicture
@@ -1297,9 +1304,10 @@ class _HomePageState extends State<HomePage> {
                                                                       ),
                                                                       title:
                                                                           Text(
-                                                                        placesResult[index]
-                                                                            .name != null ? placesResult[index]
-                                                                            .name : " ",
+                                                                        placesResult[index].name !=
+                                                                                null
+                                                                            ? placesResult[index].name
+                                                                            : " ",
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 17.0,
@@ -1309,20 +1317,26 @@ class _HomePageState extends State<HomePage> {
                                                                       ),
                                                                       subtitle:
                                                                           Text(
-                                                                        osm_value + city + country,
+                                                                        osm_value +
+                                                                            city +
+                                                                            country,
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 12.0,
                                                                             color:
                                                                                 Colors.grey),
                                                                       ),
-                                                                      onTap: (){
+                                                                      onTap:
+                                                                          () {
                                                                         CameraPosition positionToGo = CameraPosition(
-                                                                            bearing: CAMERA_BEARING,
-                                                                            target: LatLng(placesResult[index].coordinates[1], placesResult[index].coordinates[0]),
+                                                                            bearing:
+                                                                                CAMERA_BEARING,
+                                                                            target:
+                                                                                LatLng(placesResult[index].coordinates[1], placesResult[index].coordinates[0]),
                                                                             tilt: CAMERA_TILT,
                                                                             zoom: zooming);
-                                                                        _goTo(positionToGo);
+                                                                        _goTo(
+                                                                            positionToGo);
                                                                       },
                                                                     );
                                                                   },
