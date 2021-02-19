@@ -39,17 +39,19 @@ class HomePage extends StatefulWidget {
 }
 
 enum TtsState { playing, stopped, paused, continued }
-const double CAMERA_ZOOM = 16;
+const double CAMERA_ZOOME = 16;
+double zooming = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
-const LatLng SOURCE_LOCATION = LatLng(4.0747638,9.7497398);
-const LatLng DEST_LOCATION = LatLng(4.0771125,9.7486008);
+const LatLng SOURCE_LOCATION = LatLng(4.0747638, 9.7497398);
+const LatLng DEST_LOCATION = LatLng(4.0771125, 9.7486008);
 
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   double alertHeight = 30.0;
   double bottomPadding;
   String addresse = "";
+  bool soundchange = true;
   final _startPointController = TextEditingController();
   Widget swiperIcon = Container(
     child: SvgPicture.asset(
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage> {
       bearing: CAMERA_BEARING,
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: CAMERA_TILT,
-      zoom: CAMERA_ZOOM);
+      zoom: zooming);
 
   Future<void> _goToMyPosition() async {
     final GoogleMapController controller = await _controller.future;
@@ -128,11 +130,13 @@ class _HomePageState extends State<HomePage> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
-  activateNotif(Alert alert){
+
+  activateNotif(Alert alert) {
     setState(() {
       notifications = alert;
     });
   }
+
   @override
   initState() {
     if (!Platform.isIOS) {
@@ -166,7 +170,7 @@ class _HomePageState extends State<HomePage> {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
         CameraPosition cPosition = CameraPosition(
-          zoom: CAMERA_ZOOM,
+          zoom: zooming,
           tilt: CAMERA_TILT,
           bearing: CAMERA_BEARING,
           target: LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -216,12 +220,15 @@ class _HomePageState extends State<HomePage> {
       print("testobrada");
       print(data['alert']);
       // _speak(readText);
-      context.read<AlertProvider>().pushNotification(Alert.fromJson(data['alert']));
+      context
+          .read<AlertProvider>()
+          .pushNotification(Alert.fromJson(data['alert']));
       context.read<AlertProvider>().getAlertList();
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
       setState(() => loadera = false);
+      context.read<AlertProvider>().getAlertList();
       //sample event
       print("createAlertOkUser");
       print(data);
@@ -734,33 +741,24 @@ class _HomePageState extends State<HomePage> {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
     embouteillageMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.embouteillageMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.embouteillageMarker2);
     radarMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.radarMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.radarMarker2);
     accidentMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.accidentMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.accidentMarker2);
     controleMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.controleMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.routebarreeMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.routechantierMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.dangerMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.dangerMarker2);
     proximityMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.proximityMarker);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.proximityMarker);
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        Assets.proximityMarker);
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.proximityMarker);
   }
 
   void setInitialLocation() async {
@@ -870,7 +868,7 @@ class _HomePageState extends State<HomePage> {
       var pinPosition =
           LatLng(currentLocation.latitude, currentLocation.longitude);
       _kPosition = CameraPosition(
-          zoom: CAMERA_ZOOM,
+          zoom: zooming,
           tilt: CAMERA_TILT,
           bearing: CAMERA_BEARING,
           target: pinPosition);
@@ -928,39 +926,55 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Align(
-                alignment: Alignment.center,
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: context.watch<AlertProvider>().notifications.isEmpty ?
-                  Container() :
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: context.watch<AlertProvider>().notifications.length == 1 ?
-
-                        Notif(
-                          alert: context.watch<AlertProvider>().notifications[0],
-                          onClose: (){
-                            context.read<AlertProvider>().popNotification(0);
-                          },
-                          move: () {
-                            CameraPosition cPosition = CameraPosition(
-                              zoom: CAMERA_ZOOM,
-                              tilt: CAMERA_TILT,
-                              bearing: CAMERA_BEARING,
-                              target: LatLng(double.parse(context.read<AlertProvider>().notifications[0].lat), double.parse(context.read<AlertProvider>().notifications[0].lon)),
-                            );
-                            _goTo(cPosition);
-                          },
-                        ) :
-                        NotificationMapane(
-                          CAMERA_ZOOM: CAMERA_ZOOM,
-                          CAMERA_TILT: CAMERA_TILT,
-                          CAMERA_BEARING: CAMERA_BEARING,
-                          completer: _controller,
-                        ),
-                      )
-                )
-              ),
+                  alignment: Alignment.center,
+                  child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child:
+                          context.watch<AlertProvider>().notifications.isEmpty
+                              ? Container()
+                              : Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: context
+                                              .watch<AlertProvider>()
+                                              .notifications
+                                              .length ==
+                                          1
+                                      ? Notif(
+                                          alert: context
+                                              .watch<AlertProvider>()
+                                              .notifications[0],
+                                          onClose: () {
+                                            context
+                                                .read<AlertProvider>()
+                                                .popNotification(0);
+                                          },
+                                          move: () {
+                                            CameraPosition cPosition =
+                                                CameraPosition(
+                                              zoom: zooming,
+                                              tilt: CAMERA_TILT,
+                                              bearing: CAMERA_BEARING,
+                                              target: LatLng(
+                                                  double.parse(context
+                                                      .read<AlertProvider>()
+                                                      .notifications[0]
+                                                      .lat),
+                                                  double.parse(context
+                                                      .read<AlertProvider>()
+                                                      .notifications[0]
+                                                      .lon)),
+                                            );
+                                            _goTo(cPosition);
+                                          },
+                                        )
+                                      : NotificationMapane(
+                                          CAMERA_ZOOM: zooming,
+                                          CAMERA_TILT: CAMERA_TILT,
+                                          CAMERA_BEARING: CAMERA_BEARING,
+                                          completer: _controller,
+                                        ),
+                                ))),
               Padding(
                 padding: EdgeInsets.only(
                     top: SizeConfig.blockSizeVertical * 2,
@@ -1047,18 +1061,31 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
-                      UtilButton(
-                        height: getSize(38, "width", context),
-                        width: getSize(38, "width", context),
-                        icon: SvgPicture.asset(
-                          Assets.soundIcon,
+                      GestureDetector(
+                        onTap: (){
+                          context.read<UserProvider>().modifyAudioParam(!context.read<UserProvider>().audioVal);
+                        },
+                        child: UtilButton(
+                          height: getSize(38, "width", context),
+                          width: getSize(38, "width", context),
+                          icon: context.watch<UserProvider>().audioVal ? SvgPicture.asset(
+                            Assets.soundIcon
+                          ) : Icon(Icons.volume_off),
                         ),
                       ),
-                      UtilButton(
-                        height: getSize(38, "width", context),
-                        width: getSize(38, "width", context),
-                        icon: SvgPicture.asset(
-                          Assets.zoomPlusIcon,
+                      GestureDetector(
+                        onTap: () {
+                          print("zommingueh");
+                          setState(() {
+                            zooming += 16;
+                          });
+                        },
+                        child: UtilButton(
+                          height: getSize(38, "width", context),
+                          width: getSize(38, "width", context),
+                          icon: SvgPicture.asset(
+                            Assets.zoomPlusIcon,
+                          ),
                         ),
                       ),
                       UtilButton(
@@ -1076,8 +1103,8 @@ class _HomePageState extends State<HomePage> {
                 duration: Duration(milliseconds: 500),
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
-                        ? SizeConfig.blockSizeVertical * 22
-                        : getSize(420, "height", context),
+                        ? getSize(160, "height", context)
+                        : getSize(422, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                     alignment: Alignment.bottomRight,
@@ -1094,8 +1121,8 @@ class _HomePageState extends State<HomePage> {
                 duration: Duration(milliseconds: 500),
                 padding: EdgeInsets.only(
                     bottom: !isExpanded
-                        ? SizeConfig.blockSizeVertical * 15
-                        : getSize(370, "height", context),
+                        ? getSize(100, "height", context)
+                        : getSize(365, "height", context),
                     right: SizeConfig.blockSizeHorizontal * 6),
                 child: Align(
                   alignment: Alignment.bottomRight,
@@ -1183,7 +1210,7 @@ class _HomePageState extends State<HomePage> {
                                                     Expanded(
                                                       flex: 2,
                                                       child: Text(
-                                                        "Avec Mapane, rechercher des lieux de vos choix et soyez informé en temps réel en cas d’alerte.",
+                                                        "Avec Mapane, recherchez des lieux de vos choix et soyez informé en temps réel en cas d’alerte.",
                                                         overflow:
                                                             TextOverflow.clip,
                                                       ),
@@ -1277,6 +1304,14 @@ class _HomePageState extends State<HomePage> {
                                                                             color:
                                                                                 Colors.grey),
                                                                       ),
+                                                                      onTap: (){
+                                                                        CameraPosition positionToGo = CameraPosition(
+      bearing: CAMERA_BEARING,
+      target: LatLng(placesResult[index].coordinates[0], placesResult[index].coordinates[1]),
+      tilt: CAMERA_TILT,
+      zoom: zooming);
+                                                                        _goTo(positionToGo);
+                                                                      },
                                                                     );
                                                                   },
                                                                   itemCount:
@@ -1515,7 +1550,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Embouteillages",
@@ -1671,7 +1706,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Contrôle routier",
@@ -1827,7 +1862,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Zône dangereuse",
@@ -1983,7 +2018,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Radar",
@@ -2147,7 +2182,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Accident de circulation",
@@ -2303,7 +2338,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Route barrée",
@@ -2459,7 +2494,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(32,
+                                                        height: getSize(40,
                                                             "height", context),
                                                         child: Text(
                                                           "Route en chantier",

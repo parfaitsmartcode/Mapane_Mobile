@@ -26,6 +26,8 @@ class UserProvider extends BaseProvider{
   String userPhone;
   String userDomicile;
   String userId;
+  bool tabcheck;
+  bool checkifmodal;
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
@@ -40,6 +42,8 @@ class UserProvider extends BaseProvider{
       this.audioVal = false;
       this.connectVal = false;
       this.loadering = false;
+      this.tabcheck = false;
+      this.checkifmodal = false;
       // this.first_time = true;
   }
 
@@ -57,6 +61,16 @@ class UserProvider extends BaseProvider{
 
   modifyLoader(test){
     loadering = test;
+    notifyListeners();
+  }
+
+  checkTab(test){
+    tabcheck = test;
+    notifyListeners();
+  }
+  
+  checkModal(test){
+    checkifmodal = test;
     notifyListeners();
   }
 

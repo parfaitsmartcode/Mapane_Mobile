@@ -16,6 +16,7 @@ class AlertProvider extends BaseProvider{
 
   Either<NException,List<Alert>> alertList = Right([]);
   Either<NException,List<Alert>> alertListCat = Right([]);
+  Either<NException,List<Alert>> alertListHisto = Right([]);
   List<Alert> notifications = List<Alert>();
 
   getAlertList(){
@@ -34,10 +35,10 @@ class AlertProvider extends BaseProvider{
     String userId = await  _preferences.get('user_info');
     this.toggleLoadingState();
     alertService.getAlertByUser(userId).then((alerts){
-      alertList = Right(alerts);
+      alertListHisto = Right(alerts);
       this.toggleLoadingState();
     }).catchError((error){
-      alertList = Left(error);
+      alertListHisto = Left(error);
       this.toggleLoadingState();
     });
   }

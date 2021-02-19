@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/state/alert_provider.dart';
+import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
@@ -126,7 +127,12 @@ class _MyAppState extends State<WelcomeMap> {
                       children: <Widget>[
                         Container(
                           child: TabBar(
-                              onTap: (int index){
+                              onTap: (int index) {
+                                if (index < 3) {
+                                  context.read<UserProvider>().checkTab(false);
+                                } else {
+                                  context.read<UserProvider>().checkTab(true);
+                                }
                                 setState(() => _currentIndexTab = index);
                               },
                               indicatorSize: TabBarIndicatorSize.label,
@@ -202,7 +208,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                 .select(
                                                     (AlertProvider provider) =>
                                                         provider)
-                                                .alertList
+                                                .alertListHisto
                                                 .fold((NException error) {
                                                 return Column(
                                                   children: [
@@ -211,8 +217,8 @@ class _MyAppState extends State<WelcomeMap> {
                                                     )
                                                   ],
                                                 );
-                                              }, (alertList) {
-                                                return alertList.isEmpty
+                                              }, (alertListHisto) {
+                                                return alertListHisto.isEmpty
                                                     ? Column(
                                                         children: [
                                                           Text(
@@ -224,23 +230,23 @@ class _MyAppState extends State<WelcomeMap> {
                                                         physics:
                                                             NeverScrollableScrollPhysics(),
                                                         itemCount:
-                                                            alertList.length,
+                                                            alertListHisto.length,
                                                         itemBuilder:
                                                             (context, index) {
                                                           final Alert alert =
-                                                              alertList[index];
-                                                              // print("heykkkk");
-                                                              // print(alertList
-                                                              //   .where((i) =>
-                                                              //       i.category
-                                                              //           .name ==
-                                                              //       "Embouteillage")
-                                                              //   .toList()
-                                                              //   .length);
+                                                              alertListHisto[index];
+                                                          // print("heykkkk");
+                                                          // print(alertListHisto
+                                                          //   .where((i) =>
+                                                          //       i.category
+                                                          //           .name ==
+                                                          //       "Embouteillage")
+                                                          //   .toList()
+                                                          //   .length);
                                                           return AllAlerte(
                                                               alert: alert,
                                                               type: "All",
-                                                              count: alertList
+                                                              count: alertListHisto
                                                                   .length);
                                                         },
                                                       );
@@ -267,7 +273,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                 .select(
                                                     (AlertProvider provider) =>
                                                         provider)
-                                                .alertList
+                                                .alertListHisto
                                                 .fold((NException error) {
                                                 return Column(
                                                   children: [
@@ -276,15 +282,15 @@ class _MyAppState extends State<WelcomeMap> {
                                                     )
                                                   ],
                                                 );
-                                              }, (alertList) {
-                                                return alertList.isEmpty
+                                              }, (alertListHisto) {
+                                                return alertListHisto.isEmpty
                                                     ? Column(
                                                         children: [
                                                           Text(
                                                               "Aucune alerte faites pour le moment.")
                                                         ],
                                                       )
-                                                    : alertList
+                                                    : alertListHisto
                                                                 .where((i) =>
                                                                     i.category
                                                                         .name ==
@@ -294,7 +300,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                             0
                                                         ? ListView.builder(
                                                             shrinkWrap: true,
-                                                            itemCount: alertList
+                                                            itemCount: alertListHisto
                                                                 .length,
                                                             physics:
                                                                 NeverScrollableScrollPhysics(),
@@ -303,13 +309,13 @@ class _MyAppState extends State<WelcomeMap> {
                                                                     index) {
                                                               final Alert
                                                                   alert =
-                                                                  alertList[
+                                                                  alertListHisto[
                                                                       index];
                                                               return AllAlerte(
                                                                   alert: alert,
                                                                   type:
                                                                       "Embouteillage",
-                                                                  count: alertList
+                                                                  count: alertListHisto
                                                                       .length);
                                                             },
                                                           )
@@ -342,7 +348,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                 .select(
                                                     (AlertProvider provider) =>
                                                         provider)
-                                                .alertList
+                                                .alertListHisto
                                                 .fold((NException error) {
                                                 return Column(
                                                   children: [
@@ -351,15 +357,15 @@ class _MyAppState extends State<WelcomeMap> {
                                                     )
                                                   ],
                                                 );
-                                              }, (alertList) {
-                                                return alertList.isEmpty
+                                              }, (alertListHisto) {
+                                                return alertListHisto.isEmpty
                                                     ? Column(
                                                         children: [
                                                           Text(
                                                               "Aucune alerte faites pour le moment.")
                                                         ],
                                                       )
-                                                    : alertList
+                                                    : alertListHisto
                                                                 .where((i) =>
                                                                     i.category
                                                                         .name ==
@@ -369,7 +375,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                             0
                                                         ? ListView.builder(
                                                             shrinkWrap: true,
-                                                            itemCount: alertList
+                                                            itemCount: alertListHisto
                                                                 .length,
                                                             physics:
                                                                 NeverScrollableScrollPhysics(),
@@ -378,7 +384,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                                     index) {
                                                               final Alert
                                                                   alert =
-                                                                  alertList[
+                                                                  alertListHisto[
                                                                       index];
                                                               return AllAlerte(
                                                                   alert: alert,
@@ -425,6 +431,17 @@ class _MyAppState extends State<WelcomeMap> {
                                                   ],
                                                 );
                                               }, (alertListCat) {
+                                                // if (alertListCat.isEmpty) {
+                                                  // if(context.watch<UserProvider>().checkifmodal){
+                                                  //   print("checkifmodalentering");
+                                                  //   context.read<UserProvider>()
+                                                  //       .checkTab(true);
+                                                  // }else{
+                                                  //   print("checkifmodalsortering");
+                                                  //   context.read<UserProvider>()
+                                                  //       .checkTab(false);
+                                                  // }
+                                                // }
                                                 return alertListCat.isEmpty
                                                     ? Column(
                                                         children: [
@@ -445,6 +462,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                           // print(index);
                                                           return AutreAlerte(
                                                               alert: alert,
+                                                              alertes: alertListCat,
                                                               type: cat,
                                                               index: index);
                                                         },
@@ -726,88 +744,107 @@ class _MaterialModalState extends State<MaterialModal> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15), topRight: Radius.circular(15)),
             color: Colors.white),
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(
-              width: getSize(54.35, "width", context),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
-                child: Divider(thickness: 4, color: Color(0x26000000)),
+            Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: getSize(54.35, "width", context),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
+                  child: Divider(thickness: 4, color: Color(0x26000000)),
+                ),
               ),
             ),
-            ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  context
-                      .read<AlertProvider>()
-                      .getAlertByUserCat("Controle routier", 2);
-                },
-                leading: Image.asset('assets/images/police.png',
-                    height: getSize(24, "height", context),
-                    width: getSize(24, "width", context)),
-                title: Text('Controle routier',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: getSize(16, "height", context),
-                        color: Colors.black))),
-            ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  context
-                      .read<AlertProvider>()
-                      .getAlertByUserCat("Zone dangereuse", 2);
-                },
-                leading: Image.asset('assets/images/danger.png',
-                    height: getSize(24, "height", context),
-                    width: getSize(24, "width", context)),
-                title: Text('Zone dangereuse',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: getSize(16, "height", context),
-                        color: Colors.black))),
-            ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  context
-                      .read<AlertProvider>()
-                      .getAlertByUserCat("Accident de circulation", 2);
-                },
-                leading: Image.asset('assets/images/car-accident.png',
-                    height: getSize(24, "height", context),
-                    width: getSize(24, "width", context)),
-                title: Text('Accident de circulation',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: getSize(16, "height", context),
-                        color: Colors.black))),
-            ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  context
-                      .read<AlertProvider>()
-                      .getAlertByUserCat("Route en chantier", 2);
-                },
-                leading: Image.asset('assets/images/highway.png',
-                    height: getSize(24, "height", context),
-                    width: getSize(24, "width", context)),
-                title: Text('Route en chantier',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: getSize(16, "height", context),
-                        color: Colors.black))),
-            ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  context.read<AlertProvider>().getAlertByUserCat("Radar", 2);
-                },
-                leading: Image.asset('assets/images/radar.png',
-                    height: getSize(24, "height", context),
-                    width: getSize(24, "width", context)),
-                title: Text('Radar',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: getSize(16, "height", context),
-                        color: Colors.black))),
+            Padding(
+              padding:
+                  EdgeInsets.fromLTRB(0, getSize(30, "height", context), 0, 0),
+              child: Align(
+                alignment: Alignment.center,
+                child: ListView(shrinkWrap: true, children: <Widget>[
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Controle routier", 2);
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/police.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Controle routier',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Zone dangereuse", 2);
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/danger.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Zone dangereuse',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Accident de circulation", 2);
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/car-accident.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Accident de circulation',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Route en chantier", 2);
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/highway.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Route en chantier',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Radar", 2);
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/radar.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Radar',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
+                ]),
+              ),
+            ),
           ],
         ),
       ),
@@ -820,21 +857,29 @@ class AutreAlerte extends StatefulWidget {
   _AutreAlerteState createState() => _AutreAlerteState();
   final type;
   final index;
+  final alertes;
   final Alert alert;
-  AutreAlerte({this.alert, this.type, this.index});
+  AutreAlerte({this.alert, this.type, this.index, this.alertes});
 }
 
 class _AutreAlerteState extends State<AutreAlerte> {
   void initState() {
     super.initState();
+    print("heyvro");
+    print(widget.index);
+    print(context.read<UserProvider>().tabcheck);
+    print(widget.alertes);
+    print(widget.alertes.isEmpty);
     WidgetsBinding.instance.addPostFrameCallback((_) => widget.index == 0
-        ? showMaterialModalBottomSheet(
-            expand: false,
-            context: context,
-            duration: const Duration(milliseconds: 500),
-            backgroundColor: Colors.transparent,
-            builder: (context) => MaterialModal(),
-          )
+        ? context.read<UserProvider>().tabcheck
+            ? showMaterialModalBottomSheet(
+                expand: false,
+                context: context,
+                duration: const Duration(milliseconds: 500),
+                backgroundColor: Colors.transparent,
+                builder: (context) => MaterialModal(),
+              )
+            : print("autre_essai")
         : print("essaie"));
   }
 
