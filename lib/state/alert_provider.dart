@@ -66,7 +66,7 @@ class AlertProvider extends BaseProvider{
   
   pushNotification(Alert alert){
     print(alert);
-    this.notifications.add(alert);
+    this.notifications.insert(0,alert);
     notifyListeners();
   }
 

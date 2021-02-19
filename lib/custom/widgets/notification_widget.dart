@@ -204,6 +204,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                                     );
                                     final GoogleMapController controller = await widget.completer.future;
                                     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+                                    context.read<AlertProvider>().popNotification(index);
                                   },
                                   child: Text(
                                     "Localiser",

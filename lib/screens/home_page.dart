@@ -13,7 +13,6 @@ import 'package:mapane/models/alert.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
-import 'package:mapane/state/network_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -896,14 +895,6 @@ class _HomePageState extends State<HomePage> {
         bottom: false,
         child: Scaffold(
           backgroundColor: Colors.white.withOpacity(0.5),
-          /*floatingActionButton: FloatingActionButton(
-            child: Icon(
-              Icons.add
-            ),
-            onPressed: (){
-             activateNotif();
-            },
-          ),*/
           extendBody: true,
           body: Stack(
             children: [
@@ -966,6 +957,7 @@ class _HomePageState extends State<HomePage> {
                                                       .lon)),
                                             );
                                             _goTo(cPosition);
+                                            context.read<AlertProvider>().popNotification(0);
                                           },
                                         )
                                       : NotificationMapane(
@@ -1142,12 +1134,18 @@ class _HomePageState extends State<HomePage> {
                                   topRight: Radius.circular(35)),
                             ),
                             child: Stack(
+                              overflow: Overflow.visible,
                               children: [
-                                Align(
-                                    alignment: Alignment.topCenter,
-                                    child: SvgPicture.asset(
-                                      Assets.arrowDownIcon,
-                                    )),
+                                Positioned(
+                                  bottom: getSize(320,"height",context),
+                                    child: Container(
+                                      width: getSize(375,"width",context) ,
+                                      alignment: Alignment.center,
+                                      child: SvgPicture.asset(
+                                        Assets.arrowDownIcon,
+                                      ),
+                                    )
+                                ),
                                 Padding(
                                   padding: EdgeInsets.only(
                                       top: SizeConfig.blockSizeVertical * 5,
@@ -1157,7 +1155,11 @@ class _HomePageState extends State<HomePage> {
                                   child: TextField(
                                     textInputAction: TextInputAction.go,
                                     controller: _startPointController,
+                                    style: TextStyle(
+                                      fontSize: 17.0
+                                    ),
                                     onSubmitted: (value) {
+                                      print(value);
                                       context
                                           .read<SearchProvider>()
                                           .getSearchResults(value);
@@ -1269,9 +1271,12 @@ class _HomePageState extends State<HomePage> {
                                                                   itemBuilder:
                                                                       (context,
                                                                           index) {
-                                                                    print(placesResult
-                                                                        .toList()
-                                                                        .toString());
+                                                                    String osm_value = placesResult[index].osm_value != null ? placesResult[index].osm_value +
+                                                                        ","   : " ";
+                                                                    String city = placesResult[index].city != null ? placesResult[index].city +
+                                                                        "," : " ";
+                                                                    String country = placesResult[index].country != null ? placesResult[index].country +
+                                                                        "," : " ";
                                                                     return ListTile(
                                                                       leading:
                                                                           SvgPicture
@@ -1282,7 +1287,8 @@ class _HomePageState extends State<HomePage> {
                                                                       title:
                                                                           Text(
                                                                         placesResult[index]
-                                                                            .name,
+                                                                            .name != null ? placesResult[index]
+                                                                            .name : " ",
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 17.0,
@@ -1292,12 +1298,7 @@ class _HomePageState extends State<HomePage> {
                                                                       ),
                                                                       subtitle:
                                                                           Text(
-                                                                        placesResult[index].osm_value +
-                                                                            "," +
-                                                                            placesResult[index].city +
-                                                                            "," +
-                                                                            placesResult[index].country +
-                                                                            ",",
+                                                                        osm_value + city + country,
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 12.0,
@@ -1306,10 +1307,10 @@ class _HomePageState extends State<HomePage> {
                                                                       ),
                                                                       onTap: (){
                                                                         CameraPosition positionToGo = CameraPosition(
-      bearing: CAMERA_BEARING,
-      target: LatLng(placesResult[index].coordinates[0], placesResult[index].coordinates[1]),
-      tilt: CAMERA_TILT,
-      zoom: zooming);
+                                                                            bearing: CAMERA_BEARING,
+                                                                            target: LatLng(placesResult[index].coordinates[1], placesResult[index].coordinates[0]),
+                                                                            tilt: CAMERA_TILT,
+                                                                            zoom: zooming);
                                                                         _goTo(positionToGo);
                                                                       },
                                                                     );
