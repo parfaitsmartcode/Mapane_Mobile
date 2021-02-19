@@ -10,11 +10,12 @@ class SearchService {
     try {
       final String uri =
           Uri.encodeFull("https://photon.komoot.io/api/?q=" + terms);
+      print(uri);
       Response response = await locator<Di>().dio.get(
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
-      print(response.data["features"]);
+      print(response.data["features"].length);
       return List<Place>.from(((response.data["features"]) as List).map((json) {
         return Place.fromJson(json);
       }));
