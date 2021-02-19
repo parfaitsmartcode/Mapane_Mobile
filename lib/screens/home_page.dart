@@ -30,6 +30,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -774,6 +775,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showPinsOnMap() {
+    _markers = Set<Marker>();
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition =
@@ -786,18 +788,27 @@ class _HomePageState extends State<HomePage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         icon: sourceIcon));
+        
+    context.read<AlertProvider>().getAlertList();
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
       print("lise des alertes " + r.length.toString());
       if (r.length > 0) {
-        print("Il y'a les alertes");
         r.forEach((element) {
+          Moment.setLocaleGlobally(new LocaleFr());
+          var moment = Moment.now();
+          var dateForComparison = DateTime.parse(element.createdAt);
           _markers.add(Marker(
               position:
                   LatLng(double.parse(element.lat), double.parse(element.lon)),
               markerId: MarkerId('alerte ' + element.id),
-              icon: getAppropriateIcon(element.category.name)));
+              icon: getAppropriateIcon(element.category.name),
+              infoWindow: InfoWindow(
+                title: element.category.name,
+                snippet: 'Alerte créee '+moment.from(dateForComparison)
+              )
+            ));
           i++;
         });
       }
