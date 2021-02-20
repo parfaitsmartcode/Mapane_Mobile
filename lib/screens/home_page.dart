@@ -47,6 +47,7 @@ const LatLng SOURCE_LOCATION = LatLng(4.0747638, 9.7497398);
 const LatLng DEST_LOCATION = LatLng(4.0771125, 9.7486008);
 
 class _HomePageState extends State<HomePage> {
+
   bool isExpanded = false;
   double alertHeight = 30.0;
   double bottomPadding;
@@ -60,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     height: 32.0,
     width: 32.0,
   );
-
+  CameraPosition cameraCurrentPosition = new CameraPosition(target: LatLng(15,15));
   List<String> toPrint = ["trying to connect"];
   SocketIOManager manager;
   Map<String, SocketIO> sockets = {};
@@ -920,9 +921,23 @@ class _HomePageState extends State<HomePage> {
                   mapType: MapType.normal,
                   initialCameraPosition: _kPosition,
                   onMapCreated: (GoogleMapController controller) {
+                    print("map crée");
                     _controller.complete(controller);
                     // my map has completed being created;
                     showPinsOnMap();
+                    CameraPosition cPosition =
+                    CameraPosition(
+                      zoom: zooming,
+                      tilt: CAMERA_TILT,
+                      bearing: CAMERA_BEARING,
+                      target: LatLng(currentLocation.latitude,currentLocation.longitude),
+                    );
+                    _goTo(cPosition);
+                  },
+                  onCameraMove: (CameraPosition position) {
+                    setState(() {
+                      cameraCurrentPosition = position;
+                    });
                   },
                 ),
               ),
@@ -1078,22 +1093,44 @@ class _HomePageState extends State<HomePage> {
                               : Icon(Icons.volume_off),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          print("zommingueh");
-                          setState(() {
-                            zooming += 16;
+                      UtilButton(
+                        onTap: ()  async {
+                          final GoogleMapController controller = await _controller.future;
+                          var currentZoomLevel = await controller.getZoomLevel();
+                          setState((){
+                            zooming = currentZoomLevel + 1;
                           });
+                          controller.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: cameraCurrentPosition.target,
+                                zoom: zooming,
+                              ),
+                            ),
+                          );
                         },
-                        child: UtilButton(
-                          height: getSize(38, "width", context),
-                          width: getSize(38, "width", context),
-                          icon: SvgPicture.asset(
-                            Assets.zoomPlusIcon,
-                          ),
+                        height: getSize(38, "width", context),
+                        width: getSize(38, "width", context),
+                        icon: SvgPicture.asset(
+                          Assets.zoomPlusIcon,
                         ),
                       ),
                       UtilButton(
+                        onTap: ()  async {
+                          final GoogleMapController controller = await _controller.future;
+                          var currentZoomLevel = await controller.getZoomLevel();
+                          setState((){
+                            zooming = currentZoomLevel - 1;
+                          });
+                          controller.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: cameraCurrentPosition.target,
+                                zoom: zooming,
+                              ),
+                            ),
+                          );
+                        },
                         height: getSize(38, "width", context),
                         width: getSize(38, "width", context),
                         icon: SvgPicture.asset(
