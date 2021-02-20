@@ -222,7 +222,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                               ),
                               FlatButton(
                                 onPressed: (){
-                                  context.read<AlertProvider>().popNotification(index);
+                                  context.read<AlertProvider>().popAllNotifications();
                                 },
                                 child: Text("Tout fermer",
                                     style: TextStyle(

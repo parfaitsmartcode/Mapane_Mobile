@@ -19,14 +19,14 @@ class AlertProvider extends BaseProvider{
   Either<NException,List<Alert>> alertListHisto = Right([]);
   List<Alert> notifications = List<Alert>();
 
-  getAlertList(){
-    this.toggleLoadingState();
+  getAlertList(loader){
+    loader ?? this.toggleLoadingState();
     alertService.getAlerts().then((alerts){
       alertList = Right(alerts);
-      this.toggleLoadingState();
+      loader ?? this.toggleLoadingState();
     }).catchError((error){
       alertList = Left(error);
-      this.toggleLoadingState();
+      loader ?? this.toggleLoadingState();
     });
   }
 

@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(Permission.location);
     }
     super.initState();
-    context.read<AlertProvider>().getAlertList();
+    context.read<AlertProvider>().getAlertList(false);
     //context.read<NetworkProvider>().init();
     initTts();
     manager = SocketIOManager();
@@ -223,12 +223,12 @@ class _HomePageState extends State<HomePage> {
       context
           .read<AlertProvider>()
           .pushNotification(Alert.fromJson(data['alert']));
-      context.read<AlertProvider>().getAlertList();
+      context.read<AlertProvider>().getAlertList(false);
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
       setState(() => loadera = false);
-      context.read<AlertProvider>().getAlertList();
+      context.read<AlertProvider>().getAlertList(false);
       //sample event
       print("createAlertOkUser");
       print(data);
@@ -787,8 +787,9 @@ class _HomePageState extends State<HomePage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         icon: sourceIcon));
+        
+    context.read<AlertProvider>().getAlertList(false);
 
-    context.read<AlertProvider>().getAlertList();
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
