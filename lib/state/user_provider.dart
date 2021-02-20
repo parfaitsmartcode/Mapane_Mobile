@@ -39,7 +39,7 @@ class UserProvider extends BaseProvider{
       print("valeur du booléean " + this.audioVal.toString());
       this.userPhone = "+237";
       this.userDomicile = " ";
-      this.audioVal = false;
+      this.audioVal = true;
       this.connectVal = false;
       this.loadering = false;
       this.tabcheck = false;
@@ -71,6 +71,11 @@ class UserProvider extends BaseProvider{
   
   checkModal(test){
     checkifmodal = test;
+    notifyListeners();
+  }
+  
+  updateUserPhone(test){
+    userPhone = test;
     notifyListeners();
   }
 

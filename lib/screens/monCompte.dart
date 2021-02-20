@@ -408,6 +408,7 @@ class _MyAppState extends State<MonCompte> {
                                                                             0)
                                                                         .then(
                                                                             (value) {
+                                                                      context.read<UserProvider>().updateUserPhone(_mobileNumberPhone == '' ? _mobileNumberPhoneWrite : _mobileNumberPhone);
                                                                       showGeneralDialog(
                                                                           context:
                                                                               context,

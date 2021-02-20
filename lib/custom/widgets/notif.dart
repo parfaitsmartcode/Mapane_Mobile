@@ -4,6 +4,8 @@ import 'package:mapane/utils/size_config.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:mapane/constants/assets.dart';
+import 'package:provider/provider.dart';
+import 'package:mapane/state/alert_provider.dart';
 
 class Notif extends StatefulWidget {
   final Function onClose;
@@ -188,7 +190,9 @@ class _NotifState extends State<Notif> {
                               indent: 2,
                             ),
                             FlatButton(
-                              onPressed: widget.onClose,
+                              onPressed: (){
+                                  context.read<AlertProvider>().popAllNotifications();
+                              },
                               child: Text("Tout fermer",
                                   style: TextStyle(
                                       color: Colors.black,
