@@ -1752,7 +1752,7 @@ class _MyAppState extends State<MonCompte> {
                       ignoreBlank: false,
                       autoValidateMode: AutovalidateMode.disabled,
                       selectorTextStyle: TextStyle(color: Colors.black),
-                      initialValue: number,
+                      initialValue: PhoneNumber(phoneNumber: context.read<UserProvider>().userPhone, isoCode: "CM", dialCode: "237"),
                       textFieldController: controller,
                       formatInput: false,
                       keyboardType: TextInputType.numberWithOptions(

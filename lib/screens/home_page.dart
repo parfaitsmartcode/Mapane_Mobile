@@ -215,11 +215,15 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      // var readText =
-      //     'Alerte de test brakata à ' + data['alert']['address'];
-      print("testobrada");
-      print(data['alert']);
-      // _speak(readText);
+      var readText = '';
+      if (data['alert']['category']['name'] == "Embouteillage" || data['alert']['category']['name'] == "Accident de circulation") {
+        readText = 'Possible alerte d\'' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
+      } else {
+        readText = 'Possible alerte de ' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
+      }
+      if (context.read<UserProvider>().audioVal) {
+        _speak(readText);
+      }
       context
           .read<AlertProvider>()
           .pushNotification(Alert.fromJson(data['alert']));
@@ -347,7 +351,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   width: getSize(220, "width", context),
                                   child: Text(
-                                    "Votre alerte a été signalé à tous les utilisateurs de Mapane",
+                                    "Une alerte de ce type a déjà été créee dans votre zone, Merci.",
                                     style: AppTheme.bodyText1.copyWith(
                                       color:
                                           AppColors.blackColor.withOpacity(0.5),
