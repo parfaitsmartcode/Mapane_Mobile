@@ -22,6 +22,7 @@ class _MyAppState extends State<Settings> {
     super.initState();
     userProvider.setAudioNotification();
     userProvider.setConnectMode();
+    context.read<UserProvider>().getPopupVal();
   }
 
   @override
@@ -141,6 +142,65 @@ class _MyAppState extends State<Settings> {
                                                     context
                                                         .read<UserProvider>()
                                                         .modifyAudioParam(val);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: getSize(16, "height", context),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: getSize(39, "width", context),
+                                        child: Icon(Icons.notifications_none_outlined)
+                                      ),
+                                      Container(
+                                        width: getSize(200, "width", context),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              // width: getSize(160, "width", context),
+                                              child: Text(
+                                                'Afficher notifications',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: getSize(
+                                                        14, "height", context),
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: FlutterSwitch(
+                                                padding: 2,
+                                                toggleSize: getSize(
+                                                    18, "width", context),
+                                                width: getSize(
+                                                    36, "width", context),
+                                                height: getSize(
+                                                    20, "height", context),
+                                                activeColor: Color(0xFF25296A)
+                                                    .withOpacity(.2),
+                                                inactiveColor: Color(0xFF25296A)
+                                                    .withOpacity(.2),
+                                                activeToggleColor:
+                                                    Color(0xFF25296A),
+                                                value: context
+                                                    .watch<UserProvider>()
+                                                    .popupVal,
+                                                borderRadius: 100.0,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    context
+                                                        .read<UserProvider>()
+                                                        .modifyPopupParam(val);
                                                   });
                                                 },
                                               ),

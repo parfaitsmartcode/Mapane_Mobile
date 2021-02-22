@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:mapane/screens/tabs_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -669,6 +671,11 @@ class AllAlerte extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
+                onTap: (){
+                  var cPosition = alert.lat+","+alert.lon;
+                  context.read<UserProvider>().updatePosition(cPosition);
+                  Navigator.of(context).pushNamed('/map');
+                },
                   title: Text(alert.category.name.capitalize(),
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -893,6 +900,11 @@ class _AutreAlerteState extends State<AutreAlerte> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
+                onTap: (){
+                  var cPosition = widget.alert.lat+","+widget.alert.lon;
+                  context.read<UserProvider>().updatePosition(cPosition);
+                  Navigator.of(context).pushNamed('/map');
+                },
             title: Text(widget.alert.category.name.capitalize(),
                 style: TextStyle(
                     fontWeight: FontWeight.w400,

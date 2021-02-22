@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,10 +28,12 @@ import 'package:provider/provider.dart';
 import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show Directory, File, Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:audioplayer/audioplayer.dart';
+import 'package:path_provider/path_provider.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -47,12 +51,16 @@ const LatLng SOURCE_LOCATION = LatLng(4.0747638, 9.7497398);
 const LatLng DEST_LOCATION = LatLng(4.0771125, 9.7486008);
 
 class _HomePageState extends State<HomePage> {
-
   bool isExpanded = false;
   double alertHeight = 30.0;
   double bottomPadding;
   String addresse = "";
   bool soundchange = true;
+  AudioPlayer audioPlugin = AudioPlayer();
+  String mp3Uri;
+  String customAddress;
+  String procto;
+  // Audio audio = Audio.load('assets/sounds/alert_notif.mp3');
   final _startPointController = TextEditingController();
   Widget swiperIcon = Container(
     child: SvgPicture.asset(
@@ -61,7 +69,8 @@ class _HomePageState extends State<HomePage> {
     height: 32.0,
     width: 32.0,
   );
-  CameraPosition cameraCurrentPosition = new CameraPosition(target: LatLng(15,15));
+  CameraPosition cameraCurrentPosition =
+      new CameraPosition(target: LatLng(15, 15));
   List<String> toPrint = ["trying to connect"];
   SocketIOManager manager;
   Map<String, SocketIO> sockets = {};
@@ -146,6 +155,8 @@ class _HomePageState extends State<HomePage> {
     }
     super.initState();
     context.read<AlertProvider>().getAlertList(false);
+    context.read<UserProvider>().getPopupVal();
+    context.read<UserProvider>().getPositionVal().then((value) => procto = value);
     //context.read<NetworkProvider>().init();
     initTts();
     manager = SocketIOManager();
@@ -163,24 +174,38 @@ class _HomePageState extends State<HomePage> {
       print(currentLocation);
       currentLocation = cLoc;
       // if (!test) {
-        context.read<PlaceProvider>().getPlace(
-            LatLng(currentLocation.latitude, currentLocation.longitude));
-        print("le cas false");
+      context.read<PlaceProvider>().getPlace(
+          LatLng(currentLocation.latitude, currentLocation.longitude));
+      print("le cas false");
       // }
       print("current brakata terre");
       print(currentLocation);
-      if (test) {
-        print("ici");
-        // context.read<PlaceProvider>().getPlace(
-        //     LatLng(currentLocation.latitude, currentLocation.longitude));
-        CameraPosition cPosition = CameraPosition(
-          zoom: zooming,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING,
-          target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        );
-        _goTo(cPosition);
+      print(procto);
+      if(procto != null){
+          CameraPosition cPositionGo = CameraPosition(
+            zoom: zooming,
+            tilt: CAMERA_TILT,
+            bearing: CAMERA_BEARING,
+            target: LatLng(double.parse(procto.split(",")[0]), double.parse(procto.split(",")[1])),
+          );
+        _goTo(cPositionGo);
+        context.read<UserProvider>().updatePosition(null);
+        procto = null;
         test = false;
+      }else{
+        if (test) {
+          print("ici");
+          // context.read<PlaceProvider>().getPlace(
+          //     LatLng(currentLocation.latitude, currentLocation.longitude));
+          CameraPosition cPosition = CameraPosition(
+            zoom: zooming,
+            tilt: CAMERA_TILT,
+            bearing: CAMERA_BEARING,
+            target: LatLng(currentLocation.latitude, currentLocation.longitude),
+          );
+          _goTo(cPosition);
+          test = false;
+        }
       }
 
       updatePinOnMap();
@@ -192,6 +217,10 @@ class _HomePageState extends State<HomePage> {
       setInitialLocation();
     }
   }
+
+  // void _playSound() {
+  //   audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
+  // }
 
   initSocket(String identifier) async {
     setState(() => _isProbablyConnected[identifier] = true);
@@ -220,18 +249,23 @@ class _HomePageState extends State<HomePage> {
 
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      var readText = '';
-      if (data['alert']['category']['name'] == "Embouteillage" || data['alert']['category']['name'] == "Accident de circulation") {
-        readText = 'Possible alerte d\'' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
-      } else {
-        readText = 'Possible alerte de ' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
+      // var readText = '';
+      // if (data['alert']['category']['name'] == "Embouteillage" || data['alert']['category']['name'] == "Accident de circulation") {
+      //   readText = 'Possible alerte d\'' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
+      // } else {
+      //   readText = 'Possible alerte de ' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
+      // }
+      // if (context.read<UserProvider>().audioVal) {
+      //   _speak(readText);
+      // }
+      if (context.read<UserProvider>().popupVal) {
+        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2]) {
+          audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
+          context
+              .read<AlertProvider>()
+              .pushNotification(Alert.fromJson(data['alert']));
+        }
       }
-      if (context.read<UserProvider>().audioVal) {
-        _speak(readText);
-      }
-      context
-          .read<AlertProvider>()
-          .pushNotification(Alert.fromJson(data['alert']));
       context.read<AlertProvider>().getAlertList(false);
     });
     socket.on("createAlertOkUser", (data) {
@@ -578,7 +612,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   width: getSize(220, "width", context),
                                   child: Text(
-                                    "Votre alerte a été signalé à tous les utilisateurs de Mapane",
+                                    "Votre alerte a été signalée à tous les utilisateurs de Mapane",
                                     style: AppTheme.bodyText1.copyWith(
                                       color:
                                           AppColors.blackColor.withOpacity(0.5),
@@ -615,7 +649,217 @@ class _HomePageState extends State<HomePage> {
     setState(() => loadera = false);
   }
 
-  sendAlert(identifier, category, address, posted, latlon) {
+  sendAlertPopup(category, address, posted, latlon) {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: AppColors.whiteColor.withOpacity(0.96),
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: getSize(303, "width", context),
+                  // height: getSize(256, "height", context),
+                  // padding: EdgeInsets.all(getSize(0,"height",context)),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius:
+                        BorderRadius.circular(getSize(20, "height", context)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.11),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(getSize(20, "height", context)),
+                        decoration: BoxDecoration(
+                            // color: AppColors.whiteColor,
+                            ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            RichText(
+                              text: TextSpan(
+                                  text: "Voulez-vous entrer une adresse ?",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: getSize(18, "height", context),
+                                      color: Colors.black)),
+                            ),
+                            SizedBox(
+                              height: getSize(29, "height", context),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: getSize(44, "height", context),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Drawer(
+                                        elevation: 0,
+                                        child: Container(
+                                          color: Colors.white,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: TextField(
+                                            controller:
+                                                TextEditingController(text: ""),
+                                            onChanged: (value) {
+                                              customAddress = value;
+                                            },
+                                            decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                ),
+                                                filled: true,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 5.0,
+                                                        horizontal: 12),
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(.22)),
+                                                hintText: "Entrer l'adresse",
+                                                fillColor: Colors.black
+                                                    .withOpacity(.04)),
+                                            style: AppTheme.buttonText,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: getSize(16, "height", context),
+                            ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    child: Container(
+                                      height: getSize(40, "height", context),
+                                      width: getSize(162, "width", context),
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          loaderPopup();
+                                          sendAlert(
+                                              "default",
+                                              category,
+                                              address,
+                                              posted,
+                                              latlon,
+                                              customAddress);
+                                        },
+                                        color: Color(0x162C306F),
+                                        padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            getSize(5, "height", context),
+                                            0,
+                                            getSize(5, "height", context)),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Non, merci.',
+                                            style: TextStyle(
+                                              fontSize: getSize(
+                                                  18, "height", context),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: getSize(40, "height", context),
+                                    width: getSize(91, "width", context),
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        loaderPopup();
+                                        sendAlert("default", category, address,
+                                            posted, latlon, customAddress);
+                                      },
+                                      textColor: Colors.white,
+                                      color: Colors.transparent,
+                                      padding: EdgeInsets.all(0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          gradient: LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFFA7BACB),
+                                              Color(0xFF25296A),
+                                            ],
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            getSize(5, "height", context),
+                                            0,
+                                            getSize(5, "height", context)),
+                                        child: Center(
+                                            child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Oui',
+                                              style: TextStyle(
+                                                fontSize: getSize(
+                                                    18, "height", context),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                      ),
+                                    ),
+                                  ),
+                                ])
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  sendAlert(identifier, category, address, posted, latlon, desc) {
     print(_isProbablyConnected[identifier]);
     // var readText = 'Alerte d\'embouteillage à Monde-uni Bilingual School depuis 1 heures 30 minutes.';
     // _speak(readText);
@@ -627,7 +871,7 @@ class _HomePageState extends State<HomePage> {
           JsonEncoder().convert({
             "lat": latlon.latitude,
             "long": latlon.longitude,
-            "desc": "test",
+            "desc": desc,
             "postedBy": posted,
             "category": category,
             "address": address == '' ? ' ' : address
@@ -639,7 +883,7 @@ class _HomePageState extends State<HomePage> {
           JsonEncoder().convert({
             "lat": latlon.latitude,
             "long": latlon.longitude,
-            "desc": "test",
+            "desc": desc,
             "postedBy": posted,
             "category": category,
             "address": address == '' ? ' ' : address
@@ -647,6 +891,61 @@ class _HomePageState extends State<HomePage> {
         ]);
       }
     }
+  }
+
+  loaderPopup() {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: AppColors.whiteColor.withOpacity(0.92),
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Card(
+              shadowColor: Colors.transparent,
+              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: getSize(70, "width", context),
+                    height: getSize(70, "height", context),
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius:
+                          BorderRadius.circular(getSize(15, "height", context)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF000000).withOpacity(0.11),
+                          spreadRadius: 5,
+                          blurRadius: 10,
+                          offset: Offset(0, 5), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: getSize(10, "height", context),
+                          horizontal: getSize(10, "width", context)),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: SpinKitChasingDots(
+                              color: HexColor("#A7BACB"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   initTts() {
@@ -796,7 +1095,7 @@ class _HomePageState extends State<HomePage> {
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
         icon: sourceIcon));
-        
+
     context.read<AlertProvider>().getAlertList(false);
 
     // destination
@@ -805,18 +1104,21 @@ class _HomePageState extends State<HomePage> {
       print("lise des alertes " + r.length.toString());
       if (r.length > 0) {
         r.forEach((element) {
-          Moment.setLocaleGlobally(new LocaleFr());
-          var moment = Moment.now();
-          var dateForComparison = DateTime.parse(element.createdAt);
-          _markers.add(Marker(
-              position:
-                  LatLng(double.parse(element.lat), double.parse(element.lon)),
-              markerId: MarkerId('alerte ' + element.id),
-              icon: getAppropriateIcon(element.category.name),
-              infoWindow: InfoWindow(
-                  title: element.category.name,
-                  snippet: 'Alerte créee ' + moment.from(dateForComparison))));
-          i++;
+          if (addresse.split(",")[2] == element.address.split(",")[2]) {
+            Moment.setLocaleGlobally(new LocaleFr());
+            var moment = Moment.now();
+            var dateForComparison = DateTime.parse(element.createdAt);
+            _markers.add(Marker(
+                position: LatLng(
+                    double.parse(element.lat), double.parse(element.lon)),
+                markerId: MarkerId('alerte ' + element.id),
+                icon: getAppropriateIcon(element.category.name),
+                infoWindow: InfoWindow(
+                    title: element.category.name,
+                    snippet:
+                        'Alerte créee ' + moment.from(dateForComparison))));
+            i++;
+          }
         });
       }
     });
@@ -933,12 +1235,12 @@ class _HomePageState extends State<HomePage> {
                     _controller.complete(controller);
                     // my map has completed being created;
                     showPinsOnMap();
-                    CameraPosition cPosition =
-                    CameraPosition(
+                    CameraPosition cPosition = CameraPosition(
                       zoom: zooming,
                       tilt: CAMERA_TILT,
                       bearing: CAMERA_BEARING,
-                      target: LatLng(currentLocation.latitude,currentLocation.longitude),
+                      target: LatLng(
+                          currentLocation.latitude, currentLocation.longitude),
                     );
                     print("brikiti  latitude");
                     print(currentLocation.latitude);
@@ -1090,6 +1392,17 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
+                      UtilButton(
+                        onTap: () async {
+                          context.read<UserProvider>().modifyPopupParam(
+                              !context.read<UserProvider>().popupVal);
+                        },
+                        height: getSize(38, "width", context),
+                        width: getSize(38, "width", context),
+                        icon: context.watch<UserProvider>().popupVal
+                            ? Icon(Icons.notifications_none_outlined)
+                            : Icon(Icons.notifications_off_outlined),
+                      ),
                       GestureDetector(
                         onTap: () {
                           context.read<UserProvider>().modifyAudioParam(
@@ -1100,14 +1413,16 @@ class _HomePageState extends State<HomePage> {
                           width: getSize(38, "width", context),
                           icon: context.watch<UserProvider>().audioVal
                               ? SvgPicture.asset(Assets.soundIcon)
-                              : Icon(Icons.volume_off),
+                              : Icon(Icons.volume_off_outlined),
                         ),
                       ),
                       UtilButton(
-                        onTap: ()  async {
-                          final GoogleMapController controller = await _controller.future;
-                          var currentZoomLevel = await controller.getZoomLevel();
-                          setState((){
+                        onTap: () async {
+                          final GoogleMapController controller =
+                              await _controller.future;
+                          var currentZoomLevel =
+                              await controller.getZoomLevel();
+                          setState(() {
                             zooming = currentZoomLevel + 1;
                           });
                           controller.animateCamera(
@@ -1126,10 +1441,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       UtilButton(
-                        onTap: ()  async {
-                          final GoogleMapController controller = await _controller.future;
-                          var currentZoomLevel = await controller.getZoomLevel();
-                          setState((){
+                        onTap: () async {
+                          final GoogleMapController controller =
+                              await _controller.future;
+                          var currentZoomLevel =
+                              await controller.getZoomLevel();
+                          setState(() {
                             zooming = currentZoomLevel - 1;
                           });
                           controller.animateCamera(
@@ -1216,16 +1533,20 @@ class _HomePageState extends State<HomePage> {
                                     controller: _startPointController,
                                     style: TextStyle(fontSize: 17.0),
                                     onSubmitted: (value) {
+                                      print("resultat recehrcehe");
                                       print(value);
                                       context
                                           .read<SearchProvider>()
                                           .getSearchResults(value);
+                                      // context
+                                      //     .read<SearchProvider>()
+                                      //     .toggleSearchState();
                                     },
-                                    onTap: () {
-                                      context
-                                          .read<SearchProvider>()
-                                          .toggleSearchState();
-                                    },
+                                    // onTap: () {
+                                    //   context
+                                    //       .read<SearchProvider>()
+                                    //       .toggleSearchState();
+                                    // },
                                     decoration: InputDecoration(
                                         hintText: 'Rechercher un lieu',
                                         hintStyle: TextStyle(fontSize: 17.0),
@@ -1282,8 +1603,9 @@ class _HomePageState extends State<HomePage> {
                                                           .loadingState ==
                                                       LoadingState.loading
                                                   ? Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
+                                                      child:SpinKitChasingDots(
+                                                          color: HexColor("#A7BACB"),
+                                                        ),
                                                     )
                                                   : context
                                                       .select((SearchProvider
@@ -1494,108 +1816,12 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "embouteillage3",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -1650,108 +1876,12 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "controle-routier2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -1806,108 +1936,12 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "zone-dangereuse-1",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -1962,108 +1996,12 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "Radar1",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -2126,108 +2064,12 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "Accident-de-circulation-1",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -2282,108 +2124,12 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "route-barree2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:
@@ -2438,108 +2184,12 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(() => loadera = true);
-                                            sendAlert(
-                                                "default",
+                                            sendAlertPopup(
                                                 "Route-en-chantier-2",
                                                 addresse,
                                                 userId,
                                                 LatLng(currentLocation.latitude,
                                                     currentLocation.longitude));
-                                            if (loadera) {
-                                              showGeneralDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  barrierLabel:
-                                                      MaterialLocalizations.of(
-                                                              context)
-                                                          .modalBarrierDismissLabel,
-                                                  barrierColor: AppColors
-                                                      .whiteColor
-                                                      .withOpacity(0.92),
-                                                  transitionDuration:
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                  pageBuilder: (BuildContext
-                                                          buildContext,
-                                                      Animation animation,
-                                                      Animation
-                                                          secondaryAnimation) {
-                                                    return Center(
-                                                      child: Card(
-                                                        shadowColor:
-                                                            Colors.transparent,
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0,
-                                                                vertical: 0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              width: getSize(
-                                                                  70,
-                                                                  "width",
-                                                                  context),
-                                                              height: getSize(
-                                                                  70,
-                                                                  "height",
-                                                                  context),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius: BorderRadius
-                                                                    .circular(getSize(
-                                                                        15,
-                                                                        "height",
-                                                                        context)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Color(
-                                                                            0xFF000000)
-                                                                        .withOpacity(
-                                                                            0.11),
-                                                                    spreadRadius:
-                                                                        5,
-                                                                    blurRadius:
-                                                                        10,
-                                                                    offset: Offset(
-                                                                        0,
-                                                                        5), // changes position of shadow
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    vertical: getSize(
-                                                                        10,
-                                                                        "height",
-                                                                        context),
-                                                                    horizontal: getSize(
-                                                                        10,
-                                                                        "width",
-                                                                        context)),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SpinKitChasingDots(
-                                                                        color: HexColor(
-                                                                            "#A7BACB"),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  });
-                                            }
                                           },
                                           child: Container(
                                               width:

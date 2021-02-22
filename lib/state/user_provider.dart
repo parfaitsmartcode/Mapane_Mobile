@@ -11,6 +11,7 @@ import 'base_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:mapane/constants/socket.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:io' show Platform;
 
 
@@ -20,6 +21,7 @@ class UserProvider extends BaseProvider{
 
   bool audioVal;
   bool connectVal;
+  bool popupVal;
   bool getval;
   bool first_time;
   bool loadering;
@@ -28,6 +30,7 @@ class UserProvider extends BaseProvider{
   String userId;
   bool tabcheck;
   bool checkifmodal;
+  String cPositionGo;
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
@@ -44,6 +47,8 @@ class UserProvider extends BaseProvider{
       this.loadering = false;
       this.tabcheck = false;
       this.checkifmodal = false;
+      this.popupVal = true;
+      this.cPositionGo = null;
       // this.first_time = true;
   }
 
@@ -51,6 +56,12 @@ class UserProvider extends BaseProvider{
     audioVal = test;
     notifyListeners();
     storeAudioNotification(audioVal);
+  }
+
+  modifyPopupParam(test){
+    popupVal = test;
+    notifyListeners();
+    storePopupNotification(test);
   }
 
   modifyConnectParam(test){
@@ -62,6 +73,12 @@ class UserProvider extends BaseProvider{
   modifyLoader(test){
     loadering = test;
     notifyListeners();
+  }
+
+  updatePosition(test){
+    cPositionGo = test;
+    notifyListeners();
+    storePositionMode(test);
   }
 
   checkTab(test){
@@ -83,6 +100,22 @@ class UserProvider extends BaseProvider{
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
     return userPhone;
+  }
+
+  getPopupVal() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    popupVal = await _preferences.get('popup_param');
+    if(popupVal == null){
+      storePopupNotification(true);
+      popupVal = true;
+    }
+    return popupVal;
+  }
+
+  getPositionVal() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    cPositionGo = await _preferences.get('positionMode');
+    return cPositionGo;
   }
 
   Future<String> getUserId() async {
@@ -185,10 +218,22 @@ class UserProvider extends BaseProvider{
         .storeData("audioParam", audioParam, "bool");
   }
 
+  storePopupNotification(test){
+    Future<SharedPreferences> instance = SharedPreferences.getInstance();
+    SharedPreferenceHelper(instance)
+        .storeData("popup_param", test, "bool");
+  }
+
   storeConnectMode(connectMode){
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
         .storeData("connectMode", connectMode,"bool");
+  }
+
+  storePositionMode(connectMode){
+    Future<SharedPreferences> instance = SharedPreferences.getInstance();
+    SharedPreferenceHelper(instance)
+        .storeData("positionMode", connectMode,"string");
   }
 
   Future<bool>getAudioNotification() async {

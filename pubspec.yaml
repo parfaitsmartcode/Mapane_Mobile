@@ -57,6 +57,9 @@ dependencies:
   flutter_tts: ^2.1.0
   data_connection_checker: ^0.3.4
   bot_toast: ^3.0.5
+  path_provider: ^1.6.27
+  audioplayer: 0.8.1
+  audioplayer_web: 0.7.1
 
 
 dev_dependencies:
