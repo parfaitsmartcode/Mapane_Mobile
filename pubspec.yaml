@@ -57,6 +57,7 @@ dependencies:
   flutter_tts: ^2.1.0
   data_connection_checker: ^0.3.4
   bot_toast: ^3.0.5
+  geodesy: ^0.3.2
 
 
 dev_dependencies:

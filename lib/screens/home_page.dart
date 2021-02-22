@@ -18,6 +18,7 @@ import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/utils/PermissionHelper.dart';
 import 'package:mapane/utils/hexcolor.dart';
+import 'package:mapane/utils/mapane_zone_util.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -159,16 +160,12 @@ class _HomePageState extends State<HomePage> {
     // by "listening" to the location's onLocationChanged event
     location.onLocationChanged.listen((LocationData cLoc) {
       // if (currentLocation != null) test = false;
-      print("current brakata");
-      print(currentLocation);
       currentLocation = cLoc;
       // if (!test) {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
         print("le cas false");
       // }
-      print("current brakata terre");
-      print(currentLocation);
       if (test) {
         print("ici");
         // context.read<PlaceProvider>().getPlace(
@@ -182,8 +179,16 @@ class _HomePageState extends State<HomePage> {
         _goTo(cPosition);
         test = false;
       }
-
       updatePinOnMap();
+
+      List<Alert> results = List<Alert>();
+      context.read<AlertProvider>().alertList.fold((l) => null, (r) {
+        print(r);
+        print(currentLocation);
+        results = nearbyPoints(r,LatLng(currentLocation.latitude,currentLocation.longitude));
+      });
+      print("alertes dans la zone mapane");
+      print(results);
     });
     // set custom marker pins
     setSourceAndDestinationIcons();

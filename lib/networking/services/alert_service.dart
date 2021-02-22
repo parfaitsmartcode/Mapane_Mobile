@@ -5,7 +5,6 @@ import 'package:mapane/models/category.dart';
 import 'package:mapane/utils/n_exception.dart';
 import '../../di.dart';
 import '../../service_locator.dart';
-import 'package:mapane/state/alert_provider.dart';
 
 class AlertService {
   Future<List<Alert>> getAlerts() async {
@@ -16,8 +15,6 @@ class AlertService {
             options: Options(headers: {"content-type": "application/json"}),
           );
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
-      print("brikitikadee");
-      print(response.data);
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
@@ -52,6 +49,7 @@ class AlertService {
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
+      print(response.data["alerts"]);
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
       List<Alert> schools = items.map<Alert>((json) {
         // if(Alert.fromJson(json).category.name == cat){

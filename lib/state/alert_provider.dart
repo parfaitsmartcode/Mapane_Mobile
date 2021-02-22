@@ -25,6 +25,8 @@ class AlertProvider extends BaseProvider{
       alertList = Right(alerts);
       loader ?? this.toggleLoadingState();
     }).catchError((error){
+      print("voci l'erreur");
+      print(error);
       alertList = Left(error);
       loader ?? this.toggleLoadingState();
     });
