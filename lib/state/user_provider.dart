@@ -34,7 +34,7 @@ class UserProvider extends BaseProvider{
       this.getAudioNotification().then((value) {
         print("valeur des preferences " + value.toString());
       } );
-      this.getAudioNotification().then((value) => this.audioVal = value );
+      // this.getAudioNotification().then((value) => this.audioVal = value );
       this.getConnectMode().then((value) => this.connectVal = value );
       print("valeur du booléean " + this.audioVal.toString());
       this.userPhone = "+237";

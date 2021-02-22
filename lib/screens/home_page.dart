@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
   bool get isWeb => kIsWeb;
+  bool test = true;
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _kPosition = CameraPosition(
@@ -157,19 +158,21 @@ class _HomePageState extends State<HomePage> {
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
     location.onLocationChanged.listen((LocationData cLoc) {
-      bool test = true;
-      if (currentLocation != null) test = false;
-
-      if (!test) {
+      // if (currentLocation != null) test = false;
+      print("current brakata");
+      print(currentLocation);
+      currentLocation = cLoc;
+      // if (!test) {
         context.read<PlaceProvider>().getPlace(
             LatLng(currentLocation.latitude, currentLocation.longitude));
         print("le cas false");
-      }
-      currentLocation = cLoc;
+      // }
+      print("current brakata terre");
+      print(currentLocation);
       if (test) {
         print("ici");
-        context.read<PlaceProvider>().getPlace(
-            LatLng(currentLocation.latitude, currentLocation.longitude));
+        // context.read<PlaceProvider>().getPlace(
+        //     LatLng(currentLocation.latitude, currentLocation.longitude));
         CameraPosition cPosition = CameraPosition(
           zoom: zooming,
           tilt: CAMERA_TILT,
@@ -177,6 +180,7 @@ class _HomePageState extends State<HomePage> {
           target: LatLng(currentLocation.latitude, currentLocation.longitude),
         );
         _goTo(cPosition);
+        test = false;
       }
 
       updatePinOnMap();
@@ -936,6 +940,8 @@ class _HomePageState extends State<HomePage> {
                       bearing: CAMERA_BEARING,
                       target: LatLng(currentLocation.latitude,currentLocation.longitude),
                     );
+                    print("brikiti  latitude");
+                    print(currentLocation.latitude);
                     _goTo(cPosition);
                   },
                   onCameraMove: (CameraPosition position) {
