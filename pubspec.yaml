@@ -57,13 +57,11 @@ dependencies:
   flutter_tts: ^2.1.0
   data_connection_checker: ^0.3.4
   bot_toast: ^3.0.5
-<<<<<<< HEAD
   geodesy: ^0.3.2
-=======
   path_provider: ^1.6.27
   audioplayer: 0.8.1
   audioplayer_web: 0.7.1
->>>>>>> 0c69945c7381ae683febda2fb185889587414a92
+
 
 
 dev_dependencies:

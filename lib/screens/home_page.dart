@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -34,7 +33,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:audioplayer/audioplayer.dart';
-import 'package:path_provider/path_provider.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -155,7 +153,7 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(Permission.location);
     }
     super.initState();
-    context.read<AlertProvider>().getAlertList(false);
+    context.read<AlertProvider>().getAlertList(false,addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getPositionVal().then((value) => procto = value);
     //context.read<NetworkProvider>().init();
@@ -274,12 +272,12 @@ class _HomePageState extends State<HomePage> {
               .pushNotification(Alert.fromJson(data['alert']));
         }
       }
-      context.read<AlertProvider>().getAlertList(false);
+      context.read<AlertProvider>().getAlertList(false,addresse);
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
       setState(() => loadera = false);
-      context.read<AlertProvider>().getAlertList(false);
+      context.read<AlertProvider>().getAlertList(false,addresse);
       //sample event
       print("createAlertOkUser");
       print(data);
@@ -1104,7 +1102,7 @@ class _HomePageState extends State<HomePage> {
         position: pinPosition,
         icon: sourceIcon));
 
-    context.read<AlertProvider>().getAlertList(false);
+    context.read<AlertProvider>().getAlertList(false,addresse);
 
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {

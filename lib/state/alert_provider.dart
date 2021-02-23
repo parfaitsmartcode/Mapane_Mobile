@@ -1,14 +1,8 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/constants/socket.dart';
 import 'package:mapane/models/alert.dart';
-import 'package:mapane/models/place.dart';
 import 'package:mapane/networking/services/alert_service.dart';
-import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/utils/n_exception.dart';
-import '../di.dart';
-import '../service_locator.dart';
 import 'base_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,20 +12,32 @@ class AlertProvider extends BaseProvider{
   Either<NException,List<Alert>> alertListCat = Right([]);
   Either<NException,List<Alert>> alertListHisto = Right([]);
   List<Alert> notifications = List<Alert>();
+  List<Alert> countryAlerts = List<Alert>();
 
-  getAlertList(loader){
+  getAlertList(loader,String country){
     loader ?? this.toggleLoadingState();
     alertService.getAlerts().then((alerts){
       alertList = Right(alerts);
       loader ?? this.toggleLoadingState();
+      filterAlertsByCountry(country);
     }).catchError((error){
-      print("voci l'erreur");
-      print(error);
       alertList = Left(error);
       loader ?? this.toggleLoadingState();
     });
   }
-
+  filterAlertsByCountry(String country){
+    var comparator = country.split(",");
+    print(comparator[comparator.length-1]);
+    this.alertList.fold((l) => null,(r){
+      r.forEach((element) {
+        var data = element.address.split(",");
+        if(data[data.length-1].contains(comparator[comparator.length-1])){
+          countryAlerts.add(element);
+        }
+      });
+    });
+    notifyListeners();
+  }
   getAlertByUser(id) async {
     SharedPreferences  _preferences = await SharedPreferences.getInstance();
     String userId = await  _preferences.get('user_info');
