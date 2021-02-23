@@ -13,6 +13,7 @@ class AlertProvider extends BaseProvider{
   Either<NException,List<Alert>> alertListHisto = Right([]);
   List<Alert> notifications = List<Alert>();
   List<Alert> countryAlerts = List<Alert>();
+  Map<Alert,bool> readedAlerts = new Map<Alert,bool>();
 
   getAlertList(loader,String country){
     loader ?? this.toggleLoadingState();
@@ -25,6 +26,10 @@ class AlertProvider extends BaseProvider{
       loader ?? this.toggleLoadingState();
     });
   }
+  deactivateAudioNotif(int index){
+    //readedAlerts
+  }
+
   filterAlertsByCountry(String country){
     countryAlerts.clear();
     var comparator = country.split(",");

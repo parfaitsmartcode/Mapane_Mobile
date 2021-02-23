@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
       setState((){
         mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,LatLng(currentLocation.latitude,currentLocation.longitude));
       });
-      print("alertes dans la zone mapane");
+
       print(mapanes);
     });
     // set custom marker pins
@@ -871,8 +871,8 @@ class _HomePageState extends State<HomePage> {
       if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": 4.076693,//latlon.latitude,
-            "long": 9.7487913,//latlon.longitude,
+            "lat": latlon.latitude,
+            "long": latlon.longitude,
             "desc": desc,
             "postedBy": posted,
             "category": category,
