@@ -693,7 +693,7 @@ class _HomePageState extends State<HomePage> {
                           children: <Widget>[
                             RichText(
                               text: TextSpan(
-                                  text: "Voulez-vous entrer une adresse ?",
+                                  text: "Quelle est votre position ?",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: getSize(18, "height", context),
