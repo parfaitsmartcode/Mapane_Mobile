@@ -1,5 +1,6 @@
 import 'package:mapane/models/category.dart';
 import 'package:mapane/models/postedBy.dart';
+import 'package:quiver/core.dart';
 
 class Alert{
    String id;
@@ -23,6 +24,8 @@ class Alert{
     this.createdAt,
     this.address
 });
+  @override
+  bool operator ==(Object other) => other is Alert && double.parse(other.lat).toStringAsFixed(5) == double.parse(lat).toStringAsFixed(5) && double.parse(other.lon).toStringAsFixed(5) == double.parse(lon).toStringAsFixed(5);
 
    factory Alert.fromJson(Map<String, dynamic> json) {
      return Alert(
@@ -37,4 +40,8 @@ class Alert{
          createdAt: json['createdAt'],
      );
    }
+
+  @override
+  int get hashCode => hash2(lat.hashCode,lon.hashCode);
+
 }

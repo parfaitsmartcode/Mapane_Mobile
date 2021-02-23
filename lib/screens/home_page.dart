@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
   double pitch = 1.2;
   double rate = 1;
   bool isCurrentLanguageInstalled = false;
-
+  List<Alert> mapanes = List<Alert>();
   String _newVoiceText;
 
   TtsState ttsState = TtsState.stopped;
@@ -206,15 +206,11 @@ class _HomePageState extends State<HomePage> {
         }
       }
       updatePinOnMap();
-
-      List<Alert> results = List<Alert>();
-      context.read<AlertProvider>().alertList.fold((l) => null, (r) {
-        print(r);
-        print(currentLocation);
-        results = nearbyPoints(r,LatLng(currentLocation.latitude,currentLocation.longitude));
+      setState((){
+        mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,LatLng(currentLocation.latitude,currentLocation.longitude));
       });
       print("alertes dans la zone mapane");
-      print(results);
+      print(mapanes);
     });
     // set custom marker pins
     setSourceAndDestinationIcons();
@@ -875,8 +871,8 @@ class _HomePageState extends State<HomePage> {
       if (_isProbablyConnected[identifier]) {
         sockets[identifier].emit("createAlert", [
           JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
+            "lat": 4.076693,//latlon.latitude,
+            "long": 9.7487913,//latlon.longitude,
             "desc": desc,
             "postedBy": posted,
             "category": category,
@@ -1110,21 +1106,22 @@ class _HomePageState extends State<HomePage> {
       print("lise des alertes " + r.length.toString());
       if (r.length > 0) {
         r.forEach((element) {
-          if (addresse.split(",")[2] == element.address.split(",")[2]) {
+          //if (addresse.split(",")[2] == element.address.split(",")[2]) {
             Moment.setLocaleGlobally(new LocaleFr());
             var moment = Moment.now();
             var dateForComparison = DateTime.parse(element.createdAt);
+            print(mapanes.contains(element));
             _markers.add(Marker(
                 position: LatLng(
                     double.parse(element.lat), double.parse(element.lon)),
                 markerId: MarkerId('alerte ' + element.id),
-                icon: getAppropriateIcon(element.category.name),
+                icon: mapanes.contains(element) ? destinationIcon : getAppropriateIcon(element.category.name),
                 infoWindow: InfoWindow(
                     title: element.category.name,
                     snippet:
                         'Alerte créee ' + moment.from(dateForComparison))));
             i++;
-          }
+          //}
         });
       }
     });

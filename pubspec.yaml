@@ -61,6 +61,7 @@ dependencies:
   path_provider: ^1.6.27
   audioplayer: 0.8.1
   audioplayer_web: 0.7.1
+  quiver:
 
 
 

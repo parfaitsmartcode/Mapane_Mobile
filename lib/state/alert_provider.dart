@@ -26,6 +26,7 @@ class AlertProvider extends BaseProvider{
     });
   }
   filterAlertsByCountry(String country){
+    countryAlerts.clear();
     var comparator = country.split(",");
     print(comparator[comparator.length-1]);
     this.alertList.fold((l) => null,(r){
