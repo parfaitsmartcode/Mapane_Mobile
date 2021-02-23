@@ -11,13 +11,15 @@ class SearchProvider extends BaseProvider{
   Either<NException,List<Place>> placesResult = Right([]);
 
   toggleSearchState(){
-    isSearchEnable ? isSearchEnable = false : isSearchEnable = true;
+    isSearchEnable = !isSearchEnable;
     notifyListeners();
   }
   getSearchResults(String terms){
     this.toggleLoadingState();
     searchService.searchPlaces(terms).then((places){
       placesResult = Right(places);
+      isSearchEnable = true;
+      this.toggleLoadingState();
     }).catchError((onError){
       placesResult = Left(onError);
       this.toggleLoadingState();

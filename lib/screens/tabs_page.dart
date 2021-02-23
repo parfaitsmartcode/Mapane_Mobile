@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 class TabsPage extends StatefulWidget {
   @override
   _TabsPageState createState() => _TabsPageState();
+  // CameraPosition latlon;
+  // TabsPage(latlon, {this.latlon});
 }
 
 class _TabsPageState extends State<TabsPage> {
