@@ -1853,7 +1853,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(30,
                                                             "height", context),
                                                         child: Text(
                                                           "Embouteillages",
@@ -1913,7 +1913,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(30,
                                                             "height", context),
                                                         child: Text(
                                                           "Contrôle routier",
@@ -1973,7 +1973,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(30,
                                                             "height", context),
                                                         child: Text(
                                                           "Zône dangereuse",
@@ -2033,7 +2033,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(30,
                                                             "height", context),
                                                         child: Text(
                                                           "Radar",
@@ -2101,7 +2101,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(42,
                                                             "height", context),
                                                         child: Text(
                                                           "Accident de circulation",
@@ -2161,7 +2161,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(42,
                                                             "height", context),
                                                         child: Text(
                                                           "Route barrée",
@@ -2221,7 +2221,7 @@ class _HomePageState extends State<HomePage> {
                                                       SizedBox(
                                                         width: getSize(75,
                                                             "width", context),
-                                                        height: getSize(40,
+                                                        height: getSize(42,
                                                             "height", context),
                                                         child: Text(
                                                           "Route en chantier",
