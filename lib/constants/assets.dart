@@ -54,6 +54,5 @@ class Assets {
   static const String routechantierMarker3 = "assets/markers/highway.png";
   static const String dangerMarker3 = "assets/markers/danger.png";
   static const String mapPin= "assets/icons/Map pin.svg";
-  static const String ripplePin = "assets/markers/ripple.gif";
 
 }
