@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
           gdsy.LatLng(currentLocation.latitude, currentLocation.longitude),
           locationTmp);
       print("la distance est de " + distance.toString());
-      if (distance >= 10) {
+      if (distance >= 50) {
         locationTmp =
             gdsy.LatLng(currentLocation.latitude, currentLocation.longitude);
         CameraPosition cPosition = CameraPosition(
@@ -1283,20 +1283,9 @@ class _HomePageState extends State<HomePage> {
                   mapType: MapType.normal,
                   initialCameraPosition: _kPosition,
                   onMapCreated: (GoogleMapController controller) {
-                    print("map crée");
                     _controller.complete(controller);
                     // my map has completed being created;
                     showPinsOnMap();
-                    CameraPosition cPosition = CameraPosition(
-                      zoom: zooming,
-                      tilt: CAMERA_TILT,
-                      bearing: CAMERA_BEARING,
-                      target: LatLng(
-                          currentLocation.latitude, currentLocation.longitude),
-                    );
-                    print("brikiti  latitude");
-                    print(currentLocation.latitude);
-                    _goTo(cPosition);
                   },
                   onCameraMove: (CameraPosition position) {
                     setState(() {
@@ -1382,12 +1371,16 @@ class _HomePageState extends State<HomePage> {
                               .select((PlaceProvider provider) => provider)
                               .userPlace
                               .fold((NException error) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    error.message,
-                                  )
-                                ],
+                              return Container(
+                                width:
+                                SizeConfig.blockSizeHorizontal * 38,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      error.message,
+                                    )
+                                  ],
+                                ),
                               );
                             }, (userPlace) {
                               if (userPlace.name != null &&
@@ -1400,14 +1393,19 @@ class _HomePageState extends State<HomePage> {
                                     userPlace.country;
                               }
                               return userPlace == null
-                                  ? Column(
-                                      children: [
-                                        AspectRatio(aspectRatio: 5 / 1),
-                                        Text(
-                                          "Not available right now.",
-                                        )
-                                      ],
-                                    )
+                                  ? Container(
+                                width:
+                                SizeConfig.blockSizeHorizontal * 38,
+                                    child: Column(
+                                        children: [
+                                          Text(
+                                            "Not available right now.",
+                                            style: TextStyle(
+                                                fontSize: 18.0),
+                                          )
+                                        ],
+                                      ),
+                                  )
                                   : Container(
                                       width:
                                           SizeConfig.blockSizeHorizontal * 38,
