@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geodesy/geodesy.dart' as gdsy;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
@@ -28,7 +29,7 @@ import 'package:provider/provider.dart';
 import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
-import 'dart:io' show Directory, File, Platform;
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:simple_moment/simple_moment.dart';
@@ -59,7 +60,6 @@ class _HomePageState extends State<HomePage> {
   String mp3Uri;
   String customAddress;
   String procto;
-  // Audio audio = Audio.load('assets/sounds/alert_notif.mp3');
   final _startPointController = TextEditingController();
   Widget swiperIcon = Container(
     child: SvgPicture.asset(
@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
       new CameraPosition(target: LatLng(15, 15));
   List<String> toPrint = ["trying to connect"];
   SocketIOManager manager;
+  gdsy.Geodesy geodesy = new gdsy.Geodesy();
   Map<String, SocketIO> sockets = {};
   Map<String, bool> _isProbablyConnected = {};
   Alert notifications = new Alert();
@@ -110,8 +111,7 @@ class _HomePageState extends State<HomePage> {
   double rate = 1;
   bool isCurrentLanguageInstalled = false;
   List<Alert> mapanes = List<Alert>();
-  String _newVoiceText;
-
+  gdsy.LatLng locationTmp;
   TtsState ttsState = TtsState.stopped;
 
   get isPlaying => ttsState == TtsState.playing;
@@ -123,6 +123,7 @@ class _HomePageState extends State<HomePage> {
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
   bool get isWeb => kIsWeb;
   bool test = true;
+  Timer _timer;
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _kPosition = CameraPosition(
@@ -146,6 +147,21 @@ class _HomePageState extends State<HomePage> {
       notifications = alert;
     });
   }
+  vocallyNotifyMapane(){
+    mapanes.forEach((element) async {
+      num distance = geodesy.distanceBetweenTwoGeoPoints(
+          gdsy.LatLng(
+              currentLocation.latitude, currentLocation.longitude),
+          gdsy.LatLng(
+              double.parse(element.lat), double.parse(element.lon)));
+      print(distance);
+      var text = element.category.name +
+          " à " +
+          distance.round().toString() +
+          " mètres de votre position";
+      await _speak(text);
+    });
+  }
 
   @override
   initState() {
@@ -153,9 +169,12 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(Permission.location);
     }
     super.initState();
-    context.read<AlertProvider>().getAlertList(false,addresse);
+    context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
-    context.read<UserProvider>().getPositionVal().then((value) => procto = value);
+    context
+        .read<UserProvider>()
+        .getPositionVal()
+        .then((value) => procto = value);
     //context.read<NetworkProvider>().init();
     initTts();
     manager = SocketIOManager();
@@ -175,24 +194,21 @@ class _HomePageState extends State<HomePage> {
           LatLng(currentLocation.latitude, currentLocation.longitude));
       print("le cas false");
       // }
-
-      print("current brakata terre");
-      print(currentLocation);
-      print(procto);
-      if(procto != null){
-          CameraPosition cPositionGo = CameraPosition(
-            zoom: zooming,
-            tilt: CAMERA_TILT,
-            bearing: CAMERA_BEARING,
-            target: LatLng(double.parse(procto.split(",")[0]), double.parse(procto.split(",")[1])),
-          );
+      if (procto != null) {
+        CameraPosition cPositionGo = CameraPosition(
+          zoom: zooming,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(double.parse(procto.split(",")[0]),
+              double.parse(procto.split(",")[1])),
+        );
         _goTo(cPositionGo);
         context.read<UserProvider>().updatePosition(null);
         procto = null;
         test = false;
-      }else{
+      } else {
         if (test) {
-          print("ici");
+          print("ici première fois");
           // context.read<PlaceProvider>().getPlace(
           //     LatLng(currentLocation.latitude, currentLocation.longitude));
           CameraPosition cPosition = CameraPosition(
@@ -203,13 +219,47 @@ class _HomePageState extends State<HomePage> {
           );
           _goTo(cPosition);
           test = false;
+          locationTmp =
+              gdsy.LatLng(currentLocation.latitude, currentLocation.longitude);
         }
       }
       updatePinOnMap();
-      setState((){
-        mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,LatLng(currentLocation.latitude,currentLocation.longitude));
+      num distance = geodesy.distanceBetweenTwoGeoPoints(
+          gdsy.LatLng(currentLocation.latitude, currentLocation.longitude),
+          locationTmp);
+      print("la distance est de " + distance.toString());
+      if (distance >= 10) {
+        locationTmp =
+            gdsy.LatLng(currentLocation.latitude, currentLocation.longitude);
+        CameraPosition cPosition = CameraPosition(
+          zoom: zooming,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        );
+        _goTo(cPosition);
+      }
+      setState(() {
+        mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,
+            LatLng(currentLocation.latitude, currentLocation.longitude));
       });
-
+      if (mapanes.isNotEmpty) {
+        const duration = const Duration(seconds: 60);
+        if (_timer == null) {
+          vocallyNotifyMapane();
+          _timer = new Timer.periodic(duration, (Timer timer) {
+           vocallyNotifyMapane();
+          });
+        } else {
+          if (!_timer.isActive) {
+            _timer = new Timer.periodic(duration, (Timer timer) {
+              vocallyNotifyMapane();
+            });
+          }
+        }
+      } else {
+        if (_timer.isActive && _timer != null) _timer.cancel();
+      }
       print(mapanes);
     });
     // set custom marker pins
@@ -268,12 +318,12 @@ class _HomePageState extends State<HomePage> {
               .pushNotification(Alert.fromJson(data['alert']));
         }
       }
-      context.read<AlertProvider>().getAlertList(false,addresse);
+      context.read<AlertProvider>().getAlertList(false, addresse);
     });
     socket.on("createAlertOkUser", (data) {
       Navigator.pop(context);
       setState(() => loadera = false);
-      context.read<AlertProvider>().getAlertList(false,addresse);
+      context.read<AlertProvider>().getAlertList(false, addresse);
       //sample event
       print("createAlertOkUser");
       print(data);
@@ -1098,7 +1148,7 @@ class _HomePageState extends State<HomePage> {
         position: pinPosition,
         icon: sourceIcon));
 
-    context.read<AlertProvider>().getAlertList(false,addresse);
+    context.read<AlertProvider>().getAlertList(false, addresse);
 
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
@@ -1106,29 +1156,28 @@ class _HomePageState extends State<HomePage> {
       print("lise des alertes " + r.length.toString());
       if (r.length > 0) {
         r.forEach((element) {
-          //if (addresse.split(",")[2] == element.address.split(",")[2]) {
-            Moment.setLocaleGlobally(new LocaleFr());
-            var moment = Moment.now();
-            var dateForComparison = DateTime.parse(element.createdAt);
-            print(mapanes.contains(element));
-            _markers.add(Marker(
-                position: LatLng(
-                    double.parse(element.lat), double.parse(element.lon)),
-                markerId: MarkerId('alerte ' + element.id),
-                icon: mapanes.contains(element) ? destinationIcon : getAppropriateIcon(element.category.name),
-                infoWindow: InfoWindow(
-                    title: element.category.name,
-                    snippet:
-                        'Alerte créee ' + moment.from(dateForComparison))));
-            i++;
-          //}
+          Moment.setLocaleGlobally(new LocaleFr());
+          var moment = Moment.now();
+          var dateForComparison = DateTime.parse(element.createdAt);
+          print(mapanes.contains(element));
+          _markers.add(Marker(
+              position:
+                  LatLng(double.parse(element.lat), double.parse(element.lon)),
+              markerId: MarkerId('alerte ' + element.id),
+              icon: mapanes.contains(element)
+                  ? destinationIcon
+                  : getAppropriateIcon(element.category.name),
+              infoWindow: InfoWindow(
+                  title: element.category.name,
+                  snippet: 'Alerte créee ' + moment.from(dateForComparison))));
+          i++;
         });
       }
     });
-    _markers.add(Marker(
+    /*_markers.add(Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
-        icon: destinationIcon));
+        icon: destinationIcon));*/
 
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
@@ -1606,9 +1655,10 @@ class _HomePageState extends State<HomePage> {
                                                           .loadingState ==
                                                       LoadingState.loading
                                                   ? Center(
-                                                      child:SpinKitChasingDots(
-                                                          color: HexColor("#A7BACB"),
-                                                        ),
+                                                      child: SpinKitChasingDots(
+                                                        color:
+                                                            HexColor("#A7BACB"),
+                                                      ),
                                                     )
                                                   : context
                                                       .select((SearchProvider
