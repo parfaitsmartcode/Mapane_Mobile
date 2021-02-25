@@ -112,6 +112,16 @@ class UserProvider extends BaseProvider{
     return popupVal;
   }
 
+  getAudioVal() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    audioVal = await _preferences.get('audioParam');
+    if(audioVal == null){
+      storeAudioNotification(true);
+      audioVal = true;
+    }
+    return audioVal;
+  }
+
   getPositionVal() async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     cPositionGo = await _preferences.get('positionMode');
