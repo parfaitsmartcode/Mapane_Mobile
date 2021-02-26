@@ -157,12 +157,36 @@ class _HomePageState extends State<HomePage> {
           gdsy.LatLng(
               double.parse(element.lat), double.parse(element.lon)));
       print(distance);
-      var text = element.category.name +
-          " à " +
-          distance.round().toString() +
-          " mètres de votre position";
-      if (context.read<UserProvider>().audioVal) {
-        await _speak(text);
+      if(distance.round() >= 0 && distance <= 50){
+        var text = element.category.name +
+            " à moins de 50 mètres de votre position";
+        if (context.read<UserProvider>().audioVal) {
+          await _speak(text);
+        }
+      } else if(distance.round() > 50 && distance <= 100){
+        var text = element.category.name +
+            " à moins de 100 mètres de votre position";
+        if (context.read<UserProvider>().audioVal) {
+          await _speak(text);
+        }
+      } else if(distance.round() > 100 && distance <= 150){
+        var text = element.category.name +
+            " à moins de 150 mètres de votre position";
+        if (context.read<UserProvider>().audioVal) {
+          await _speak(text);
+        }
+      } else if(distance.round() > 150 && distance <= 200){
+        var text = element.category.name +
+            " à moins de 200 mètres de votre position";
+        if (context.read<UserProvider>().audioVal) {
+          await _speak(text);
+        }
+      }else{
+        var text = element.category.name +
+            " à moins de " + distance.round().toString() +" mètres de votre position";
+        if (context.read<UserProvider>().audioVal) {
+          await _speak(text);
+        }
       }
     });
   }
