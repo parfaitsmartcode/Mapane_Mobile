@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -113,7 +114,7 @@ class _HomePageState extends State<HomePage> {
   List<Alert> mapanes = List<Alert>();
   gdsy.LatLng locationTmp;
   TtsState ttsState = TtsState.stopped;
-
+  Set<Circle> _cirlces = HashSet<Circle>();
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
   get isPaused => ttsState == TtsState.paused;
@@ -1182,6 +1183,22 @@ class _HomePageState extends State<HomePage> {
     // set the route lines on the map from source to destination
     // for more info follow this tutorial
     setPolylines();
+    showCirclesOnMap();
+  }
+  void showCirclesOnMap(){
+    int i = 0;
+    mapanes.forEach((element) {
+      _cirlces.add(
+        Circle(
+          circleId: CircleId("circle"+i.toString()),
+          center: LatLng(double.parse(element.lat),double.parse(element.lon)),
+          radius: element.category.perimeter,
+          fillColor: Colors.redAccent[200],
+          strokeWidth: 3,
+          strokeColor: Colors.red
+        )
+      );
+    });
   }
 
   getAppropriateIcon(alert) {
@@ -1278,6 +1295,7 @@ class _HomePageState extends State<HomePage> {
                   zoomControlsEnabled: false,
                   compassEnabled: false,
                   markers: _markers,
+                  circles: _cirlces,
                   tiltGesturesEnabled: false,
                   polylines: _polylines,
                   mapType: MapType.normal,
