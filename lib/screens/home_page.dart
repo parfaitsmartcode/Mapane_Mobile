@@ -930,7 +930,7 @@ class _HomePageState extends State<HomePage> {
           JsonEncoder().convert({
             "lat": latlon.latitude,
             "long": latlon.longitude,
-            "desc": desc,
+            "desc": desc == "" || desc == null ? "desc" : desc,
             "postedBy": posted,
             "category": category,
             "address": address == '' ? ' ' : address
@@ -942,7 +942,7 @@ class _HomePageState extends State<HomePage> {
           JsonEncoder().convert({
             "lat": latlon.latitude,
             "long": latlon.longitude,
-            "desc": desc,
+            "desc": desc == "" || desc == null ? "desc" : desc,
             "postedBy": posted,
             "category": category,
             "address": address == '' ? ' ' : address
@@ -1192,7 +1192,7 @@ class _HomePageState extends State<HomePage> {
     showCirclesOnMap();
   }
   dynamic radiusTest = {
-    "radius" : 700,
+    "radius" : 300,
     "level" : true
   };
   updateCirlce(){
@@ -1209,7 +1209,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     }else{
-      if( radiusTest["radius"] == 700){
+      if( radiusTest["radius"] == 300){
         setState(() {
           radiusTest["level"] = true;
           showCirclesOnMap();
