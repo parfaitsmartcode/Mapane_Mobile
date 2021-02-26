@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
   List<Alert> mapanes = List<Alert>();
   gdsy.LatLng locationTmp;
   TtsState ttsState = TtsState.stopped;
-  Set<Circle> _cirlces = HashSet<Circle>();
+  Set<Circle> _circles = HashSet<Circle>();
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
   get isPaused => ttsState == TtsState.paused;
@@ -125,6 +125,7 @@ class _HomePageState extends State<HomePage> {
   bool get isWeb => kIsWeb;
   bool test = true;
   Timer _timer;
+  Timer _circleTimer;
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _kPosition = CameraPosition(
@@ -1190,20 +1191,66 @@ class _HomePageState extends State<HomePage> {
     setPolylines();
     showCirclesOnMap();
   }
+  dynamic radiusTest = {
+    "radius" : 700,
+    "level" : true
+  };
+  updateCirlce(){
+    if(radiusTest["level"]){
+      if( radiusTest["radius"] == 100){
+        setState(() {
+          radiusTest["level"] = false;
+          showCirclesOnMap();
+        });
+      } else {
+        setState(() {
+          radiusTest["radius"] -= 100;
+          showCirclesOnMap();
+        });
+      }
+    }else{
+      if( radiusTest["radius"] == 700){
+        setState(() {
+          radiusTest["level"] = true;
+          showCirclesOnMap();
+        });
+      } else {
+        setState(() {
+          radiusTest["radius"] += 100;
+          showCirclesOnMap();
+        });
+      }
+    }
+  }
   void showCirclesOnMap(){
     int i = 0;
+    _circles.clear();
     mapanes.forEach((element) {
-      _cirlces.add(
+      _circles.add(
         Circle(
           circleId: CircleId("circle"+i.toString()),
           center: LatLng(double.parse(element.lat),double.parse(element.lon)),
-          radius: element.category.perimeter,
-          fillColor: Colors.redAccent[200],
+          radius: double.parse(radiusTest["radius"].toString()),//element.category.perimeter * 1000,
+          fillColor: Colors.redAccent[200].withOpacity(0.1),
           strokeWidth: 3,
           strokeColor: Colors.red
         )
       );
     });
+    if(mapanes.isNotEmpty){
+      const duration = const Duration(milliseconds: 100);
+      if(_circleTimer == null){
+        _circleTimer = new Timer.periodic(duration,(Timer timer){
+          updateCirlce();
+        });
+      } else {
+        if(!_circleTimer.isActive){
+          _circleTimer = new Timer.periodic(duration,(Timer timer){
+            updateCirlce();
+          });
+        }
+      }
+    }
   }
 
   getAppropriateIcon(alert) {
@@ -1278,14 +1325,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  updateBottomPadding() {
-    if (bottomPadding == null) bottomPadding = SizeConfig.screenHeight / 50;
+  updateBottomPadding(context) {
+    if (bottomPadding == null) {
+      bottomPadding = SizeConfig.screenHeight / 50;
+      setState((){
+        if (isExpanded) {
+          isExpanded = false;
+          alertHeight =
+              getSize(30, "height", context);
+          print(getSize(17, "height", context));
+          bottomPadding =
+              getSize(17, "height", context);
+        } else {
+          isExpanded = true;
+          alertHeight =
+              getSize(300, "height", context);
+          bottomPadding =
+              getSize(285, "height", context);
+          swiperIcon = Container(
+            child: SvgPicture.asset(
+              Assets.arrowDownIcon,
+            ),
+            height: 32.0,
+            width: 32.0,
+          );
+
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    updateBottomPadding();
+    updateBottomPadding(context);
     return SafeArea(
         bottom: false,
         child: Scaffold(
@@ -1300,7 +1373,7 @@ class _HomePageState extends State<HomePage> {
                   zoomControlsEnabled: false,
                   compassEnabled: false,
                   markers: _markers,
-                  circles: _cirlces,
+                  circles: _circles,
                   tiltGesturesEnabled: false,
                   polylines: _polylines,
                   mapType: MapType.normal,
@@ -1873,7 +1946,6 @@ class _HomePageState extends State<HomePage> {
                                         getSize(285, "height", context);
                                   }
                                 });
-                                print(bottomPadding);
                               },
                               child: swiperIcon,
                             ),

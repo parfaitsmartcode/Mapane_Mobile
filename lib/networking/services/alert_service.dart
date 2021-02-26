@@ -94,9 +94,6 @@ class AlertService {
           },
           options: Options(headers:{"content-type": "application/json"})
       );
-      // final alertProvider = AlertProvider();
-      // alertProvider.getAlertByUser("5ff34b88af0f1982ab03f3f9");
-      // alertProvider.getAlertByUserCat("All", 1);
       return response.data["message"];
     } on DioError catch (e) {
       print(e);

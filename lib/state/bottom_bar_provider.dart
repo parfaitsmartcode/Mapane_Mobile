@@ -6,7 +6,7 @@ class BottomBarProvider extends ChangeNotifier{
   bool widgetToDisplay;
 
   BottomBarProvider(){
-    this.bottomBarColor = Colors.white.withOpacity(0.3);
+    this.bottomBarColor = Colors.white;
     this.widgetToDisplay = false;
   }
 
