@@ -25,7 +25,7 @@ import 'package:mapane/utils/mapane_zone_util.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as PermissionHandler;
 import 'package:provider/provider.dart';
 import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
       } else if(distance.round() > 150 && distance <= 200){
         var text = element.category.name +
             " à moins de 200 mètres de votre position";
-        if (context.read<UserProvider>();.audioVal) {
+        if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
       }else{
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     if (!Platform.isIOS) {
-      PermissionHelper.checkPermission(Permission.location);
+      PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
     super.initState();
     context.read<AlertProvider>().getAlertList(false, addresse);
@@ -2047,66 +2047,6 @@ class _HomePageState extends State<HomePage> {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "controle-routier2",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/controle-routier.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          "Contrôle routier",
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  12,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
                                                 "zone-dangereuse-1",
                                                 addresse,
                                                 userId,
@@ -2144,66 +2084,6 @@ class _HomePageState extends State<HomePage> {
                                                             "height", context),
                                                         child: Text(
                                                           "Zône dangereuse",
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  12,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Radar1",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/radar-test.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          "Radar",
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
