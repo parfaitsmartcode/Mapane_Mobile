@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
       } else if(distance.round() > 150 && distance <= 200){
         var text = element.category.name +
             " à moins de 200 mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
+        if (context.read<UserProvider>();.audioVal) {
           await _speak(text);
         }
       }else{
