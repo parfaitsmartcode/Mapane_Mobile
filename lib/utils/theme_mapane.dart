@@ -12,6 +12,7 @@ class ThemeMapane {
     return base.copyWith(
       primaryColor: AppColors.primaryColor,
       accentColor: AppColors.whiteColor,
+      canvasColor: Colors.transparent,
       cursorColor: AppColors.blackColor,
       hintColor: AppColors.textColorLightXX,
       focusColor: AppColors.iconBlueColor,

@@ -156,10 +156,10 @@ class _HomePageState extends State<HomePage> {
   }
   vocallyNotifyMapane(){
     mapanes.forEach((element) async {
-      num distance = geodesy.distanceBetweenTwoGeoPoints(
-          gdsy.LatLng(
+      num distance = distanceBetweenTwoGeoPoints(
+          LatLng(
               currentLocation.latitude, currentLocation.longitude),
-          gdsy.LatLng(
+          LatLng(
               double.parse(element.lat), double.parse(element.lon)));
       print(distance);
       if(distance.round() >= 0 && distance <= 50){
@@ -381,9 +381,9 @@ class _HomePageState extends State<HomePage> {
         }
       }
       updatePinOnMap();
-      num distance = geodesy.distanceBetweenTwoGeoPoints(
-          gdsy.LatLng(currentPosition.latitude, currentPosition.longitude),
-          locationTmp);
+      num distance = distanceBetweenTwoGeoPoints(
+          LatLng(currentPosition.latitude, currentPosition.longitude),
+          LatLng(locationTmp.latitude,locationTmp.longitude));
       print("la distance est de " + distance.toString());
       if (distance >= 50) {
         locationTmp =
@@ -1389,6 +1389,7 @@ class _HomePageState extends State<HomePage> {
           strokeColor: Colors.red
         )
       );
+      i++;
     });
     if(mapanes.isNotEmpty){
       const duration = const Duration(milliseconds: 100);
@@ -1916,9 +1917,6 @@ class _HomePageState extends State<HomePage> {
                                                       .fold((NException error) {
                                                       return Column(
                                                         children: [
-                                                          AspectRatio(
-                                                              aspectRatio:
-                                                                  5 / 1),
                                                           Center(
                                                             child: Text(
                                                               error.message,
@@ -1931,9 +1929,6 @@ class _HomePageState extends State<HomePage> {
                                                               .isEmpty
                                                           ? Column(
                                                               children: [
-                                                                AspectRatio(
-                                                                    aspectRatio:
-                                                                        5 / 1),
                                                                 Center(
                                                                   child: Text(
                                                                       "Aucun résultat pour cette recherche"),
@@ -2008,6 +2003,14 @@ class _HomePageState extends State<HomePage> {
                                                                             zoom: zooming);
                                                                         _goTo(
                                                                             positionToGo);
+                                                                      },
+                                                                      onLongPress: (){
+                                                                        sendAlertFromSearchPopup(
+                                                                            addresse,
+                                                                            userId,
+                                                                            LatLng(currentPosition.latitude,
+                                                                                currentPosition.longitude)
+                                                                        );
                                                                       },
                                                                     );
                                                                   },
@@ -2657,5 +2660,215 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ));
+  }
+
+  sendAlertFromSearchPopup(address, posted, latlon) {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: AppColors.whiteColor.withOpacity(0.96),
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: getSize(303, "width", context),
+                  // height: getSize(256, "height", context),
+                  // padding: EdgeInsets.all(getSize(0,"height",context)),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius:
+                    BorderRadius.circular(getSize(20, "height", context)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.11),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(getSize(20, "height", context)),
+                        decoration: BoxDecoration(
+                          // color: AppColors.whiteColor,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            RichText(
+                              text: TextSpan(
+                                  text: "Completez les informations pour créer cette alerte",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: getSize(18, "height", context),
+                                      color: Colors.black)),
+                            ),
+                            SizedBox(
+                              height: getSize(29, "height", context),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: getSize(44, "height", context),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius:
+                                        BorderRadius.circular(100),
+                                      ),
+                                      child: Drawer(
+                                        elevation: 0,
+                                        child: Container(
+                                          color: Colors.white,
+                                          width:
+                                          MediaQuery.of(context).size.width,
+                                          child: TextField(
+                                            controller:
+                                            TextEditingController(text: ""),
+                                            onChanged: (value) {
+                                              customAddress = value;
+                                            },
+                                            decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      100),
+                                                ),
+                                                filled: true,
+                                                contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 5.0,
+                                                    horizontal: 12),
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(.22)),
+                                                hintText: "Entrer l'adresse",
+                                                fillColor: Colors.black
+                                                    .withOpacity(.04)),
+                                            style: AppTheme.buttonText,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: getSize(16, "height", context),
+                            ),
+                            Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    child: Container(
+                                      height: getSize(40, "height", context),
+                                      width: getSize(162, "width", context),
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          loaderPopup();
+                                          /*sendAlert(
+                                              "default",
+                                              category,
+                                              address,
+                                              posted,
+                                              latlon,
+                                              customAddress);*/
+                                        },
+                                        color: Color(0x162C306F),
+                                        padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            getSize(5, "height", context),
+                                            0,
+                                            getSize(5, "height", context)),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(100),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Non, merci.',
+                                            style: TextStyle(
+                                              fontSize: getSize(
+                                                  18, "height", context),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: getSize(40, "height", context),
+                                    width: getSize(91, "width", context),
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        loaderPopup();
+                                        /*sendAlert("default", category, address,
+                                            posted, latlon, customAddress);*/
+                                      },
+                                      textColor: Colors.white,
+                                      color: Colors.transparent,
+                                      padding: EdgeInsets.all(0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(100),
+                                          gradient: LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFFA7BACB),
+                                              Color(0xFF25296A),
+                                            ],
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            getSize(5, "height", context),
+                                            0,
+                                            getSize(5, "height", context)),
+                                        child: Center(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Oui',
+                                                  style: TextStyle(
+                                                    fontSize: getSize(
+                                                        18, "height", context),
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+                                ])
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

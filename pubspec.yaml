@@ -63,6 +63,8 @@ dependencies:
   audioplayer_web: 0.7.1
   quiver:
   geolocator: ^6.2.1
+  vector_math: any
+  select_form_field: ^1.1.0
 
 
 
