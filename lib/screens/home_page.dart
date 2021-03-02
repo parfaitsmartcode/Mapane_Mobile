@@ -6,6 +6,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geodesy/geodesy.dart' as gdsy;
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapane/constants/assets.dart';
@@ -98,10 +99,11 @@ class _HomePageState extends State<HomePage> {
 // the user's initial location and current location
 // as it moves
   LocationData currentLocation;
+  Position currentPosition;
 // a reference to the destination location
   LocationData destinationLocation;
 // wrapper around the location API
-  Location location;
+  Location location = new Location();
   String userId;
   bool loadera = false;
   FlutterTts flutterTts;
@@ -126,6 +128,9 @@ class _HomePageState extends State<HomePage> {
   bool test = true;
   Timer _timer;
   Timer _circleTimer;
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _kPosition = CameraPosition(
@@ -191,11 +196,57 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  checkPermission () async{
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+  }
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permantly denied, we cannot request permissions.');
+    }
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return Future.error(
+            'Location permissions are denied (actual value: $permission).');
+      }
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   initState() {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
+    //checkPermission();
+    _determinePosition().then((position) => print(position == null ? 'Unknow': position.latitude.toString() + " , " + position.longitude.toString()));
     super.initState();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
@@ -209,13 +260,14 @@ class _HomePageState extends State<HomePage> {
     manager = SocketIOManager();
     initSocket("default");
     // create an instance of Location
-    location = new Location();
+    //location = new Location();
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
 
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
-    location.onLocationChanged.listen((LocationData cLoc) {
+    /*location.onLocationChanged.listen((LocationData cLoc) {
+      print("here");
       // if (currentLocation != null) test = false;
       currentLocation = cLoc;
       // if (!test) {
@@ -288,6 +340,82 @@ class _HomePageState extends State<HomePage> {
         }
       } else {
         if (_timer.isActive && _timer != null) _timer.cancel();
+      }
+      print(mapanes);
+    });*/
+    Geolocator.getPositionStream().listen((Position position){
+      print("from here");
+      //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
+      currentPosition = position;
+      context.read<PlaceProvider>().getPlace(
+          LatLng(currentPosition.latitude, currentPosition.longitude));
+      print("le cas false");
+      // }
+      if (procto != null) {
+        CameraPosition cPositionGo = CameraPosition(
+          zoom: zooming,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(double.parse(procto.split(",")[0]),
+              double.parse(procto.split(",")[1])),
+        );
+        _goTo(cPositionGo);
+        context.read<UserProvider>().updatePosition(null);
+        procto = null;
+        test = false;
+      } else {
+        if (test) {
+          print("ici première fois");
+          // context.read<PlaceProvider>().getPlace(
+          //     LatLng(currentLocation.latitude, currentLocation.longitude));
+          CameraPosition cPosition = CameraPosition(
+            zoom: zooming,
+            tilt: CAMERA_TILT,
+            bearing: CAMERA_BEARING,
+            target: LatLng(currentPosition.latitude, currentPosition.longitude),
+          );
+          _goTo(cPosition);
+          test = false;
+          locationTmp =
+              gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
+        }
+      }
+      updatePinOnMap();
+      num distance = geodesy.distanceBetweenTwoGeoPoints(
+          gdsy.LatLng(currentPosition.latitude, currentPosition.longitude),
+          locationTmp);
+      print("la distance est de " + distance.toString());
+      if (distance >= 50) {
+        locationTmp =
+            gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
+        CameraPosition cPosition = CameraPosition(
+          zoom: zooming,
+          tilt: CAMERA_TILT,
+          bearing: CAMERA_BEARING,
+          target: LatLng(currentPosition.latitude, currentPosition.longitude),
+        );
+        _goTo(cPosition);
+      }
+      setState(() {
+        mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,
+            LatLng(currentPosition.latitude, currentPosition.longitude));
+      });
+      if (mapanes.isNotEmpty) {
+        const duration = const Duration(seconds: 60);
+        if (_timer == null) {
+          vocallyNotifyMapane();
+          _timer = new Timer.periodic(duration, (Timer timer) {
+            vocallyNotifyMapane();
+          });
+        } else {
+          if (!_timer.isActive) {
+            _timer = new Timer.periodic(duration, (Timer timer) {
+              vocallyNotifyMapane();
+            });
+          }
+        }
+      } else {
+        if (_timer != null) _timer.cancel();
       }
       print(mapanes);
     });
@@ -1169,7 +1297,8 @@ class _HomePageState extends State<HomePage> {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition =
-        LatLng(currentLocation.latitude, currentLocation.longitude);
+    LatLng(currentPosition.latitude, currentPosition.longitude);
+        //LatLng(currentLocation.latitude, currentLocation.longitude);
     // get a LatLng out of the LocationData object
     var destPosition =
         LatLng(destinationLocation.latitude, destinationLocation.longitude);
@@ -1331,7 +1460,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       // updated position
       var pinPosition =
-          LatLng(currentLocation.latitude, currentLocation.longitude);
+      LatLng(currentPosition.latitude, currentPosition.longitude);
+          //LatLng(currentLocation.latitude, currentLocation.longitude);
       _kPosition = CameraPosition(
           zoom: zooming,
           tilt: CAMERA_TILT,
@@ -1990,8 +2120,11 @@ class _HomePageState extends State<HomePage> {
                                                 "embouteillage3",
                                                 addresse,
                                                 userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
                                           },
                                           child: Container(
                                               width:
@@ -2047,11 +2180,140 @@ class _HomePageState extends State<HomePage> {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
+                                                "route-barree2",
+                                                addresse,
+                                                userId,
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
+                                          },
+                                          child: Container(
+                                              width:
+                                              getSize(75, "width", context),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        child: Image.asset(
+                                                            'assets/images/route block.png',
+                                                            height: getSize(
+                                                                56,
+                                                                "height",
+                                                                context)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: getSize(15,
+                                                          "height", context)),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        height: getSize(30,
+                                                            "height", context),
+                                                        child: Text(
+                                                          "Route barrée",
+                                                          maxLines: 2,
+                                                          softWrap: true,
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                  .5),
+                                                              fontSize: getSize(
+                                                                  12,
+                                                                  "height",
+                                                                  context)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            sendAlertPopup(
+                                                "Route-en-chantier-2",
+                                                addresse,
+                                                userId,
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
+                                          },
+                                          child: Container(
+                                              width:
+                                              getSize(75, "width", context),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        child: Image.asset(
+                                                            'assets/images/chantier.png',
+                                                            height: getSize(
+                                                                56,
+                                                                "height",
+                                                                context)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: getSize(15,
+                                                          "height", context)),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        height: getSize(30,
+                                                            "height", context),
+                                                        child: Text(
+                                                          "Route en chantier",
+                                                          maxLines: 2,
+                                                          softWrap: true,
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                  .5),
+                                                              fontSize: getSize(
+                                                                  12,
+                                                                  "height",
+                                                                  context)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            sendAlertPopup(
                                                 "zone-dangereuse-1",
                                                 addresse,
                                                 userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
                                           },
                                           child: Container(
                                               width:
@@ -2111,6 +2373,7 @@ class _HomePageState extends State<HomePage> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -2118,8 +2381,11 @@ class _HomePageState extends State<HomePage> {
                                                 "Accident-de-circulation-1",
                                                 addresse,
                                                 userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
                                           },
                                           child: Container(
                                               width:
@@ -2152,8 +2418,9 @@ class _HomePageState extends State<HomePage> {
                                                             "height", context),
                                                         child: Text(
                                                           "Accident de circulation",
-                                                          maxLines: 2,
+                                                          maxLines: 3,
                                                           softWrap: true,
+                                                          overflow: TextOverflow.clip,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -2175,15 +2442,18 @@ class _HomePageState extends State<HomePage> {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "route-barree2",
+                                                "Accident-de-circulation-1",
                                                 addresse,
                                                 userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2192,7 +2462,7 @@ class _HomePageState extends State<HomePage> {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/route block.png',
+                                                            'assets/images/accident-circulation.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2211,76 +2481,17 @@ class _HomePageState extends State<HomePage> {
                                                         height: getSize(42,
                                                             "height", context),
                                                         child: Text(
-                                                          "Route barrée",
-                                                          maxLines: 2,
+                                                          "SOS",
+                                                          maxLines: 3,
                                                           softWrap: true,
+                                                          overflow: TextOverflow.clip,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  12,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Route-en-chantier-2",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/chantier.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(42,
-                                                            "height", context),
-                                                        child: Text(
-                                                          "Route en chantier",
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   12,
                                                                   "height",
@@ -2319,7 +2530,7 @@ class _HomePageState extends State<HomePage> {
                                                     SizedBox(
                                                       width: getSize(
                                                           75, "width", context),
-                                                      height: getSize(32,
+                                                      height: getSize(40,
                                                           "height", context),
                                                       child: Text(
                                                         "Publier ma position",
@@ -2341,6 +2552,70 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ],
                                             )),
+                                        GestureDetector(
+                                          onTap: () {
+                                            sendAlertPopup(
+                                                "Accident-de-circulation-1",
+                                                addresse,
+                                                userId,
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude)
+                                            );
+                                          },
+                                          child: Container(
+                                              width:
+                                              getSize(75, "width", context),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        child: Image.asset(
+                                                            'assets/images/accident-circulation.pn',
+                                                            height: getSize(
+                                                                56,
+                                                                "height",
+                                                                context)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: getSize(15,
+                                                          "height", context)),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        height: getSize(42,
+                                                            "height", context),
+                                                        child: Text(
+                                                          " ",
+                                                          maxLines: 3,
+                                                          softWrap: true,
+                                                          overflow: TextOverflow.clip,
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                  .5),
+                                                              fontSize: getSize(
+                                                                  12,
+                                                                  "height",
+                                                                  context)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
                                       ],
                                     ),
                                   ],
