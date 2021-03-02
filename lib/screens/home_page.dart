@@ -26,8 +26,10 @@ import 'package:mapane/utils/mapane_zone_util.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:permission_handler/permission_handler.dart' as PermissionHandler;
+import 'package:permission_handler/permission_handler.dart'
+    as PermissionHandler;
 import 'package:provider/provider.dart';
+import 'package:select_form_field/select_form_field.dart';
 import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
@@ -86,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   String googleAPIKey = "AIzaSyA1vPvfFjBhjgx0rOJcP8_K9vv5Xa2y1ZU";
 // for my custom marker pins
   BitmapDescriptor sourceIcon;
-
+  String customCategory = "embouteillage3";
   BitmapDescriptor embouteillageMarker;
   BitmapDescriptor radarMarker;
   BitmapDescriptor accidentMarker;
@@ -154,41 +156,42 @@ class _HomePageState extends State<HomePage> {
       notifications = alert;
     });
   }
-  vocallyNotifyMapane(){
+
+  vocallyNotifyMapane() {
     mapanes.forEach((element) async {
       num distance = distanceBetweenTwoGeoPoints(
-          LatLng(
-              currentLocation.latitude, currentLocation.longitude),
-          LatLng(
-              double.parse(element.lat), double.parse(element.lon)));
+          LatLng(currentLocation.latitude, currentLocation.longitude),
+          LatLng(double.parse(element.lat), double.parse(element.lon)));
       print(distance);
-      if(distance.round() >= 0 && distance <= 50){
-        var text = element.category.name +
-            " à moins de 50 mètres de votre position";
+      if (distance.round() >= 0 && distance <= 50) {
+        var text =
+            element.category.name + " à moins de 50 mètres de votre position";
         if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
-      } else if(distance.round() > 50 && distance <= 100){
-        var text = element.category.name +
-            " à moins de 100 mètres de votre position";
+      } else if (distance.round() > 50 && distance <= 100) {
+        var text =
+            element.category.name + " à moins de 100 mètres de votre position";
         if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
-      } else if(distance.round() > 100 && distance <= 150){
-        var text = element.category.name +
-            " à moins de 150 mètres de votre position";
+      } else if (distance.round() > 100 && distance <= 150) {
+        var text =
+            element.category.name + " à moins de 150 mètres de votre position";
         if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
-      } else if(distance.round() > 150 && distance <= 200){
-        var text = element.category.name +
-            " à moins de 200 mètres de votre position";
+      } else if (distance.round() > 150 && distance <= 200) {
+        var text =
+            element.category.name + " à moins de 200 mètres de votre position";
         if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
-      }else{
+      } else {
         var text = element.category.name +
-            " à moins de " + distance.round().toString() +" mètres de votre position";
+            " à moins de " +
+            distance.round().toString() +
+            " mètres de votre position";
         if (context.read<UserProvider>().audioVal) {
           await _speak(text);
         }
@@ -196,7 +199,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  checkPermission () async{
+  checkPermission() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -213,6 +216,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -246,7 +250,11 @@ class _HomePageState extends State<HomePage> {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
     //checkPermission();
-    _determinePosition().then((position) => print(position == null ? 'Unknow': position.latitude.toString() + " , " + position.longitude.toString()));
+    _determinePosition().then((position) => print(position == null
+        ? 'Unknow'
+        : position.latitude.toString() +
+            " , " +
+            position.longitude.toString()));
     super.initState();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
@@ -343,7 +351,7 @@ class _HomePageState extends State<HomePage> {
       }
       print(mapanes);
     });*/
-    Geolocator.getPositionStream().listen((Position position){
+    Geolocator.getPositionStream().listen((Position position) {
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
@@ -383,7 +391,7 @@ class _HomePageState extends State<HomePage> {
       updatePinOnMap();
       num distance = distanceBetweenTwoGeoPoints(
           LatLng(currentPosition.latitude, currentPosition.longitude),
-          LatLng(locationTmp.latitude,locationTmp.longitude));
+          LatLng(locationTmp.latitude, locationTmp.longitude));
       print("la distance est de " + distance.toString());
       if (distance >= 50) {
         locationTmp =
@@ -485,7 +493,7 @@ class _HomePageState extends State<HomePage> {
       print("createAlertOkUser");
       print(data);
       if (data.containsKey('message')) {
-        if (data['id'] == userId){
+        if (data['id'] == userId) {
           if (data['message'] == "alerte inactive") {
             showGeneralDialog(
                 context: context,
@@ -516,8 +524,8 @@ class _HomePageState extends State<HomePage> {
                                   color: Color(0xFF000000).withOpacity(0.11),
                                   spreadRadius: 5,
                                   blurRadius: 10,
-                                  offset:
-                                      Offset(0, 5), // changes position of shadow
+                                  offset: Offset(
+                                      0, 5), // changes position of shadow
                                 ),
                               ],
                             ),
@@ -532,11 +540,12 @@ class _HomePageState extends State<HomePage> {
                                     height: getSize(100, "height", context),
                                     padding: EdgeInsets.symmetric(
                                         vertical: getSize(0, "height", context),
-                                        horizontal: getSize(0, "width", context)),
+                                        horizontal:
+                                            getSize(0, "width", context)),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
-                                      color:
-                                          AppColors.greenColor.withOpacity(0.35),
+                                      color: AppColors.greenColor
+                                          .withOpacity(0.35),
                                     ),
                                     child: Stack(
                                       overflow: Overflow.visible,
@@ -545,10 +554,10 @@ class _HomePageState extends State<HomePage> {
                                           child: Center(
                                               child: Image.asset(
                                             'assets/images/Map pin-3.png',
-                                            height:
-                                                getSize(45.6, "height", context),
-                                            width:
-                                                getSize(37.77, "width", context),
+                                            height: getSize(
+                                                45.6, "height", context),
+                                            width: getSize(
+                                                37.77, "width", context),
                                           )),
                                         ),
                                         Positioned(
@@ -556,15 +565,15 @@ class _HomePageState extends State<HomePage> {
                                           top: getSize(61, "height", context),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                                vertical:
-                                                    getSize(9, "width", context),
+                                                vertical: getSize(
+                                                    9, "width", context),
                                                 horizontal: getSize(
                                                     9, "height", context)),
                                             child: SizedBox(
-                                              width:
-                                                  getSize(31, "height", context),
-                                              height:
-                                                  getSize(31, "height", context),
+                                              width: getSize(
+                                                  31, "height", context),
+                                              height: getSize(
+                                                  31, "height", context),
                                               child: Card(
                                                 elevation: 2.5,
                                                 shape: RoundedRectangleBorder(
@@ -602,8 +611,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Text(
                                       "Une alerte de ce type a déjà été créee dans votre zone, Merci.",
                                       style: AppTheme.bodyText1.copyWith(
-                                        color:
-                                            AppColors.blackColor.withOpacity(0.5),
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.5),
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -647,8 +656,8 @@ class _HomePageState extends State<HomePage> {
                                   color: Color(0xFF000000).withOpacity(0.11),
                                   spreadRadius: 5,
                                   blurRadius: 10,
-                                  offset:
-                                      Offset(0, 5), // changes position of shadow
+                                  offset: Offset(
+                                      0, 5), // changes position of shadow
                                 ),
                               ],
                             ),
@@ -662,7 +671,8 @@ class _HomePageState extends State<HomePage> {
                                     width: getSize(100, "height", context),
                                     height: getSize(100, "height", context),
                                     padding: EdgeInsets.symmetric(
-                                        vertical: getSize(36, "height", context),
+                                        vertical:
+                                            getSize(36, "height", context),
                                         horizontal:
                                             getSize(30, "width", context)),
                                     decoration: BoxDecoration(
@@ -691,8 +701,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Text(
                                       data['message'],
                                       style: AppTheme.bodyText1.copyWith(
-                                        color:
-                                            AppColors.blackColor.withOpacity(0.5),
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.5),
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -1297,8 +1307,8 @@ class _HomePageState extends State<HomePage> {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition =
-    LatLng(currentPosition.latitude, currentPosition.longitude);
-        //LatLng(currentLocation.latitude, currentLocation.longitude);
+        LatLng(currentPosition.latitude, currentPosition.longitude);
+    //LatLng(currentLocation.latitude, currentLocation.longitude);
     // get a LatLng out of the LocationData object
     var destPosition =
         LatLng(destinationLocation.latitude, destinationLocation.longitude);
@@ -1344,13 +1354,11 @@ class _HomePageState extends State<HomePage> {
     setPolylines();
     showCirclesOnMap();
   }
-  dynamic radiusTest = {
-    "radius" : 300,
-    "level" : true
-  };
-  updateCirlce(){
-    if(radiusTest["level"]){
-      if( radiusTest["radius"] == 100){
+
+  dynamic radiusTest = {"radius": 300, "level": true};
+  updateCirlce() {
+    if (radiusTest["level"]) {
+      if (radiusTest["radius"] == 100) {
         setState(() {
           radiusTest["level"] = false;
           showCirclesOnMap();
@@ -1361,8 +1369,8 @@ class _HomePageState extends State<HomePage> {
           showCirclesOnMap();
         });
       }
-    }else{
-      if( radiusTest["radius"] == 300){
+    } else {
+      if (radiusTest["radius"] == 300) {
         setState(() {
           radiusTest["level"] = true;
           showCirclesOnMap();
@@ -1375,31 +1383,30 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
-  void showCirclesOnMap(){
+
+  void showCirclesOnMap() {
     int i = 0;
     _circles.clear();
     mapanes.forEach((element) {
-      _circles.add(
-        Circle(
-          circleId: CircleId("circle"+i.toString()),
-          center: LatLng(double.parse(element.lat),double.parse(element.lon)),
-          radius: double.parse(radiusTest["radius"].toString()),//element.category.perimeter * 1000,
+      _circles.add(Circle(
+          circleId: CircleId("circle" + i.toString()),
+          center: LatLng(double.parse(element.lat), double.parse(element.lon)),
+          radius: double.parse(radiusTest["radius"]
+              .toString()), //element.category.perimeter * 1000,
           fillColor: Colors.redAccent[200].withOpacity(0.1),
           strokeWidth: 3,
-          strokeColor: Colors.red
-        )
-      );
+          strokeColor: Colors.red));
       i++;
     });
-    if(mapanes.isNotEmpty){
+    if (mapanes.isNotEmpty) {
       const duration = const Duration(milliseconds: 100);
-      if(_circleTimer == null){
-        _circleTimer = new Timer.periodic(duration,(Timer timer){
+      if (_circleTimer == null) {
+        _circleTimer = new Timer.periodic(duration, (Timer timer) {
           updateCirlce();
         });
       } else {
-        if(!_circleTimer.isActive){
-          _circleTimer = new Timer.periodic(duration,(Timer timer){
+        if (!_circleTimer.isActive) {
+          _circleTimer = new Timer.periodic(duration, (Timer timer) {
             updateCirlce();
           });
         }
@@ -1461,8 +1468,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       // updated position
       var pinPosition =
-      LatLng(currentPosition.latitude, currentPosition.longitude);
-          //LatLng(currentLocation.latitude, currentLocation.longitude);
+          LatLng(currentPosition.latitude, currentPosition.longitude);
+      //LatLng(currentLocation.latitude, currentLocation.longitude);
       _kPosition = CameraPosition(
           zoom: zooming,
           tilt: CAMERA_TILT,
@@ -1483,20 +1490,16 @@ class _HomePageState extends State<HomePage> {
   updateBottomPadding(context) {
     if (bottomPadding == null) {
       bottomPadding = SizeConfig.screenHeight / 50;
-      setState((){
+      setState(() {
         if (isExpanded) {
           isExpanded = false;
-          alertHeight =
-              getSize(30, "height", context);
+          alertHeight = getSize(30, "height", context);
           print(getSize(17, "height", context));
-          bottomPadding =
-              getSize(17, "height", context);
+          bottomPadding = getSize(17, "height", context);
         } else {
           isExpanded = true;
-          alertHeight =
-              getSize(300, "height", context);
-          bottomPadding =
-              getSize(285, "height", context);
+          alertHeight = getSize(300, "height", context);
+          bottomPadding = getSize(285, "height", context);
           swiperIcon = Container(
             child: SvgPicture.asset(
               Assets.arrowDownIcon,
@@ -1504,7 +1507,6 @@ class _HomePageState extends State<HomePage> {
             height: 32.0,
             width: 32.0,
           );
-
         }
       });
     }
@@ -1623,8 +1625,7 @@ class _HomePageState extends State<HomePage> {
                               .userPlace
                               .fold((NException error) {
                               return Container(
-                                width:
-                                SizeConfig.blockSizeHorizontal * 38,
+                                width: SizeConfig.blockSizeHorizontal * 38,
                                 child: Column(
                                   children: [
                                     Text(
@@ -1645,18 +1646,17 @@ class _HomePageState extends State<HomePage> {
                               }
                               return userPlace == null
                                   ? Container(
-                                width:
-                                SizeConfig.blockSizeHorizontal * 38,
-                                    child: Column(
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 38,
+                                      child: Column(
                                         children: [
                                           Text(
                                             "Not available right now.",
-                                            style: TextStyle(
-                                                fontSize: 18.0),
+                                            style: TextStyle(fontSize: 18.0),
                                           )
                                         ],
                                       ),
-                                  )
+                                    )
                                   : Container(
                                       width:
                                           SizeConfig.blockSizeHorizontal * 38,
@@ -1946,6 +1946,11 @@ class _HomePageState extends State<HomePage> {
                                                                   itemBuilder:
                                                                       (context,
                                                                           index) {
+                                                                    String name = placesResult[index].name !=
+                                                                            null
+                                                                        ? placesResult[index]
+                                                                            .name
+                                                                        : " ";
                                                                     String osm_value = placesResult[index].osm_value !=
                                                                             null
                                                                         ? placesResult[index].osm_value +
@@ -2004,13 +2009,15 @@ class _HomePageState extends State<HomePage> {
                                                                         _goTo(
                                                                             positionToGo);
                                                                       },
-                                                                      onLongPress: (){
+                                                                      onLongPress:
+                                                                          () {
                                                                         sendAlertFromSearchPopup(
-                                                                            addresse,
+                                                                            name +
+                                                                                city +
+                                                                                country,
                                                                             userId,
-                                                                            LatLng(currentPosition.latitude,
-                                                                                currentPosition.longitude)
-                                                                        );
+                                                                            LatLng(placesResult[index].coordinates[1],
+                                                                                placesResult[index].coordinates[0]));
                                                                       },
                                                                     );
                                                                   },
@@ -2126,8 +2133,7 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
@@ -2189,12 +2195,11 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
-                                              getSize(75, "width", context),
+                                                  getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2226,12 +2231,12 @@ class _HomePageState extends State<HomePage> {
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                  .5),
+                                                                      .5),
                                                               fontSize: getSize(
                                                                   12,
                                                                   "height",
@@ -2252,12 +2257,11 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
-                                              getSize(75, "width", context),
+                                                  getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2289,12 +2293,12 @@ class _HomePageState extends State<HomePage> {
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                  .5),
+                                                                      .5),
                                                               fontSize: getSize(
                                                                   12,
                                                                   "height",
@@ -2315,8 +2319,7 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
@@ -2376,7 +2379,8 @@ class _HomePageState extends State<HomePage> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -2387,8 +2391,7 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
@@ -2423,7 +2426,8 @@ class _HomePageState extends State<HomePage> {
                                                           "Accident de circulation",
                                                           maxLines: 3,
                                                           softWrap: true,
-                                                          overflow: TextOverflow.clip,
+                                                          overflow:
+                                                              TextOverflow.clip,
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -2451,12 +2455,11 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
-                                              getSize(75, "width", context),
+                                                  getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2487,14 +2490,15 @@ class _HomePageState extends State<HomePage> {
                                                           "SOS",
                                                           maxLines: 3,
                                                           softWrap: true,
-                                                          overflow: TextOverflow.clip,
+                                                          overflow:
+                                                              TextOverflow.clip,
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                  .5),
+                                                                      .5),
                                                               fontSize: getSize(
                                                                   12,
                                                                   "height",
@@ -2564,12 +2568,11 @@ class _HomePageState extends State<HomePage> {
                                                 /*LatLng(currentLocation.latitude,
                                                     currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude)
-                                            );
+                                                    currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
-                                              getSize(75, "width", context),
+                                                  getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2600,14 +2603,15 @@ class _HomePageState extends State<HomePage> {
                                                           " ",
                                                           maxLines: 3,
                                                           softWrap: true,
-                                                          overflow: TextOverflow.clip,
+                                                          overflow:
+                                                              TextOverflow.clip,
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                  .5),
+                                                                      .5),
                                                               fontSize: getSize(
                                                                   12,
                                                                   "height",
@@ -2663,11 +2667,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   sendAlertFromSearchPopup(address, posted, latlon) {
+    print(latlon.toString());
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
         barrierLabel:
-        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
         barrierColor: AppColors.whiteColor.withOpacity(0.96),
         transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (BuildContext buildContext, Animation animation,
@@ -2683,7 +2688,7 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
                     borderRadius:
-                    BorderRadius.circular(getSize(20, "height", context)),
+                        BorderRadius.circular(getSize(20, "height", context)),
                     boxShadow: [
                       BoxShadow(
                         color: Color(0xFF000000).withOpacity(0.11),
@@ -2697,21 +2702,55 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Container(
                         padding: EdgeInsets.all(getSize(20, "height", context)),
-                        decoration: BoxDecoration(
-                          // color: AppColors.whiteColor,
-                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             RichText(
                               text: TextSpan(
-                                  text: "Completez les informations pour créer cette alerte",
+                                  text:
+                                      "Completez les informations pour créer cette alerte",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: getSize(18, "height", context),
                                       color: Colors.black)),
                             ),
+                            SizedBox(
+                              height: getSize(29, "height", context),
+                            ),
+                            SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: getSize(44, "height", context),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: Drawer(
+                                            elevation: 0,
+                                            child: Container(
+                                              color: Colors.white,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: SelectFormField(
+                                                type: SelectFormFieldType.dropdown, // or can be dialog
+                                                initialValue: 'embouteillage3',
+                                                labelText: 'Categorie',
+                                                items: Alert.items,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    customCategory = val;
+                                                  });
+                                                },
+                                                onSaved: (val) {
+                                                  setState(() {
+                                                    customCategory = val;
+                                                  });
+                                                },
+                                              ),
+                                            )))),
                             SizedBox(
                               height: getSize(29, "height", context),
                             ),
@@ -2725,17 +2764,17 @@ class _HomePageState extends State<HomePage> {
                                       decoration: BoxDecoration(
                                         color: Colors.transparent,
                                         borderRadius:
-                                        BorderRadius.circular(100),
+                                            BorderRadius.circular(100),
                                       ),
                                       child: Drawer(
                                         elevation: 0,
                                         child: Container(
                                           color: Colors.white,
                                           width:
-                                          MediaQuery.of(context).size.width,
+                                              MediaQuery.of(context).size.width,
                                           child: TextField(
                                             controller:
-                                            TextEditingController(text: ""),
+                                                TextEditingController(text: ""),
                                             onChanged: (value) {
                                               customAddress = value;
                                             },
@@ -2743,14 +2782,14 @@ class _HomePageState extends State<HomePage> {
                                                 border: OutlineInputBorder(
                                                   borderSide: BorderSide.none,
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      100),
+                                                      BorderRadius.circular(
+                                                          100),
                                                 ),
                                                 filled: true,
                                                 contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 5.0,
-                                                    horizontal: 12),
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 5.0,
+                                                        horizontal: 12),
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
@@ -2771,7 +2810,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
                                     child: Container(
@@ -2781,13 +2820,13 @@ class _HomePageState extends State<HomePage> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                           loaderPopup();
-                                          /*sendAlert(
+                                          sendAlert(
                                               "default",
-                                              category,
+                                              customCategory,
                                               address,
                                               posted,
                                               latlon,
-                                              customAddress);*/
+                                              customAddress);
                                         },
                                         color: Color(0x162C306F),
                                         padding: EdgeInsets.fromLTRB(
@@ -2797,7 +2836,7 @@ class _HomePageState extends State<HomePage> {
                                             getSize(5, "height", context)),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(100),
+                                              BorderRadius.circular(100),
                                         ),
                                         child: Center(
                                           child: Text(
@@ -2819,8 +2858,8 @@ class _HomePageState extends State<HomePage> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         loaderPopup();
-                                        /*sendAlert("default", category, address,
-                                            posted, latlon, customAddress);*/
+                                        sendAlert("default", customCategory, address,
+                                            posted, latlon, customAddress);
                                       },
                                       textColor: Colors.white,
                                       color: Colors.transparent,
@@ -2828,7 +2867,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(100),
+                                              BorderRadius.circular(100),
                                           gradient: LinearGradient(
                                             colors: <Color>[
                                               Color(0xFFA7BACB),
@@ -2843,19 +2882,19 @@ class _HomePageState extends State<HomePage> {
                                             getSize(5, "height", context)),
                                         child: Center(
                                             child: Row(
-                                              mainAxisAlignment:
+                                          mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'Oui',
-                                                  style: TextStyle(
-                                                    fontSize: getSize(
-                                                        18, "height", context),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
+                                          children: [
+                                            Text(
+                                              'Oui',
+                                              style: TextStyle(
+                                                fontSize: getSize(
+                                                    18, "height", context),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                                       ),
                                     ),
                                   ),

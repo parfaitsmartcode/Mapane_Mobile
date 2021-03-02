@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mapane/models/category.dart';
 import 'package:mapane/models/postedBy.dart';
 import 'package:quiver/core.dart';
@@ -43,5 +44,58 @@ class Alert{
 
   @override
   int get hashCode => hash2(lat.hashCode,lon.hashCode);
+
+   static List<Map<String, dynamic>> items = [
+     {
+       'value': 'embouteillage3',
+       'label': 'Embouteillage',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/embouteillage.png'
+       )),
+     },
+     {
+       'value': 'route-barree2',
+       'label': 'Route barrée',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/route block.png'
+       )),
+     },
+     {
+       'value': 'Route-en-chantier-2',
+       'label': 'Route en chantier',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/chantier.png'
+       )),
+     },
+     {
+       'value': 'zone-dangereuse-1',
+       'label': 'Zone dangereuse',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/zone-danger.png'
+       )),
+     },
+     {
+       'value': 'Accident-de-circulation-1',
+       'label': 'Accident de circulation',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/accident-circulation.png'
+       )),
+     },
+   ];
 
 }
