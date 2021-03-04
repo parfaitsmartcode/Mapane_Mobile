@@ -2,6 +2,7 @@ class Assets {
   Assets._();
 
   static const String appLogo = "assets/images/icare.png";
+  static const String logoLong = "assets/images/Logo-long-edited.png";
   static const String profilePicture = "assets/images/profile.png";
   static const String historyIcon = "assets/icons/History-icon.svg";
   static const String accidentIcon = "assets/icons/car-accident.svg";
