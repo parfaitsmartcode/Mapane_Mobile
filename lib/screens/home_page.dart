@@ -1396,8 +1396,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   getAppropriateIcon(alert) {
+    print("ezaeazeza");
     switch (alert) {
       case "Embouteillage":
+        print(alert);
         return embouteillageMarker;
         break;
       case "Route en chantier":

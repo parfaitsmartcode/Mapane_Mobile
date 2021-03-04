@@ -765,26 +765,26 @@ class _MaterialModalState extends State<MaterialModal> {
             ),
             Padding(
               padding:
-                  EdgeInsets.fromLTRB(0, getSize(30, "height", context), 0, 0),
+                  EdgeInsets.fromLTRB(0, getSize(20, "height", context), 0, 0),
               child: Align(
                 alignment: Alignment.center,
                 child: ListView(shrinkWrap: true, children: <Widget>[
-                  ListTile(
-                      onTap: () {
-                        Navigator.pop(context);
-                        context
-                            .read<AlertProvider>()
-                            .getAlertByUserCat("Controle routier", 2);
-                        context.read<UserProvider>().checkTab(false);
-                      },
-                      leading: Image.asset('assets/images/police.png',
-                          height: getSize(24, "height", context),
-                          width: getSize(24, "width", context)),
-                      title: Text('Controle routier',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: getSize(16, "height", context),
-                              color: Colors.black))),
+                  // ListTile(
+                  //     onTap: () {
+                  //       Navigator.pop(context);
+                  //       context
+                  //           .read<AlertProvider>()
+                  //           .getAlertByUserCat("Controle routier", 2);
+                  //       context.read<UserProvider>().checkTab(false);
+                  //     },
+                  //     leading: Image.asset('assets/images/police.png',
+                  //         height: getSize(24, "height", context),
+                  //         width: getSize(24, "width", context)),
+                  //     title: Text('Controle routier',
+                  //         style: TextStyle(
+                  //             fontWeight: FontWeight.w400,
+                  //             fontSize: getSize(16, "height", context),
+                  //             color: Colors.black))),
                   ListTile(
                       onTap: () {
                         Navigator.pop(context);
@@ -838,13 +838,13 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Radar", 2);
+                            .getAlertByUserCat("S.O.S", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/radar.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
-                      title: Text('Radar',
+                      title: Text('S.O.S',
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
