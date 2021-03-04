@@ -1331,9 +1331,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               position:
                   LatLng(double.parse(element.lat), double.parse(element.lon)),
               markerId: MarkerId('alerte ' + element.id),
-              icon: mapanes.contains(element)
-                  ? destinationIcon
-                  : getAppropriateIcon(element.category.name),
+              icon: getAppropriateIcon(element.category.name),
               infoWindow: InfoWindow(
                   title: element.category.name,
                   snippet: 'Alerte créee ' + moment.from(dateForComparison))));
