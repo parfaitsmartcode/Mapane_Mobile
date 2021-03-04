@@ -55,7 +55,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
         return Assets.accidentMarker3;
         break;
       case "S.O.S":
-        return Assets.sosMarker2;
+        return Assets.sosMarker3;
         break;
       default:
         return Assets.embouteillageMarker3;
