@@ -54,7 +54,7 @@ const double CAMERA_BEARING = 30;
 const LatLng SOURCE_LOCATION = LatLng(4.0747638, 9.7497398);
 const LatLng DEST_LOCATION = LatLng(4.0771125, 9.7486008);
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool isExpanded = false;
   double alertHeight = 30.0;
   double bottomPadding;
@@ -131,6 +131,7 @@ class _HomePageState extends State<HomePage> {
   bool test = true;
   Timer _timer;
   Timer _circleTimer;
+  GoogleMapController mapController;
 
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
@@ -225,6 +226,17 @@ class _HomePageState extends State<HomePage> {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _initMapStyle();
+    }
+  }
+  
+  Future<void> _initMapStyle() async {
+    mapController.setMapStyle('[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
   }
 
   @override
@@ -343,6 +355,7 @@ class _HomePageState extends State<HomePage> {
       print("le cas false");
       // }
       if (procto != null) {
+        print("Proctologie");
         CameraPosition cPositionGo = CameraPosition(
           zoom: zooming,
           tilt: CAMERA_TILT,
@@ -351,8 +364,10 @@ class _HomePageState extends State<HomePage> {
               double.parse(procto.split(",")[1])),
         );
         _goTo(cPositionGo);
-        context.read<UserProvider>().updatePosition(null);
         procto = null;
+        context.read<UserProvider>().updatePosition(null);
+        locationTmp =
+            gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
         test = false;
       } else {
         if (test) {

@@ -12,8 +12,15 @@ class TabsPage extends StatefulWidget {
   // TabsPage(latlon, {this.latlon});
 }
 
-class _TabsPageState extends State<TabsPage> {
+class _TabsPageState extends State<TabsPage> with WidgetsBindingObserver {
   int _currentIndex = 1;
+  AppLifecycleState _notification; 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      _notification = state;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
