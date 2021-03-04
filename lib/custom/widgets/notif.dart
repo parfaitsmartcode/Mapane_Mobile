@@ -42,6 +42,9 @@ class _NotifState extends State<Notif> {
       case "Accident de circulation":
         return Assets.accidentMarker3;
         break;
+      case "S.O.S":
+        return Assets.sosMarker2;
+        break;
       default:
         return Assets.embouteillageMarker3;
     }

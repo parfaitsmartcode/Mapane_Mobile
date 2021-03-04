@@ -1418,6 +1418,9 @@ class _HomePageState extends State<HomePage> {
       case "Route barrée":
         return routebarreeMarker;
         break;
+      case "S.O.S":
+        return sosMarker;
+        break;
       default:
         return embouteillageMarker;
     }
@@ -2430,7 +2433,7 @@ class _HomePageState extends State<HomePage> {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "Accident-de-circulation-1",
+                                                "S.O.S",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
