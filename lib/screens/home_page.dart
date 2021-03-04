@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -163,7 +164,7 @@ class _HomePageState extends State<HomePage> {
       double distance = distanceBetweenTwoGeoPoints(
           LatLng(currentLocation.latitude, currentLocation.longitude),
           LatLng(double.parse(element.lat), double.parse(element.lon)));
-      double perimeter = element.category.perimeter * 1000;
+      double perimeter = element.category.perimeter * 10000.0;
       List<int> subvalues = List<int>();
       print("avant découpage");
       print(perimeter);
@@ -1531,6 +1532,22 @@ class _HomePageState extends State<HomePage> {
                       cameraCurrentPosition = position;
                     });
                   },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical,left: SizeConfig.blockSizeHorizontal * 1.8),
+                  child: Container(
+                    height: getSize(30,"height",context),
+                    width:  getSize(132,"width",context),
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10.0,sigmaY: 10.0),
+                          child: Image.asset(Assets.logoLong,fit: BoxFit.cover,)
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Align(
