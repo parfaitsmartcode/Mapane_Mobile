@@ -90,6 +90,7 @@ class _HomePageState extends State<HomePage> {
   BitmapDescriptor sourceIcon;
   String customCategory = "embouteillage3";
   BitmapDescriptor embouteillageMarker;
+  BitmapDescriptor sosMarker;
   BitmapDescriptor radarMarker;
   BitmapDescriptor accidentMarker;
   BitmapDescriptor controleMarker;
@@ -159,43 +160,25 @@ class _HomePageState extends State<HomePage> {
 
   vocallyNotifyMapane() {
     mapanes.forEach((element) async {
-      num distance = distanceBetweenTwoGeoPoints(
+      double distance = distanceBetweenTwoGeoPoints(
           LatLng(currentLocation.latitude, currentLocation.longitude),
           LatLng(double.parse(element.lat), double.parse(element.lon)));
-      print(distance);
-      if (distance.round() >= 0 && distance <= 50) {
-        var text =
-            element.category.name + " à moins de 50 mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
-          await _speak(text);
-        }
-      } else if (distance.round() > 50 && distance <= 100) {
-        var text =
-            element.category.name + " à moins de 100 mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
-          await _speak(text);
-        }
-      } else if (distance.round() > 100 && distance <= 150) {
-        var text =
-            element.category.name + " à moins de 150 mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
-          await _speak(text);
-        }
-      } else if (distance.round() > 150 && distance <= 200) {
-        var text =
-            element.category.name + " à moins de 200 mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
-          await _speak(text);
-        }
-      } else {
-        var text = element.category.name +
-            " à moins de " +
-            distance.round().toString() +
-            " mètres de votre position";
-        if (context.read<UserProvider>().audioVal) {
-          await _speak(text);
-        }
+      double perimeter = element.category.perimeter * 1000;
+      List<int> subvalues = List<int>();
+      print("avant découpage");
+      print(perimeter);
+      while(perimeter >= 50){
+        subvalues.add((perimeter - 50).round());
+        perimeter -= 50;
       }
+      print("valeurs subdivisées");
+      var greater = subvalues.where((e) => e >= distance.round()).toList()..sort();
+      greater.remove(0);
+      print(greater);
+        var text =
+            element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
+        if (context.read<UserProvider>().audioVal)
+          await _speak(text);
     });
   }
 
@@ -434,10 +417,6 @@ class _HomePageState extends State<HomePage> {
       setInitialLocation();
     }
   }
-
-  // void _playSound() {
-  //   audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
-  // }
 
   initSocket(String identifier) async {
     setState(() => _isProbablyConnected[identifier] = true);
@@ -1288,6 +1267,8 @@ class _HomePageState extends State<HomePage> {
 
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.proximityMarker);
+    sosMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), Assets.sosMarker2);
   }
 
   void setInitialLocation() async {
@@ -1329,7 +1310,7 @@ class _HomePageState extends State<HomePage> {
           Moment.setLocaleGlobally(new LocaleFr());
           var moment = Moment.now();
           var dateForComparison = DateTime.parse(element.createdAt);
-          print(mapanes.contains(element));
+          print(element.category.name);
           _markers.add(Marker(
               position:
                   LatLng(double.parse(element.lat), double.parse(element.lon)),
@@ -2683,8 +2664,6 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Container(
                   width: getSize(303, "width", context),
-                  // height: getSize(256, "height", context),
-                  // padding: EdgeInsets.all(getSize(0,"height",context)),
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
                     borderRadius:
