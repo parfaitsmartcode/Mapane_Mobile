@@ -2162,7 +2162,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/embouteillage.png',
+                                                            'assets/images/new-icon-alerts/traffic.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2224,7 +2224,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/route block.png',
+                                                            'assets/images/new-icon-alerts/barree.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2286,7 +2286,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/chantier.png',
+                                                            'assets/images/new-icon-alerts/chantier.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2348,7 +2348,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/zone-danger.png',
+                                                            'assets/images/new-icon-alerts/danger.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2420,7 +2420,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/accident-circulation.png',
+                                                            'assets/images/new-icon-alerts/car-accident.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2484,7 +2484,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/accident-circulation.png',
+                                                            'assets/images/new-icon-alerts/radar.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
