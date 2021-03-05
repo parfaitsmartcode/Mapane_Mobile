@@ -63,7 +63,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/imagesnew-icon-alerts/test/routebarree-copie.png'
+           'assets/images/new-icon-alerts/test/routebarree-copie.png'
        )),
      },
      {
