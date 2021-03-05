@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -132,6 +133,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool test = true;
   Timer _timer;
   Timer _circleTimer;
+  bool bolSpeaking = false;
+  var brikit = [];
   GoogleMapController mapController;
 
   bool _serviceEnabled;
@@ -179,8 +182,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print(greater);
         var text =
             element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
+        setState(() {
+          brikit.add(text);
+        });
         if (context.read<UserProvider>().audioVal)
-          await _speak(text);
+          // if (!bolSpeaking) {
+            print("taille list");
+            print(brikit.length);
+            print(brikit);
+            await _speak(text);
+          // }else{
+          //   // if (brikit.length == 1) {
+          //     await _speak(text);
+          //   // }
+          // }
     });
   }
 
@@ -1236,11 +1251,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(rate);
     await flutterTts.setPitch(pitch);
-
+    // await flutterTts.setQueueMode(1);
+    print(test);
+    // await flutterTts.awaitSpeakCompletion(true);
     if (test != null) {
       if (test.isNotEmpty) {
         await flutterTts.awaitSpeakCompletion(true);
         await flutterTts.speak(test);
+        flutterTts.setCompletionHandler(() {
+          print("mbrakiti");
+          print(brikit);
+          // if (brikit.length > 0) {
+            brikit.asMap().forEach((index,element) {
+              if (index > 0) {
+                _speak(element);
+              }
+              if (index+1 == brikit.length) {
+                setState(() {
+                  brikit.clear();
+                });
+              }
+            });
+          setState(() {
+            bolSpeaking = true;
+          });
+          // }
+        });
       }
     }
   }
