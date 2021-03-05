@@ -179,8 +179,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print(greater);
         var text =
             element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
-        if (context.read<UserProvider>().audioVal)
+        if (context.read<UserProvider>().audioVal){
+          await flutterTts.awaitSpeakCompletion(true);
           await _speak(text);
+        }
     });
   }
 
@@ -1171,6 +1173,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (isAndroid) {
       _getEngines();
+      flutterTts.setQueueMode(1);
     }
 
     flutterTts.setStartHandler(() {
