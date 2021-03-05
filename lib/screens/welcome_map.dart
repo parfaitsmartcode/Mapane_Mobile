@@ -793,7 +793,7 @@ class _MaterialModalState extends State<MaterialModal> {
                             .getAlertByUserCat("Zone dangereuse", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
-                      leading: Image.asset('assets/images/danger.png',
+                      leading: Image.asset('assets/images/new-icon-alerts/test/zone-dangereuse.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
                       title: Text('Zone dangereuse',
@@ -809,7 +809,7 @@ class _MaterialModalState extends State<MaterialModal> {
                             .getAlertByUserCat("Accident de circulation", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
-                      leading: Image.asset('assets/images/car-accident.png',
+                      leading: Image.asset('assets/images/new-icon-alerts/test/accident.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
                       title: Text('Accident de circulation',
@@ -825,7 +825,7 @@ class _MaterialModalState extends State<MaterialModal> {
                             .getAlertByUserCat("Route en chantier", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
-                      leading: Image.asset('assets/images/highway.png',
+                      leading: Image.asset('assets/images/new-icon-alerts/test/chantier-copie.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
                       title: Text('Route en chantier',
@@ -833,22 +833,22 @@ class _MaterialModalState extends State<MaterialModal> {
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
                               color: Colors.black))),
-                  ListTile(
-                      onTap: () {
-                        Navigator.pop(context);
-                        context
-                            .read<AlertProvider>()
-                            .getAlertByUserCat("S.O.S", 2);
-                        context.read<UserProvider>().checkTab(false);
-                      },
-                      leading: Image.asset('assets/images/radar.png',
-                          height: getSize(24, "height", context),
-                          width: getSize(24, "width", context)),
-                      title: Text('S.O.S',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: getSize(16, "height", context),
-                              color: Colors.black))),
+                  // ListTile(
+                  //     onTap: () {
+                  //       Navigator.pop(context);
+                  //       context
+                  //           .read<AlertProvider>()
+                  //           .getAlertByUserCat("S.O.S", 2);
+                  //       context.read<UserProvider>().checkTab(false);
+                  //     },
+                  //     leading: Image.asset('assets/images/new-icon-alerts/test/sos.png',
+                  //         height: getSize(24, "height", context),
+                  //         width: getSize(24, "width", context)),
+                  //     title: Text('S.O.S',
+                  //         style: TextStyle(
+                  //             fontWeight: FontWeight.w400,
+                  //             fontSize: getSize(16, "height", context),
+                  //             color: Colors.black))),
                 ]),
               ),
             ),
