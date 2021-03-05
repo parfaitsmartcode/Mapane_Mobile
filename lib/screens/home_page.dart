@@ -2810,7 +2810,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer l'adresse",
+                                                hintText: "Précision sur la position",
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -2836,14 +2836,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       child: FlatButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          loaderPopup();
-                                          sendAlert(
-                                              "default",
-                                              customCategory,
-                                              address,
-                                              posted,
-                                              latlon,
-                                              customAddress);
                                         },
                                         color: Color(0x162C306F),
                                         padding: EdgeInsets.fromLTRB(
@@ -2875,8 +2867,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         loaderPopup();
-                                        sendAlert("default", customCategory, address,
-                                            posted, latlon, customAddress);
+                                          sendAlert(
+                                              "default",
+                                              customCategory,
+                                              address,
+                                              posted,
+                                              latlon,
+                                              customAddress == "" || customAddress == null ? "test" : customAddress);
                                       },
                                       textColor: Colors.white,
                                       color: Colors.transparent,
