@@ -671,11 +671,11 @@ class AllAlerte extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                /*onTap: (){
+                onTap: (){
                   var cPosition = alert.lat+","+alert.lon;
                   context.read<UserProvider>().updatePosition(cPosition);
                   Navigator.of(context).pushNamed('/map');
-                },*/
+                },
                   title: Text(alert.category.name.capitalize(),
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -900,11 +900,11 @@ class _AutreAlerteState extends State<AutreAlerte> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-                /*onTap: (){
+                onTap: (){
                   var cPosition = widget.alert.lat+","+widget.alert.lon;
                   context.read<UserProvider>().updatePosition(cPosition);
                   Navigator.of(context).pushNamed('/map');
-                },*/
+                },
             title: Text(widget.alert.category.name.capitalize(),
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
