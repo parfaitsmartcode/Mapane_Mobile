@@ -2162,7 +2162,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/traffic.png',
+                                                            'assets/images/new-icon-alerts/test/embouteillage.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2224,7 +2224,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/barree.png',
+                                                            'assets/images/new-icon-alerts/test/routebarree-copie.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2286,7 +2286,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/chantier.png',
+                                                            'assets/images/new-icon-alerts/test/chantier-copie.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2348,7 +2348,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/danger.png',
+                                                            'assets/images/new-icon-alerts/test/zone-dangereuse.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2420,7 +2420,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/car-accident.png',
+                                                            'assets/images/new-icon-alerts/test/accident.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",
@@ -2484,7 +2484,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         width: getSize(75,
                                                             "width", context),
                                                         child: Image.asset(
-                                                            'assets/images/new-icon-alerts/radar.png',
+                                                            'assets/images/new-icon-alerts/test/sos.png',
                                                             height: getSize(
                                                                 56,
                                                                 "height",

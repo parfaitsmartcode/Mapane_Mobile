@@ -53,7 +53,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/images/embouteillage.png'
+           'assets/images/new-icon-alerts/test/embouteillage.png'
        )),
      },
      {
@@ -63,7 +63,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/images/route block.png'
+           'assets/imagesnew-icon-alerts/test/routebarree-copie.png'
        )),
      },
      {
@@ -73,7 +73,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/images/chantier.png'
+           'assets/images/new-icon-alerts/test/chantier-copie.png'
        )),
      },
      {
@@ -83,7 +83,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/images/zone-danger.png'
+           'assets/images/new-icon-alerts/test/zone-dangereuse.png'
        )),
      },
      {
@@ -93,7 +93,7 @@ class Alert{
          height: 40,
          width: 40,
          child:Image.asset(
-           'assets/images/accident-circulation.png'
+           'assets/images/new-icon-alerts/test/accident.png'
        )),
      },
    ];
