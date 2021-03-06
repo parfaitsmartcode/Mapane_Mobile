@@ -31,14 +31,14 @@ class Assets {
   static const String dangerMarker = "assets/markers/zone-dangereuse.png";
   static const String proximityMarker = "assets/markers/proximity-alert.png";
   
-   static const String embouteillageMarker2 = "assets/markers/mapmarker/emboumap.png";
-   static const String radarMarker2 = "assets/markers/mapmarker/radarmap.png";
-   static const String accidentMarker2 = "assets/markers/mapmarker/accidentmap.png";
+   static const String embouteillageMarker2 = "assets/markers/mapmarker/oldmarkers/embouteillage-2.png";
+   static const String radarMarker2 = "assets/markers/mapmarker/oldmarkers/radarmap.png";
+   static const String accidentMarker2 = "assets/markers/mapmarker/oldmarkers/accident-2.png";
    static const String controleMarker2 = "assets/markers/controle-routier1.png";
-   static const String routebarreeMarker2 = "assets/markers/mapmarker/barreemap.png";
-   static const String routechantierMarker2 = "assets/markers/mapmarker/chantiermap.png";
-   static const String dangerMarker2 = "assets/markers/mapmarker/dangermap.png";
-   static const String sosMarker2 = "assets/markers/mapmarker/sosmap.png";
+   static const String routebarreeMarker2 = "assets/markers/mapmarker/oldmarkers/routebarree-2.png";
+   static const String routechantierMarker2 = "assets/markers/mapmarker/oldmarkers/chantier-2.png";
+   static const String dangerMarker2 = "assets/markers/mapmarker/oldmarkers/zone-dangereuse-2.png";
+   static const String sosMarker2 = "assets/markers/mapmarker/oldmarkers/sos-2.png";
 
   
   static const String embouteillageMarker3 = "assets/markers/traffic.png";

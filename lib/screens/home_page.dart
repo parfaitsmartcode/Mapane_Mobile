@@ -65,7 +65,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AudioPlayer audioPlugin = AudioPlayer();
   String mp3Uri;
   String customAddress;
-  String procto;
+  // ignore: avoid_init_to_null
+  String procto = null;
   final _startPointController = TextEditingController();
   Widget swiperIcon = Container(
     child: SvgPicture.asset(
@@ -111,6 +112,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Location location = new Location();
   String userId;
   bool loadera = false;
+  bool testrop = true;
   FlutterTts flutterTts;
   dynamic languages;
   String language;
@@ -130,7 +132,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
   bool get isWeb => kIsWeb;
-  bool test = true;
   Timer _timer;
   Timer _circleTimer;
   bool bolSpeaking = false;
@@ -164,6 +165,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   vocallyNotifyMapane() {
+    setState(() {
+      brikit.clear();
+    });
     mapanes.forEach((element) async {
       double distance = distanceBetweenTwoGeoPoints(
           LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -182,15 +186,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print(greater);
         var text =
             element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
-        setState(() {
-          brikit.add(text);
-        });
-        if (context.read<UserProvider>().audioVal)
-          // if (!bolSpeaking) {
-            print("taille list");
-            print(brikit.length);
+        if (context.read<UserProvider>().audioVal){
+          setState(() {
+            brikit.add(text);
+            bolSpeaking = true;
+          });
+            print("brikit total phrase tyjty");
             print(brikit);
+            print(brikit.length);
+          if (brikit.length == 1) {
             await _speak(text);
+          }
+        }
           // }else{
           //   // if (brikit.length == 1) {
           //     await _speak(text);
@@ -274,94 +281,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .read<UserProvider>()
         .getPositionVal()
         .then((value) => procto = value);
-    //context.read<NetworkProvider>().init();
-    initTts();
-    manager = SocketIOManager();
-    initSocket("default");
-    // create an instance of Location
-    //location = new Location();
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-
-    // subscribe to changes in the user's location
-    // by "listening" to the location's onLocationChanged event
-    /*location.onLocationChanged.listen((LocationData cLoc) {
-      print("here");
-      // if (currentLocation != null) test = false;
-      currentLocation = cLoc;
-      // if (!test) {
-      context.read<PlaceProvider>().getPlace(
-          LatLng(currentLocation.latitude, currentLocation.longitude));
-      print("le cas false");
-      // }
-      if (procto != null) {
-        CameraPosition cPositionGo = CameraPosition(
-          zoom: zooming,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING,
-          target: LatLng(double.parse(procto.split(",")[0]),
-              double.parse(procto.split(",")[1])),
-        );
-        _goTo(cPositionGo);
-        context.read<UserProvider>().updatePosition(null);
-        procto = null;
-        test = false;
-      } else {
-        if (test) {
-          print("ici première fois");
-          // context.read<PlaceProvider>().getPlace(
-          //     LatLng(currentLocation.latitude, currentLocation.longitude));
-          CameraPosition cPosition = CameraPosition(
-            zoom: zooming,
-            tilt: CAMERA_TILT,
-            bearing: CAMERA_BEARING,
-            target: LatLng(currentLocation.latitude, currentLocation.longitude),
-          );
-          _goTo(cPosition);
-          test = false;
-          locationTmp =
-              gdsy.LatLng(currentLocation.latitude, currentLocation.longitude);
-        }
-      }
-      updatePinOnMap();
-      num distance = geodesy.distanceBetweenTwoGeoPoints(
-          gdsy.LatLng(currentLocation.latitude, currentLocation.longitude),
-          locationTmp);
-      print("la distance est de " + distance.toString());
-      if (distance >= 50) {
-        locationTmp =
-            gdsy.LatLng(currentLocation.latitude, currentLocation.longitude);
-        CameraPosition cPosition = CameraPosition(
-          zoom: zooming,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING,
-          target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        );
-        _goTo(cPosition);
-      }
-      setState(() {
-        mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,
-            LatLng(currentLocation.latitude, currentLocation.longitude));
-      });
-      if (mapanes.isNotEmpty) {
-        const duration = const Duration(seconds: 60);
-        if (_timer == null) {
-          vocallyNotifyMapane();
-          _timer = new Timer.periodic(duration, (Timer timer) {
-           vocallyNotifyMapane();
-          });
-        } else {
-          if (!_timer.isActive) {
-            _timer = new Timer.periodic(duration, (Timer timer) {
-              vocallyNotifyMapane();
-            });
-          }
-        }
-      } else {
-        if (_timer.isActive && _timer != null) _timer.cancel();
-      }
-      print(mapanes);
-    });*/
     Geolocator.getPositionStream().listen((Position position) {
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
@@ -384,10 +305,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         context.read<UserProvider>().updatePosition(null);
         locationTmp =
             gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
-        test = false;
+        testrop = false;
       } else {
-        if (test) {
-          print("ici première fois");
+        if (testrop) {
           // context.read<PlaceProvider>().getPlace(
           //     LatLng(currentLocation.latitude, currentLocation.longitude));
           CameraPosition cPosition = CameraPosition(
@@ -397,7 +317,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             target: LatLng(currentPosition.latitude, currentPosition.longitude),
           );
           _goTo(cPosition);
-          test = false;
+          testrop = false;
           locationTmp =
               gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
         }
@@ -441,6 +361,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       print(mapanes);
     });
+    //context.read<NetworkProvider>().init();
+    initTts();
+    manager = SocketIOManager();
+    initSocket("default");
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
@@ -485,8 +409,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       // if (context.read<UserProvider>().audioVal) {
       //   _speak(readText);
       // }
+      setState(() {
+        brikit.clear();
+      });
       if (context.read<UserProvider>().popupVal) {
-        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2]) {
+        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2] && data['alert']['category']['name'] != "S.O.S") {
           audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
           context
               .read<AlertProvider>()
@@ -972,7 +899,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer l'adresse",
+                                                hintText: "Entrer la position exacte",
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -1259,23 +1186,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await flutterTts.awaitSpeakCompletion(true);
         await flutterTts.speak(test);
         flutterTts.setCompletionHandler(() {
-          print("mbrakiti");
-          print(brikit);
-          // if (brikit.length > 0) {
-            brikit.asMap().forEach((index,element) {
-              if (index > 0) {
-                _speak(element);
-              }
-              if (index+1 == brikit.length) {
+          // Future.delayed(const Duration(milliseconds: 3500), () {
+            print("brikit total phrase");
+            print(brikit);
+            print(brikit.length);
+            if (brikit.length != 1) {
+              setState(() {
+                brikit.removeAt(0);
+                bolSpeaking = false;
+              });
+            }
+            // brikit.asMap().forEach((index,element) {
+              print(brikit);
+              // if (index > 0) {
+              if (!bolSpeaking) {
+                _speak(brikit.first);
                 setState(() {
-                  brikit.clear();
+                  brikit.removeAt(0);
                 });
               }
-            });
-          setState(() {
-            bolSpeaking = true;
-          });
-          // }
+              // }
+            // });
+          // });
         });
       }
     }
@@ -1309,7 +1241,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     controleMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.routebarreeMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5,size:Size.fromHeight(19)), Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
@@ -1356,7 +1288,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
-      print("lise des alertes " + r.length.toString());
+      print("liste des alertes " + r.length.toString());
       if (r.length > 0) {
         r.forEach((element) {
           Moment.setLocaleGlobally(new LocaleFr());
@@ -1370,7 +1302,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               icon: getAppropriateIcon(element.category.name),
               infoWindow: InfoWindow(
                   title: element.category.name,
-                  snippet: 'Alerte créee ' + moment.from(dateForComparison))));
+                  snippet: 'à '+element.address.split(',')[0]+', ' + moment.from(dateForComparison))));
           i++;
         });
       }
@@ -1885,7 +1817,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     textInputAction: TextInputAction.go,
                                     controller: _startPointController,
                                     style: TextStyle(fontSize: 17.0),
-                                    onSubmitted: (value) {
+                                    onChanged: (value) {
                                       print("resultat recehrcehe");
                                       print(value);
                                       context
@@ -2843,7 +2775,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer l'adresse",
+                                                hintText: "Entrer la position exacte",
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -2869,14 +2801,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       child: FlatButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          loaderPopup();
-                                          sendAlert(
-                                              "default",
-                                              customCategory,
-                                              address,
-                                              posted,
-                                              latlon,
-                                              customAddress);
+                                          // loaderPopup();
+                                          // sendAlert(
+                                          //     "default",
+                                          //     customCategory,
+                                          //     address,
+                                          //     posted,
+                                          //     latlon,
+                                          //     customAddress);
                                         },
                                         color: Color(0x162C306F),
                                         padding: EdgeInsets.fromLTRB(
