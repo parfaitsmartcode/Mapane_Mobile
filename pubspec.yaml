@@ -105,12 +105,8 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/markers/mapmarker/
-<<<<<<< HEAD
-    - assets/markers/
-=======
     - assets/markers/mapmarker/oldmarkers/
     - assets/images/new-icon-alerts/test/
->>>>>>> 274b1aff1d3e9d9104af281fb26c595ddcbab663
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
