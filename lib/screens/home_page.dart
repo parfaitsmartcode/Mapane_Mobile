@@ -1485,6 +1485,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     updateBottomPadding(context);
+    checkPermission();
     return SafeArea(
         bottom: false,
         child: Scaffold(
