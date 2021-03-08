@@ -1113,6 +1113,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (isAndroid) {
       _getEngines();
+      flutterTts.setQueueMode(1);
     }
 
     flutterTts.setStartHandler(() {
@@ -1484,6 +1485,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     updateBottomPadding(context);
+    checkPermission();
     return SafeArea(
         bottom: false,
         child: Scaffold(
@@ -2801,14 +2803,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       child: FlatButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          // loaderPopup();
-                                          // sendAlert(
-                                          //     "default",
-                                          //     customCategory,
-                                          //     address,
-                                          //     posted,
-                                          //     latlon,
-                                          //     customAddress);
                                         },
                                         color: Color(0x162C306F),
                                         padding: EdgeInsets.fromLTRB(
@@ -2840,8 +2834,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         loaderPopup();
-                                        sendAlert("default", customCategory, address,
-                                            posted, latlon, customAddress);
+                                          sendAlert(
+                                              "default",
+                                              customCategory,
+                                              address,
+                                              posted,
+                                              latlon,
+                                              customAddress == "" || customAddress == null ? "test" : customAddress);
                                       },
                                       textColor: Colors.white,
                                       color: Colors.transparent,
