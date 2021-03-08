@@ -104,6 +104,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/markers/
     - assets/markers/mapmarker/
     - assets/markers/mapmarker/oldmarkers/
     - assets/images/new-icon-alerts/test/

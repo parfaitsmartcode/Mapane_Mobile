@@ -285,7 +285,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
+        print("daz dzakcvx vcxopkpcvx vcxvk");
+        print(testrop);
     Geolocator.getPositionStream().listen((Position position) {
+        print("daz dzakcvx vcxopkpcvx vcxvk 2");
+        print(testrop);
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
@@ -341,6 +345,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _goTo(cPosition);
       }
       setState(() {
+        // brikit.clear();
         mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,
             LatLng(currentPosition.latitude, currentPosition.longitude));
       });
@@ -395,22 +400,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print("connected...");
       print(data);
     });
-    socket.onConnectError(manageLoader());
-    socket.onConnectTimeout(manageLoader());
-    socket.onError(manageLoader());
-    socket.onDisconnect(manageLoader());
-
+    socket.onConnectError(manageLoader(2));
+    socket.onConnectTimeout(manageLoader(2));
+    socket.onError(manageLoader(2));
+    socket.onDisconnect(manageLoader(2));
+    socket.connect();
+    sockets[identifier] = socket;
     socket.on("createAlertNo", (data) => print(data));
     socket.on("createAlertOk", (data) {
-      // var readText = '';
-      // if (data['alert']['category']['name'] == "Embouteillage" || data['alert']['category']['name'] == "Accident de circulation") {
-      //   readText = 'Possible alerte d\'' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
-      // } else {
-      //   readText = 'Possible alerte de ' + data['alert']['category']['name'] + ' signalée à ' + data['alert']['address'].split(',')[0];
-      // }
-      // if (context.read<UserProvider>().audioVal) {
-      //   _speak(readText);
-      // }
+      print("not connected but receive");
+      print(data);
       setState(() {
         brikit.clear();
       });
@@ -791,8 +790,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               });
       }
     });
-    socket.connect();
-    sockets[identifier] = socket;
+    
   }
 
   bool isProbablyConnected(String identifier) {
@@ -804,9 +802,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     setState(() => _isProbablyConnected[identifier] = false);
   }
 
-  manageLoader() {
-    // Navigator.pop(context);
-    setState(() => loadera = false);
+  manageLoader(data) {
+      print("not connected but receive disconnected");
+      print(data);
   }
 
   sendAlertPopup(category, address, posted, latlon) {
@@ -2164,7 +2162,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2226,7 +2224,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2288,7 +2286,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2350,7 +2348,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2424,7 +2422,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2488,7 +2486,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
@@ -2601,7 +2599,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                   .withOpacity(
                                                                       .5),
                                                               fontSize: getSize(
-                                                                  12,
+                                                                  11,
                                                                   "height",
                                                                   context)),
                                                         ),
