@@ -252,17 +252,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _initMapStyle();
-    }
-  }
-  
-  Future<void> _initMapStyle() async {
-    mapController.setMapStyle('[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
-  }
-
-  @override
   initState() {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
@@ -283,7 +272,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
+        print("daz dzakcvx vcxopkpcvx vcxvk");
+        print(testrop);
     Geolocator.getPositionStream().listen((Position position) {
+        print("daz dzakcvx vcxopkpcvx vcxvk 2");
+        print(testrop);
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
@@ -339,6 +332,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _goTo(cPosition);
       }
       setState(() {
+        brikit.clear();
         mapanes = nearbyPoints(context.read<AlertProvider>().countryAlerts,
             LatLng(currentPosition.latitude, currentPosition.longitude));
       });

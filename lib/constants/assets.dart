@@ -41,14 +41,14 @@ class Assets {
    static const String sosMarker2 = "assets/markers/mapmarker/oldmarkers/sos-2.png";
 
   
-  static const String embouteillageMarker3 = "assets/markers/traffic.png";
+  static const String embouteillageMarker3 = "assets/images/new-icon-alerts/test/embouteillage.png";
   static const String radarMarker3 = "assets/markers/radar2.png";
-  static const String accidentMarker3 = "assets/markers/car-accident.png";
+  static const String accidentMarker3 = "assets/images/new-icon-alerts/test/accident.png";
   static const String controleMarker3 = "assets/markers/police.png";
-  static const String routebarreeMarker3 = "assets/markers/road-block.png";
-  static const String routechantierMarker3 = "assets/markers/highway.png";
-  static const String dangerMarker3 = "assets/markers/danger.png";
-   static const String sosMarker3 = "assets/markers/mapmarker/sosmap.png";
+  static const String routebarreeMarker3 = "assets/images/new-icon-alerts/test/routebarree-copie.png";
+  static const String routechantierMarker3 = "assets/images/new-icon-alerts/test/chantier-copie.png";
+  static const String dangerMarker3 = "assets/images/new-icon-alerts/test/zone-dangereuse.png";
+   static const String sosMarker3 = "assets/images/new-icon-alerts/test/sos.png";
   static const String mapPin= "assets/icons/Map pin.svg";
 
 }
