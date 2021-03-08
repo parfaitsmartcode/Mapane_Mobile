@@ -255,6 +255,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _initMapStyle();
+      setState(() {
+      });
     }
   }
   
