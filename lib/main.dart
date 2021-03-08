@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
+import 'package:mapane/screens/test_screen.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/network_provider.dart';
