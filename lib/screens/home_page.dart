@@ -253,6 +253,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("app goes in background");
+    print(state);
+    if (state == AppLifecycleState.resumed) {
+     // _initMapStyle();
+      setState(() {});
+    }
+  }
+  
+  Future<void> _initMapStyle() async {
+    mapController.setMapStyle('[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
+  }
+
+  @override
   initState() {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
@@ -267,10 +281,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
-    context
+    /*context
         .read<UserProvider>()
         .getPositionVal()
-        .then((value) => procto = value);
+        .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
         print("daz dzakcvx vcxopkpcvx vcxvk");
@@ -286,17 +300,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print("le cas false");
       // }
       if (procto != null) {
-        print("Proctologie");
-        CameraPosition cPositionGo = CameraPosition(
-          zoom: zooming,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING,
-          target: LatLng(double.parse(procto.split(",")[0]),
-              double.parse(procto.split(",")[1])),
-        );
-        _goTo(cPositionGo);
-        procto = null;
-        context.read<UserProvider>().updatePosition(null);
         locationTmp =
             gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
         testrop = false;
@@ -1478,6 +1481,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     SizeConfig().init(context);
     updateBottomPadding(context);
     checkPermission();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
+          .read<UserProvider>()
+          .getPositionVal()
+          .then((value){
+        print("Proctologie");
+        print(value);
+        if(value != null) {
+          CameraPosition cPositionGo = CameraPosition(
+            zoom: zooming,
+            tilt: CAMERA_TILT,
+            bearing: CAMERA_BEARING,
+            target: LatLng(double.parse(value.split(",")[0]),
+                double.parse(value.split(",")[1])),
+          );
+          _goTo(cPositionGo);
+        }
+        context.read<UserProvider>().updatePosition(null);
+      });
+    });
     return SafeArea(
         bottom: false,
         child: Scaffold(

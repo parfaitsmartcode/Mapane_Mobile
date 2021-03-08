@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mapane/di.dart';
 import 'package:mapane/routes.dart';
+import 'package:mapane/service_locator.dart';
+import 'package:mapane/state/bottom_bar_provider.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -674,7 +677,9 @@ class AllAlerte extends StatelessWidget {
                 onTap: (){
                   var cPosition = alert.lat+","+alert.lon;
                   context.read<UserProvider>().updatePosition(cPosition);
-                  Navigator.of(context).pushNamed('/map');
+                  context.read<BottomBarProvider>().modifyIndex(1);
+                  //Navigator.of(context).pushNamed('/map');
+                  //DefaultTabController.of(context).animateTo(1);
                 },
                   title: Text(alert.category.name.capitalize(),
                       style: TextStyle(
@@ -903,7 +908,9 @@ class _AutreAlerteState extends State<AutreAlerte> {
                 onTap: (){
                   var cPosition = widget.alert.lat+","+widget.alert.lon;
                   context.read<UserProvider>().updatePosition(cPosition);
-                  Navigator.of(context).pushNamed('/map');
+                  //Navigator.of(context).pushNamed('/map');
+                 // DefaultBottomNavigationBar.of(context).animateTo(1);
+                  context.read<BottomBarProvider>().modifyIndex(1);
                 },
             title: Text(widget.alert.category.name.capitalize(),
                 style: TextStyle(
