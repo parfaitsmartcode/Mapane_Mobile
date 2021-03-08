@@ -495,6 +495,10 @@ class _MyAppState extends State<MonCompte> {
                                                                               ),
                                                                             );
                                                                           });
+                                                                          Future.delayed(const Duration(milliseconds: 2000), () {
+                                                                            Navigator.pop(context);
+                                                                            Navigator.pop(context);
+                                                                          });
                                                                     }).catchError(
                                                                             (onError) {
                                                                       showGeneralDialog(
@@ -582,6 +586,11 @@ class _MyAppState extends State<MonCompte> {
                                                                                 ),
                                                                               ),
                                                                             );
+                                                                          });
+                                                                    
+                                                                          Future.delayed(const Duration(milliseconds: 2000), () {
+                                                                            Navigator.pop(context);
+                                                                            Navigator.pop(context);
                                                                           });
                                                                     });
                                                                   },

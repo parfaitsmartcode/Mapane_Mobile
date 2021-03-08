@@ -391,10 +391,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       print("connected...");
       print(data);
     });
-    socket.onConnectError(manageLoader(2));
-    socket.onConnectTimeout(manageLoader(2));
-    socket.onError(manageLoader(2));
-    socket.onDisconnect(manageLoader(2));
+    socket.onConnectError(manageLoader());
+    socket.onConnectTimeout(manageLoader());
+    socket.onError(manageLoader());
+    socket.onDisconnect(manageLoader());
     socket.connect();
     sockets[identifier] = socket;
     socket.on("createAlertNo", (data) => print(data));
