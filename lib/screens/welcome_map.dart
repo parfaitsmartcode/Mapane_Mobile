@@ -758,16 +758,16 @@ class _MaterialModalState extends State<MaterialModal> {
               child: SizedBox(
                 width: getSize(54.35, "width", context),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 25),
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                   child: Divider(thickness: 4, color: Color(0x26000000)),
                 ),
               ),
             ),
             Padding(
               padding:
-                  EdgeInsets.fromLTRB(0, getSize(20, "height", context), 0, 0),
+                  EdgeInsets.fromLTRB(0, getSize(35, "height", context), 0, 0),
               child: Align(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 child: ListView(shrinkWrap: true, children: <Widget>[
                   // ListTile(
                   //     onTap: () {

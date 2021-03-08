@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AudioPlayer audioPlugin = AudioPlayer();
   String mp3Uri;
   String customAddress;
+  bool disconnect_loader_check = false;
   // ignore: avoid_init_to_null
   String procto = null;
   final _startPointController = TextEditingController();
@@ -789,9 +790,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     setState(() => _isProbablyConnected[identifier] = false);
   }
 
-  manageLoader(data) {
+  manageLoader() {
       print("not connected but receive disconnected");
-      print(data);
+      if(disconnect_loader_check){
+        Navigator.pop(context);
+      }
+      setState(() => disconnect_loader_check = false);
   }
 
   sendAlertPopup(category, address, posted, latlon) {
@@ -1039,6 +1043,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   loaderPopup() {
+    setState(() => disconnect_loader_check = true);
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
