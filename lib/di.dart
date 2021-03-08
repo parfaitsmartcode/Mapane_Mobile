@@ -9,5 +9,5 @@ class Di{
 
   final _navigatorKey = GlobalKey<NavigatorState>();
 
-
+  GlobalKey globalBottomNavigationKey = new GlobalKey(debugLabel: 'btm_app_bar');
 }

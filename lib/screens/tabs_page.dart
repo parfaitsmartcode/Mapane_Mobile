@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/custom/widgets/tab_navigation_item.dart';
+import 'package:mapane/di.dart';
+import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';
@@ -25,7 +27,7 @@ class _TabsPageState extends State<TabsPage> {
       child: Scaffold(
         extendBody: true,
         body: IndexedStack(
-          index: _currentIndex,
+          index: context.watch<BottomBarProvider>().currentIndex,
           children: [
             for (final tabItem in TabNavigationItem.items) tabItem.page,
           ],
@@ -34,9 +36,9 @@ class _TabsPageState extends State<TabsPage> {
           elevation: 0.0,
           backgroundColor: context.watch<BottomBarProvider>().bottomBarColor,
           type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
+          currentIndex: context.watch<BottomBarProvider>().currentIndex,
           onTap: (int index) {
-            setState(() => _currentIndex = index);
+            context.read<BottomBarProvider>().modifyIndex(index);
             if (index == 0) {
               context
                   .read<AlertProvider>()
@@ -48,7 +50,7 @@ class _TabsPageState extends State<TabsPage> {
             for (int i = 0; i < TabNavigationItem.items.length; i++)
               BottomNavigationBarItem(
                 icon: TabNavigationItem.items[i].icon,
-                title: _currentIndex == i
+                title: context.watch<BottomBarProvider>().currentIndex == i
                     ? TabNavigationItem.items[i].title
                     : Container(),
               )
