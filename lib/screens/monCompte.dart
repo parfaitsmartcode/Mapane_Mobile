@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import '../state/user_provider.dart';
@@ -160,9 +161,11 @@ class _MyAppState extends State<MonCompte> {
                             ),
                             GestureDetector(
                               onTap: (){
-                                Navigator.of(context).pushNamed('/map');
-                                // context.read<UserProvider>().testSocket();
-                                // return Popup(type: "error", msg: "test", image: AssetImage("assets/images/Background.png"),);
+                                Geolocator.getCurrentPosition().then((value) {
+                                  var cPosition = value.latitude.toString()+","+value.longitude.toString();
+                                  context.read<UserProvider>().updatePosition(cPosition);
+                                  context.read<BottomBarProvider>().modifyIndex(1);
+                                });
                               },
                               child: Container(
                                 decoration: BoxDecoration(

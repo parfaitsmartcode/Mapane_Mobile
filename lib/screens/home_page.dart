@@ -271,7 +271,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
-    //checkPermission();
     _determinePosition().then((position) => print(position == null
         ? 'Unknow'
         : position.latitude.toString() +
@@ -1486,8 +1485,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           .read<UserProvider>()
           .getPositionVal()
           .then((value){
-        print("Proctologie");
-        print(value);
         if(value != null) {
           CameraPosition cPositionGo = CameraPosition(
             zoom: zooming,
