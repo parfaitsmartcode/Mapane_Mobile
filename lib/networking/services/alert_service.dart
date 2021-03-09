@@ -14,6 +14,7 @@ class AlertService {
             uri,
             options: Options(headers: {"content-type": "application/json"}),
           );
+      //print(response.data["alerts"]);
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
@@ -33,6 +34,7 @@ class AlertService {
             options: Options(headers: {"content-type": "application/json"}),
           );
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
+      print(response.data);
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
