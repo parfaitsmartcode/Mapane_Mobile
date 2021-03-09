@@ -194,8 +194,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           (element - distance.round()).abs() < (value - distance.round()).abs()
               ? element
               : value);
-      print(distance);
-      print(result);
       var text = element.category.name +
           " à moins de " +
           result.round().toString() +
@@ -205,9 +203,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           brikit.add(text);
           bolSpeaking = true;
         });
-        print("brikit total phrase tyjty");
-        print(brikit);
-        print(brikit.length);
         if (brikit.length == 1) {
           await _speak(text);
         }
@@ -1461,6 +1456,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
 
         getAppropriateIcon(alert) {
+          print("le slug actuel");
           print(alert);
           switch (alert) {
             case "Embouteillage":
