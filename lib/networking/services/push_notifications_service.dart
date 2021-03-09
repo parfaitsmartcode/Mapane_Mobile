@@ -32,9 +32,13 @@ class PushNotificationService {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        String userId = "";
-        context.read<UserProvider>().getUserId().then((value) => userId = value);
-        context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),userId);
+        print("id de user");
+        // String userId = "";
+        context.read<UserProvider>().getUserId().then((value){
+          print(value);
+          context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),value);
+        });
+        // print(userId);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");

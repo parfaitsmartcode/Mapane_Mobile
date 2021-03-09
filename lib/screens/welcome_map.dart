@@ -669,9 +669,6 @@ class AllAlerte extends StatelessWidget {
     Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(alert.createdAt);
-    print('total alerte');
-    print(alert.category.slug);
-    print(alert.category.name_en);
     return type == alert.category.slug || type == "All"
         ? Column(
             mainAxisAlignment: MainAxisAlignment.start,
