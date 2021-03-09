@@ -1370,7 +1370,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     icon: getAppropriateIcon(element.category.slug),
                     infoWindow: InfoWindow(
                         title: context
-                            .watch<UserProvider>()
+                            .read<UserProvider>()
                             .languageVal ? element.category.name : element
                             .category.name_en,
                         snippet: Languages
