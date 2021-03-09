@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:connectivity/connectivity.dart';
+//import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:mapane/networking/dio_connectivity_reques_retrier.dart';
 

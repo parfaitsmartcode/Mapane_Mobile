@@ -1,23 +1,23 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
+//import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class DioConnectivityRequestRetrier {
   final Dio dio;
-  final Connectivity connectivity;
+  //final Connectivity connectivity;
 
   DioConnectivityRequestRetrier(
-      {@required this.dio, @required this.connectivity});
+      {@required this.dio, /*@required this.connectivity*/});
 
   Future<Response> scheduleRequestRetry(RequestOptions requestOptions) async {
-    StreamSubscription streamSubscription;
+    /*StreamSubscription streamSubscription;
     final responseCompleter = Completer<Response>();
     streamSubscription =
-        connectivity.onConnectivityChanged.listen((connectivityResult) {
-      if (connectivityResult != ConnectivityResult.none) {
-        streamSubscription.cancel();
+        //connectivity.onConnectivityChanged.listen((connectivityResult) {
+      //if (connectivityResult != ConnectivityResult.none) {
+        //streamSubscription.cancel();
         responseCompleter.complete(dio.request(requestOptions.path,
             cancelToken: requestOptions.cancelToken,
             data: requestOptions.data,
@@ -25,8 +25,8 @@ class DioConnectivityRequestRetrier {
             onSendProgress: requestOptions.onSendProgress,
             queryParameters: requestOptions.queryParameters,
             options: requestOptions));
-      }
+     // }
     });
-    return responseCompleter.future;
+    return responseCompleter.future;*/
   }
 }

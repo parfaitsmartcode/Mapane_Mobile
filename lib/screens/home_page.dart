@@ -175,24 +175,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
     mapanes.forEach((element) async {
       double distance = distanceBetweenTwoGeoPoints(
-          LatLng(currentLocation.latitude, currentLocation.longitude),
+          LatLng(currentPosition.latitude, currentPosition.longitude),
           LatLng(double.parse(element.lat), double.parse(element.lon)));
-      double perimeter = element.category.perimeter * 10000.0;
+      double perimeter = element.category.perimeter * 1000.0;
       List<int> subvalues = List<int>();
       print("avant découpage");
       print(perimeter);
-      while (perimeter >= 50) {
-        subvalues.add((perimeter - 50).round());
-        perimeter -= 50;
+      while (perimeter >= 50.0) {
+        subvalues.add((perimeter - 50.0).round());
+        perimeter -= 50.0;
+        print(perimeter);
       }
       print("valeurs subdivisées");
-      var greater = subvalues.where((e) => e >= distance.round()).toList()
-        ..sort();
-      greater.remove(0);
-      print(greater);
+      subvalues.sort();
+      subvalues.remove(0);
+      print(subvalues);
+      var result = subvalues.reduce((value, element) =>
+          (element - distance.round()).abs() < (value - distance.round()).abs()
+              ? element
+              : value);
+      print(distance);
+      print(result);
       var text = element.category.name +
           " à moins de " +
-          greater.first.toString() +
+          result.round().toString() +
           " mètres de votre position";
       if (context.read<UserProvider>().audioVal) {
         setState(() {
@@ -264,14 +270,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print("app goes in background");
     print(state);
     if (state == AppLifecycleState.resumed) {
-      // _initMapStyle();
       setState(() {});
+       _initMapStyle();
     }
   }
 
   Future<void> _initMapStyle() async {
-    mapController.setMapStyle(
-        '[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
+    final GoogleMapController mapController = await _controller.future;
+    mapController.setMapStyle(null);
   }
 
   @override
@@ -284,6 +290,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         : position.latitude.toString() +
             " , " +
             position.longitude.toString()));
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     context.read<UserProvider>().getLangVal();
     context.read<AlertProvider>().getAlertList(false, addresse);
@@ -1262,10 +1269,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           // });
           // });
         });
-      }
-    }
-  }
-
   Future _stop() async {
     var result = await flutterTts.stop();
     if (result == 1) setState(() => ttsState = TtsState.stopped);
@@ -1278,6 +1281,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     flutterTts.stop();
   }

@@ -1,8 +1,15 @@
 PODS:
-  - connectivity (0.0.1):
+  - adhara_socket_io (0.0.1):
     - Flutter
-    - Reachability
+    - Socket.IO-Client-Swift
+    - Starscream
+  - audioplayer (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_tts (0.0.1):
+    - Flutter
+  - geolocator (6.2.0):
+    - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
     - GoogleMaps (< 3.10)
@@ -17,22 +24,30 @@ PODS:
   - libPhoneNumber-iOS (0.9.15)
   - location (0.0.1):
     - Flutter
+  - path_provider (0.0.1):
+    - Flutter
   - "permission_handler (5.0.1+1)":
     - Flutter
   - phone_number (0.8.0):
     - Flutter
     - PhoneNumberKit/PhoneNumberKitCore (= 3.3.1)
   - PhoneNumberKit/PhoneNumberKitCore (3.3.1)
-  - Reachability (3.2)
   - shared_preferences (0.0.1):
     - Flutter
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
 
 DEPENDENCIES:
-  - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - adhara_socket_io (from `.symlinks/plugins/adhara_socket_io/ios`)
+  - audioplayer (from `.symlinks/plugins/audioplayer/ios`)
   - Flutter (from `Flutter`)
+  - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - phone_number (from `.symlinks/plugins/phone_number/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -42,19 +57,28 @@ SPEC REPOS:
     - GoogleMaps
     - libPhoneNumber-iOS
     - PhoneNumberKit
-    - Reachability
+    - Socket.IO-Client-Swift
+    - Starscream
 
 EXTERNAL SOURCES:
-  connectivity:
-    :path: ".symlinks/plugins/connectivity/ios"
+  adhara_socket_io:
+    :path: ".symlinks/plugins/adhara_socket_io/ios"
+  audioplayer:
+    :path: ".symlinks/plugins/audioplayer/ios"
   Flutter:
     :path: Flutter
+  flutter_tts:
+    :path: ".symlinks/plugins/flutter_tts/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
   libphonenumber:
     :path: ".symlinks/plugins/libphonenumber/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
   phone_number:
@@ -63,18 +87,23 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
-  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
+  adhara_socket_io: a2f8b3079a0de70a1a3f5080a8429a4fb7ae9bea
+  audioplayer: 0584f31a697e4b0bbad405ae7903d7a93585e784
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
+  geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   GoogleMaps: 4b5346bddfe6911bb89155d43c903020170523ac
   libphonenumber: bd14d5abfc5939ab0b0767234e2d8e2593af258e
   libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   phone_number: 0c59d1ce0ceaf822e4507d9b60b2300754e8633e
   PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
-  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
