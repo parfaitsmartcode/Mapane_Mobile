@@ -10,6 +10,10 @@ import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/utils/hexcolor.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
+import 'package:mapane/state/user_provider.dart';
 
 class NotificationMapane extends StatefulWidget {
   final double CAMERA_ZOOM;
@@ -31,27 +35,32 @@ class _NotificationMapaneState extends State<NotificationMapane>
     "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserProvider>().getLangVal();
+  }
   getAppropriateIcon(alert){
     switch (alert) {
       case "Embouteillage":
         return Assets.embouteillageMarker3;
         break;
-      case "Route en chantier":
+      case "Route-en-chantier":
         return Assets.routechantierMarker3;
         break;
-      case "Route barrée":
+      case "Route-barree":
         return Assets.routebarreeMarker3;
         break;
-      case "Controle routier":
+      case "Controle-routier":
         return Assets.controleMarker3;
         break;
-      case "Zone dangereuse":
+      case "Zone-dangereuse":
         return Assets.dangerMarker3;
         break;
       case "Radar":
         return Assets.radarMarker3;
         break;
-      case "Accident de circulation":
+      case "Accident-de-circulation":
         return Assets.accidentMarker3;
         break;
       case "S.O.S":
@@ -66,7 +75,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
   Widget build(BuildContext context) {
     CardController controller = CardController(); //Use this to trigger swap.
     SizeConfig().init(context);
-    Moment.setLocaleGlobally(new LocaleFr());
+    Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     print(context.watch<AlertProvider>().notifications[0].lat);
     var moment = Moment.now();
     return  Container(
@@ -129,7 +138,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                             color: HexColor("#ffffff"),
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          child: Image.asset(getAppropriateIcon(context.watch<AlertProvider>().notifications[index].category.name),height:getSize(35, "height", context),width: getSize(35, "width", context)),
+                          child: Image.asset(getAppropriateIcon(context.watch<AlertProvider>().notifications[index].category.slug),height:getSize(35, "height", context),width: getSize(35, "width", context)),
                         ),
                       ),
                     ),
@@ -145,7 +154,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                       Text(
-                        context.watch<AlertProvider>().notifications[index].category.name,
+                        context.watch<UserProvider>().languageVal ? context.watch<AlertProvider>().notifications[index].category.name : context.watch<AlertProvider>().notifications[index].category.name_en,
 
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
@@ -210,7 +219,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                                     context.read<AlertProvider>().popAllNotifications();
                                   },
                                   child: Text(
-                                    "Localiser",
+                                    Languages.of(context).localiser,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: getSize(12, "height", context),
@@ -227,7 +236,7 @@ class _NotificationMapaneState extends State<NotificationMapane>
                                 onPressed: (){
                                   context.read<AlertProvider>().popAllNotifications();
                                 },
-                                child: Text("Tout fermer",
+                                child: Text(Languages.of(context).closeall,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: getSize(12, "height", context),

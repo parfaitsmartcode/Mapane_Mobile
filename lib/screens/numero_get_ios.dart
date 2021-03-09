@@ -7,8 +7,12 @@ import 'package:mapane/routes.dart';
 import '../utils/size_config.dart';
 import '../utils/theme_mapane.dart';
 import 'dart:async';
+import 'package:provider/provider.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
+import '../state/user_provider.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -44,6 +48,7 @@ class _MyAppState extends State<NumeroGetIos> {
   @override
   void initState() {
     super.initState();
+    context.read<UserProvider>().getLangVal();
   }
 
   @override
@@ -71,7 +76,7 @@ class _MyAppState extends State<NumeroGetIos> {
                 height: 0.01529 * deviceSize.height,
               ),
               Text(
-                "Sélectionner un numéro",
+                Languages.of(context).selectnumber,
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 18,
@@ -98,7 +103,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                       child: ListTile(
                                         title: Align(
                                           child: Text(
-                                            'Veuillez entrer une SIM',
+                                            Languages.of(context).entersim,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 20,
@@ -220,7 +225,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                                         21, "height", context),
                                                   ),
                                                   Text(
-                                                    "Sauvegardé",
+                                                    Languages.of(context).saved,
                                                     style: AppTheme
                                                         .defaultParagraph,
                                                   ),
@@ -232,7 +237,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                                     width: getSize(
                                                         220, "width", context),
                                                     child: Text(
-                                                      value,
+                                                      value == "Ce compte existe déjà !" ? Languages.of(context).compteexiste : Languages.of(context).inscrisok,
                                                       style: AppTheme.bodyText1
                                                           .copyWith(
                                                         color: AppColors
@@ -345,7 +350,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                                         21, "height", context),
                                                   ),
                                                   Text(
-                                                    "Erreur",
+                                                    Languages.of(context).error,
                                                     style: AppTheme
                                                         .defaultParagraph,
                                                   ),
@@ -361,7 +366,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                                                   null ||
                                                               onError.response ==
                                                                   ""
-                                                          ? 'Une erreur est survenue, verifier votre connexion.'
+                                                          ? Languages.of(context).errormsg
                                                           : onError.response
                                                               .data["message"],
                                                       style: AppTheme.bodyText1
@@ -421,7 +426,7 @@ class _MyAppState extends State<NumeroGetIos> {
                                       ),
                                     )
                                   : Row(),
-                              Text('Continuer', style: TextStyle(fontSize: 18)),
+                              Text(Languages.of(context).continuer, style: TextStyle(fontSize: 18)),
                             ],
                           )),
                         ),
@@ -434,8 +439,41 @@ class _MyAppState extends State<NumeroGetIos> {
             bottom: 21,
             child: Column(
               children: [
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        changeLanguage(context,"fr");
+                        context.read<UserProvider>().changeLanguage(true);
+                      },
+                      child: Text(
+                        "Fr   |",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: Colors.black),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: (){
+                        changeLanguage(context,"en");
+                        context.read<UserProvider>().changeLanguage(false);
+                      },
+                      child: Text(
+                        "   En",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: Colors.black),
+                      ),
+                    ),
+                  ]
+                ), 
+                SizedBox(
+                  height: 0.01177 * deviceSize.height,
+                ), 
                 Text(
-                  "Informations légales",
+                  Languages.of(context).infolegale,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 15,

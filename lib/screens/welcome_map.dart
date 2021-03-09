@@ -19,6 +19,9 @@ import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:mapane/screens/tabs_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
@@ -84,7 +87,7 @@ class _MyAppState extends State<WelcomeMap> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Mon historique",
+                              Languages.of(context).historique,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline1
@@ -163,27 +166,27 @@ class _MyAppState extends State<WelcomeMap> {
                                   width: getSize(56, "width", context),
                                   height: getSize(27, "height", context),
                                   child: Tab(
-                                    text: "Tout",
+                                    text: Languages.of(context).all,
                                   ),
                                 ),
                                 Container(
                                   width: getSize(100, "width", context),
                                   height: getSize(27, "height", context),
                                   child: Tab(
-                                    text: "Embouteillages",
+                                    text: Languages.of(context).embou,
                                   ),
                                 ),
                                 Container(
                                   height: getSize(27, "height", context),
                                   child: Tab(
-                                    text: "Route barrée",
+                                    text: Languages.of(context).routebarre,
                                   ),
                                 ),
                                 Container(
                                   width: getSize(56, "width", context),
                                   height: getSize(27, "height", context),
                                   child: Tab(
-                                    text: "Autres",
+                                    text: Languages.of(context).autre,
                                   ),
                                 ),
                               ]),
@@ -227,7 +230,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                     ? Column(
                                                         children: [
                                                           Text(
-                                                              "Aucune alerte faites pour le moment.")
+                                                              Languages.of(context).noalert)
                                                         ],
                                                       )
                                                     : ListView.builder(
@@ -292,13 +295,12 @@ class _MyAppState extends State<WelcomeMap> {
                                                     ? Column(
                                                         children: [
                                                           Text(
-                                                              "Aucune alerte faites pour le moment.")
+                                                              Languages.of(context).noalert)
                                                         ],
                                                       )
                                                     : alertListHisto
                                                                 .where((i) =>
-                                                                    i.category
-                                                                        .name ==
+                                                                    i.category.slug ==
                                                                     "Embouteillage")
                                                                 .toList()
                                                                 .length >
@@ -326,7 +328,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                           )
                                                         : Center(
                                                             child: Text(
-                                                                'Aucune alerte créee dans cette catégorie pour le moment',
+                                                                Languages.of(context).noalert,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center));
@@ -367,14 +369,13 @@ class _MyAppState extends State<WelcomeMap> {
                                                     ? Column(
                                                         children: [
                                                           Text(
-                                                              "Aucune alerte faites pour le moment.")
+                                                              Languages.of(context).noalert)
                                                         ],
                                                       )
                                                     : alertListHisto
                                                                 .where((i) =>
-                                                                    i.category
-                                                                        .name ==
-                                                                    "Route barrée")
+                                                                    i.category.slug ==
+                                                                    "Route-barree")
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -394,12 +395,12 @@ class _MyAppState extends State<WelcomeMap> {
                                                               return AllAlerte(
                                                                   alert: alert,
                                                                   type:
-                                                                      "Route barrée");
+                                                                      "Route-barree");
                                                             },
                                                           )
                                                         : Center(
                                                             child: Text(
-                                                                'Aucune alerte créee dans cette catégorie pour le moment',
+                                                                Languages.of(context).noalert,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center));
@@ -665,10 +666,13 @@ class AllAlerte extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Moment.setLocaleGlobally(new LocaleFr());
+    Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(alert.createdAt);
-    return type == alert.category.name || type == "All"
+    print('total alerte');
+    print(alert.category.slug);
+    print(alert.category.name_en);
+    return type == alert.category.slug || type == "All"
         ? Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -681,7 +685,7 @@ class AllAlerte extends StatelessWidget {
                   //Navigator.of(context).pushNamed('/map');
                   //DefaultTabController.of(context).animateTo(1);
                 },
-                  title: Text(alert.category.name.capitalize(),
+                  title: Text(context.watch<UserProvider>().languageVal ? alert.category.name.capitalize() : alert.category.name_en.capitalize(),
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 20,
@@ -696,7 +700,7 @@ class AllAlerte extends StatelessWidget {
                           width: getSize(200, "width", context),
                           child: Text(
                               alert.address == '' || alert.address == null
-                                  ? 'Adresse Inconnue'
+                                  ? Languages.of(context).addressunknown
                                   : alert.address,
                               maxLines: 2,
                               softWrap: true,
@@ -795,13 +799,13 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Zone dangereuse", 2);
+                            .getAlertByUserCat("Zone-dangereuse", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/zone-dangereuse.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
-                      title: Text('Zone dangereuse',
+                      title: Text(Languages.of(context).zonedanger,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
@@ -811,13 +815,13 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Accident de circulation", 2);
+                            .getAlertByUserCat("Accident-de-circulation", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/accident.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
-                      title: Text('Accident de circulation',
+                      title: Text(Languages.of(context).accidentdecircu,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
@@ -827,13 +831,13 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Route en chantier", 2);
+                            .getAlertByUserCat("Route-en-chantier", 2);
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/chantier-copie.png',
                           height: getSize(24, "height", context),
                           width: getSize(24, "width", context)),
-                      title: Text('Route en chantier',
+                      title: Text(Languages.of(context).routechantier,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
@@ -877,11 +881,6 @@ class AutreAlerte extends StatefulWidget {
 class _AutreAlerteState extends State<AutreAlerte> {
   void initState() {
     super.initState();
-    print("heyvro");
-    print(widget.index);
-    print(context.read<UserProvider>().tabcheck);
-    print(widget.alertes);
-    print(widget.alertes.isEmpty);
     WidgetsBinding.instance.addPostFrameCallback((_) => widget.index == 0
         ? context.read<UserProvider>().tabcheck
             ? showMaterialModalBottomSheet(
@@ -897,7 +896,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
 
   @override
   Widget build(BuildContext context) {
-    Moment.setLocaleGlobally(new LocaleFr());
+    Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(widget.alert.createdAt);
     return Column(
@@ -912,7 +911,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
                  // DefaultBottomNavigationBar.of(context).animateTo(1);
                   context.read<BottomBarProvider>().modifyIndex(1);
                 },
-            title: Text(widget.alert.category.name.capitalize(),
+            title: Text(context.watch<UserProvider>().languageVal ? widget.alert.category.name.capitalize() : widget.alert.category.name_en.capitalize(),
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: getSize(20, "height", context),
@@ -928,7 +927,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
                     child: Text(
                         widget.alert.address == '' ||
                                 widget.alert.address == null
-                            ? 'Adresse Inconnue'
+                            ? Languages.of(context).addressunknown
                             : widget.alert.address,
                         maxLines: 2,
                         softWrap: true,
@@ -969,6 +968,7 @@ class AutreAlerteVide extends StatefulWidget {
 class _AutreAlerteVideState extends State<AutreAlerteVide> {
   void initState() {
     super.initState();
+    context.read<UserProvider>().getLangVal();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => showMaterialModalBottomSheet(
               expand: false,
@@ -982,7 +982,7 @@ class _AutreAlerteVideState extends State<AutreAlerteVide> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Text('Aucune alerte créee dans cette catégorie pour le moment.',
+        child: Text(Languages.of(context).noalert,
             textAlign: TextAlign.center));
   }
 }

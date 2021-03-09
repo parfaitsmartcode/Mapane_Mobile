@@ -13,6 +13,9 @@ import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/place_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'localization/locale_constant.dart';
+import 'localization/localizations_delegate.dart';
 
 
 void main() {
@@ -35,7 +38,34 @@ void main() {
   });
 
 }
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  static void setLocale(BuildContext context, Locale newLocale) {
+    var state = context.findAncestorStateOfType<_MyAppState>();
+    state.setLocale(newLocale);
+  }
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale;
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void didChangeDependencies() async {
+    getLocale().then((locale) {
+      setState(() {
+        _locale = locale;
+      });
+    });
+    super.didChangeDependencies();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -47,6 +77,26 @@ class MyApp extends StatelessWidget {
       routes: Routes.routes,
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
+      locale: _locale,
+      supportedLocales: [
+        Locale('fr', ''),
+        Locale('en', ''),
+      ],
+      localizationsDelegates: [
+        AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale?.languageCode == locale?.languageCode &&
+              supportedLocale?.countryCode == locale?.countryCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales?.first;
+      },
     );
   }
 }

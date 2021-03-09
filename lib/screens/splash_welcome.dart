@@ -5,6 +5,8 @@ import 'dart:async';
 import 'dart:core';
 import 'welcome_map.dart';
 import 'package:mapane/screens/tabs_page.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
 
 class SplashWelcome extends StatefulWidget {
   @override
@@ -38,7 +40,7 @@ class _SplashWelcomeState extends State<SplashWelcome> {
                     Center(
                       child: Column(
                         children: [
-                          Text('Bienvenue sur Mapane',
+                          Text(Languages.of(context).welcomemapane,
                               style: TextStyle(
                                 fontSize: 26.0,
                                 fontFamily: 'Robotto',
@@ -50,7 +52,7 @@ class _SplashWelcomeState extends State<SplashWelcome> {
                           SizedBox(
                             width: 212,
                             child: Text(
-                                'Votre application d\'aide au déplacement urbain',
+                                Languages.of(context).mapanepresentation,
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 softWrap: true,
@@ -378,7 +380,7 @@ class _SplashScreen21State extends State<SplashScreen21> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Informations légales",
+                  Languages.of(context).infolegale,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 15,

@@ -10,6 +10,9 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -80,7 +83,7 @@ class _MyAppState extends State<Settings> {
                                                 getSize(5, "width", context),
                                             vertical: 0),
                                         child: Text(
-                                          'Paramètres',
+                                          Languages.of(context).setting,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 20,
@@ -110,7 +113,7 @@ class _MyAppState extends State<Settings> {
                                             Container(
                                               // width: getSize(160, "width", context),
                                               child: Text(
-                                                'Notifications audio',
+                                                Languages.of(context).notifaudio,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: getSize(
@@ -169,7 +172,7 @@ class _MyAppState extends State<Settings> {
                                             Container(
                                               // width: getSize(160, "width", context),
                                               child: Text(
-                                                'Afficher notifications',
+                                                Languages.of(context).displaynotif,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: getSize(
@@ -231,7 +234,7 @@ class _MyAppState extends State<Settings> {
                                               Container(
                                                 // width: getSize(160, "width", context),
                                                 child: Text(
-                                                  'Mode non connecté',
+                                                  Languages.of(context).modenoncote,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
@@ -289,7 +292,7 @@ class _MyAppState extends State<Settings> {
                                       Container(
                                         width: getSize(174, "width", context),
                                         child: Text(
-                                          'Termes et conditions',
+                                          Languages.of(context).termandcond,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: getSize(
@@ -314,7 +317,7 @@ class _MyAppState extends State<Settings> {
                                       Container(
                                         width: getSize(174, "width", context),
                                         child: Text(
-                                          'A Propos',
+                                          Languages.of(context).apropos,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: getSize(
@@ -339,7 +342,7 @@ class _MyAppState extends State<Settings> {
                                       Container(
                                         width: getSize(174, "width", context),
                                         child: Text(
-                                          'Aide',
+                                          Languages.of(context).aide,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: getSize(

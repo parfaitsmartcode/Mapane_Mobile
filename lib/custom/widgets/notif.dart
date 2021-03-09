@@ -6,6 +6,10 @@ import 'package:mapane/models/alert.dart';
 import 'package:mapane/constants/assets.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
+import 'package:mapane/state/user_provider.dart';
 
 class Notif extends StatefulWidget {
   final Function onClose;
@@ -24,22 +28,22 @@ class _NotifState extends State<Notif> {
       case "Embouteillage":
         return Assets.embouteillageMarker3;
         break;
-      case "Route en chantier":
+      case "Route-en-chantier":
         return Assets.routechantierMarker3;
         break;
-      case "Route barrée":
+      case "Route-barree":
         return Assets.routebarreeMarker3;
         break;
-      case "Controle routier":
+      case "Controle-routier":
         return Assets.controleMarker3;
         break;
-      case "Zone dangereuse":
+      case "Zone-dangereuse":
         return Assets.dangerMarker3;
         break;
       case "Radar":
         return Assets.radarMarker3;
         break;
-      case "Accident de circulation":
+      case "Accident-de-circulation":
         return Assets.accidentMarker3;
         break;
       case "S.O.S":
@@ -51,9 +55,15 @@ class _NotifState extends State<Notif> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<UserProvider>().getLangVal();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    Moment.setLocaleGlobally(new LocaleFr());
+    SizeConfig().init(context);    
+    Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
 
     return Container(
@@ -105,7 +115,7 @@ class _NotifState extends State<Notif> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         child: Image.asset(
-                            getAppropriateIcon(widget.alert.category.name),
+                            getAppropriateIcon(widget.alert.category.slug),
                             height: getSize(35, "height", context),
                             width: getSize(35, "width", context)),
                       ),
@@ -121,7 +131,7 @@ class _NotifState extends State<Notif> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.alert.category.name,
+                            context.watch<UserProvider>().languageVal ? widget.alert.category.name : widget.alert.category.name_en,
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.white),
                             overflow: TextOverflow.clip,
@@ -179,7 +189,7 @@ class _NotifState extends State<Notif> {
                               child: FlatButton(
                                 onPressed: widget.move,
                                 child: Text(
-                                  "Localiser",
+                                  Languages.of(context).localiser,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: getSize(12, "height", context),
@@ -196,7 +206,7 @@ class _NotifState extends State<Notif> {
                               onPressed: (){
                                   context.read<AlertProvider>().popAllNotifications();
                               },
-                              child: Text("Tout fermer",
+                              child: Text(Languages.of(context).closeall,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize:

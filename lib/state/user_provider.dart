@@ -31,6 +31,7 @@ class UserProvider extends BaseProvider{
   bool tabcheck;
   bool checkifmodal;
   String cPositionGo;
+  bool languageVal;
   final TextEditingController domicilecontroller = TextEditingController();
 
   UserProvider(){
@@ -49,6 +50,7 @@ class UserProvider extends BaseProvider{
       this.checkifmodal = false;
       this.popupVal = true;
       this.cPositionGo = null;
+      this.languageVal = true;
       // this.first_time = true;
   }
 
@@ -62,6 +64,12 @@ class UserProvider extends BaseProvider{
     popupVal = test;
     notifyListeners();
     storePopupNotification(test);
+  }
+
+  changeLanguage(test){
+    languageVal = test;
+    notifyListeners();
+    storeLang(test);
   }
 
   modifyConnectParam(test){
@@ -110,6 +118,16 @@ class UserProvider extends BaseProvider{
       popupVal = true;
     }
     return popupVal;
+  }
+
+  getLangVal() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    languageVal = await _preferences.get('lang');
+    if(languageVal == null){
+      storeLang(true);
+      languageVal = true;
+    }
+    return languageVal;
   }
 
   getAudioVal() async {
@@ -238,6 +256,12 @@ class UserProvider extends BaseProvider{
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
         .storeData("connectMode", connectMode,"bool");
+  }
+
+  storeLang(connectMode){
+    Future<SharedPreferences> instance = SharedPreferences.getInstance();
+    SharedPreferenceHelper(instance)
+        .storeData("lang", connectMode,"bool");
   }
 
   storePositionMode(connectMode){

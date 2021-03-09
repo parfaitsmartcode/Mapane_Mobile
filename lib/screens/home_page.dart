@@ -40,6 +40,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:audioplayer/audioplayer.dart';
+import 'package:mapane/networking/services/alert_service.dart';
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -177,33 +181,36 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       List<int> subvalues = List<int>();
       print("avant découpage");
       print(perimeter);
-      while(perimeter >= 50){
+      while (perimeter >= 50) {
         subvalues.add((perimeter - 50).round());
         perimeter -= 50;
       }
       print("valeurs subdivisées");
-      var greater = subvalues.where((e) => e >= distance.round()).toList()..sort();
+      var greater = subvalues.where((e) => e >= distance.round()).toList()
+        ..sort();
       greater.remove(0);
       print(greater);
-        var text =
-            element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
-        if (context.read<UserProvider>().audioVal){
-          setState(() {
-            brikit.add(text);
-            bolSpeaking = true;
-          });
-            print("brikit total phrase tyjty");
-            print(brikit);
-            print(brikit.length);
-          if (brikit.length == 1) {
-            await _speak(text);
-          }
+      var text = element.category.name +
+          " à moins de " +
+          greater.first.toString() +
+          " mètres de votre position";
+      if (context.read<UserProvider>().audioVal) {
+        setState(() {
+          brikit.add(text);
+          bolSpeaking = true;
+        });
+        print("brikit total phrase tyjty");
+        print(brikit);
+        print(brikit.length);
+        if (brikit.length == 1) {
+          await _speak(text);
         }
-          // }else{
-          //   // if (brikit.length == 1) {
-          //     await _speak(text);
-          //   // }
-          // }
+      }
+      // }else{
+      //   // if (brikit.length == 1) {
+      //     await _speak(text);
+      //   // }
+      // }
     });
   }
 
@@ -257,13 +264,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print("app goes in background");
     print(state);
     if (state == AppLifecycleState.resumed) {
-     // _initMapStyle();
+      // _initMapStyle();
       setState(() {});
     }
   }
-  
+
   Future<void> _initMapStyle() async {
-    mapController.setMapStyle('[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
+    mapController.setMapStyle(
+        '[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
   }
 
   @override
@@ -277,6 +285,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             " , " +
             position.longitude.toString()));
     super.initState();
+    context.read<UserProvider>().getLangVal();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
@@ -286,11 +295,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-        print("daz dzakcvx vcxopkpcvx vcxvk");
-        print(testrop);
+    print("daz dzakcvx vcxopkpcvx vcxvk");
+    print(testrop);
     Geolocator.getPositionStream().listen((Position position) {
-        print("daz dzakcvx vcxopkpcvx vcxvk 2");
-        print(testrop);
+      print("daz dzakcvx vcxopkpcvx vcxvk 2");
+      print(testrop);
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
@@ -360,8 +369,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
     //context.read<NetworkProvider>().init();
     initTts();
-    manager = SocketIOManager();
-    initSocket("default");
+    // manager = SocketIOManager();
+    // initSocket("default");
     // set custom marker pins
     setSourceAndDestinationIcons();
     // set the initial location
@@ -370,418 +379,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  initSocket(String identifier) async {
-    setState(() => _isProbablyConnected[identifier] = true);
-    SocketIO socket = await manager.createInstance(SocketOptions(
-        //Socket IO server URI
-        URI,
-        nameSpace: (identifier == "namespaced") ? "/adhara" : "/",
-        //Query params - can be used for authentication
-        query: {
-          "auth": "--SOME AUTH STRING---",
-          "info": "new connection from adhara-socketio",
-          "timestamp": DateTime.now().toString()
-        },
-        //Enable or disable platform channel logging
-        enableLogging: false,
-        transports: [Transports.POLLING] //Enable required transport
-        ));
-    socket.onConnect((data) {
-      print("connected...");
-      print(data);
-    });
-    socket.onConnectError(manageLoader());
-    socket.onConnectTimeout(manageLoader());
-    socket.onError(manageLoader());
-    socket.onDisconnect(manageLoader());
-    socket.connect();
-    sockets[identifier] = socket;
-    socket.on("createAlertNo", (data) => print(data));
-    socket.on("createAlertOk", (data) {
-      print("not connected but receive");
-      print(data);
-      setState(() {
-        brikit.clear();
-      });
-      if (context.read<UserProvider>().popupVal) {
-        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2] && data['alert']['category']['name'] != "S.O.S") {
-          audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
-          context
-              .read<AlertProvider>()
-              .pushNotification(Alert.fromJson(data['alert']));
-        }
-      }
-      context.read<AlertProvider>().getAlertList(false, addresse);
-    });
-    socket.on("createAlertOkUser", (data) {
-      Navigator.pop(context);
-      setState(() => loadera = false);
-      context.read<AlertProvider>().getAlertList(false, addresse);
-      //sample event
-      print("createAlertOkUser");
-      print(data);
-      if (data.containsKey('message')) {
-        if (data['id'] == userId) {
-          if (data['message'] == "alerte inactive") {
-            showGeneralDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel:
-                    MaterialLocalizations.of(context).modalBarrierDismissLabel,
-                barrierColor: AppColors.whiteColor.withOpacity(0.96),
-                transitionDuration: const Duration(milliseconds: 200),
-                pageBuilder: (BuildContext buildContext, Animation animation,
-                    Animation secondaryAnimation) {
-                  return Center(
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: getSize(303, "width", context),
-                            // height: getSize(256, "height", context),
-                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                  getSize(20, "height", context)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF000000).withOpacity(0.11),
-                                  spreadRadius: 5,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 5), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: getSize(33, "height", context),
-                                  horizontal: getSize(28, "width", context)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: getSize(100, "height", context),
-                                    height: getSize(100, "height", context),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: getSize(0, "height", context),
-                                        horizontal:
-                                            getSize(0, "width", context)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: AppColors.greenColor
-                                          .withOpacity(0.35),
-                                    ),
-                                    child: Stack(
-                                      overflow: Overflow.visible,
-                                      children: <Widget>[
-                                        Positioned(
-                                          child: Center(
-                                              child: Image.asset(
-                                            'assets/images/Map pin-3.png',
-                                            height: getSize(
-                                                45.6, "height", context),
-                                            width: getSize(
-                                                37.77, "width", context),
-                                          )),
-                                        ),
-                                        Positioned(
-                                          left: getSize(60, "width", context),
-                                          top: getSize(61, "height", context),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: getSize(
-                                                    9, "width", context),
-                                                horizontal: getSize(
-                                                    9, "height", context)),
-                                            child: SizedBox(
-                                              width: getSize(
-                                                  31, "height", context),
-                                              height: getSize(
-                                                  31, "height", context),
-                                              child: Card(
-                                                elevation: 2.5,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                100))),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    size: getSize(
-                                                        9, "height", context),
-                                                    color: AppColors.greenColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: getSize(21, "height", context),
-                                  ),
-                                  Text(
-                                    "Alerte envoyé",
-                                    style: AppTheme.defaultParagraph,
-                                  ),
-                                  SizedBox(
-                                    height: getSize(12, "height", context),
-                                  ),
-                                  Container(
-                                    width: getSize(220, "width", context),
-                                    child: Text(
-                                      "Une alerte de ce type a déjà été créee dans votre zone, Merci.",
-                                      style: AppTheme.bodyText1.copyWith(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.5),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          } else {
-            showGeneralDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel:
-                    MaterialLocalizations.of(context).modalBarrierDismissLabel,
-                barrierColor: AppColors.whiteColor.withOpacity(0.96),
-                transitionDuration: const Duration(milliseconds: 200),
-                pageBuilder: (BuildContext buildContext, Animation animation,
-                    Animation secondaryAnimation) {
-                  return Center(
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: getSize(303, "width", context),
-                            // height: getSize(256, "height", context),
-                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                  getSize(20, "height", context)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF000000).withOpacity(0.11),
-                                  spreadRadius: 5,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 5), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: getSize(33, "height", context),
-                                  horizontal: getSize(28, "width", context)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: getSize(100, "height", context),
-                                    height: getSize(100, "height", context),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(36, "height", context),
-                                        horizontal:
-                                            getSize(30, "width", context)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: Colors.red.withOpacity(0.35),
-                                    ),
-                                    child: Center(
-                                        child: Icon(
-                                      Icons.close,
-                                      size: getSize(38, "height", context),
-                                      color: Colors.white,
-                                    )),
-                                  ),
-                                  SizedBox(
-                                    height: getSize(21, "height", context),
-                                  ),
-                                  Text(
-                                    "Erreur",
-                                    style: AppTheme.defaultParagraph,
-                                  ),
-                                  SizedBox(
-                                    height: getSize(12, "height", context),
-                                  ),
-                                  Container(
-                                    width: getSize(220, "width", context),
-                                    child: Text(
-                                      data['message'],
-                                      style: AppTheme.bodyText1.copyWith(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.5),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          }
-        }
-      } else {
-        if (data['alert']['postedBy']['_id'] == userId)
-          showGeneralDialog(
-              context: context,
-              barrierDismissible: true,
-              barrierLabel:
-                  MaterialLocalizations.of(context).modalBarrierDismissLabel,
-              barrierColor: AppColors.whiteColor.withOpacity(0.96),
-              transitionDuration: const Duration(milliseconds: 200),
-              pageBuilder: (BuildContext buildContext, Animation animation,
-                  Animation secondaryAnimation) {
-                return Center(
-                  child: Card(
-                    shadowColor: Colors.transparent,
-                    margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: getSize(303, "width", context),
-                          // height: getSize(256, "height", context),
-                          // padding: EdgeInsets.all(getSize(0,"height",context)),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(
-                                getSize(20, "height", context)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xFF000000).withOpacity(0.11),
-                                spreadRadius: 5,
-                                blurRadius: 10,
-                                offset:
-                                    Offset(0, 5), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: getSize(33, "height", context),
-                                horizontal: getSize(28, "width", context)),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: getSize(100, "height", context),
-                                  height: getSize(100, "height", context),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(0, "height", context),
-                                      horizontal: getSize(0, "width", context)),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color:
-                                        AppColors.greenColor.withOpacity(0.35),
-                                  ),
-                                  child: Stack(
-                                    overflow: Overflow.visible,
-                                    children: <Widget>[
-                                      Positioned(
-                                        child: Center(
-                                            child: Image.asset(
-                                          'assets/images/Map pin-3.png',
-                                          height:
-                                              getSize(45.6, "height", context),
-                                          width:
-                                              getSize(37.77, "width", context),
-                                        )),
-                                      ),
-                                      Positioned(
-                                        left: getSize(60, "width", context),
-                                        top: getSize(61, "height", context),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  getSize(9, "width", context),
-                                              horizontal: getSize(
-                                                  9, "height", context)),
-                                          child: SizedBox(
-                                            width:
-                                                getSize(31, "height", context),
-                                            height:
-                                                getSize(31, "height", context),
-                                            child: Card(
-                                              elevation: 2.5,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              100))),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.check,
-                                                  size: getSize(
-                                                      9, "height", context),
-                                                  color: AppColors.greenColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: getSize(21, "height", context),
-                                ),
-                                Text(
-                                  "Alerte envoyé",
-                                  style: AppTheme.defaultParagraph,
-                                ),
-                                SizedBox(
-                                  height: getSize(12, "height", context),
-                                ),
-                                Container(
-                                  width: getSize(220, "width", context),
-                                  child: Text(
-                                    "Votre alerte a été signalée à tous les utilisateurs de Mapane",
-                                    style: AppTheme.bodyText1.copyWith(
-                                      color:
-                                          AppColors.blackColor.withOpacity(0.5),
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-      }
-    });
-    
-  }
 
   bool isProbablyConnected(String identifier) {
     return _isProbablyConnected[identifier] ?? false;
@@ -793,11 +390,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   manageLoader() {
-      print("not connected but receive disconnected");
-      if(disconnect_loader_check){
-        Navigator.pop(context);
-      }
-      setState(() => disconnect_loader_check = false);
+    print("not connected but receive disconnected");
+    if (disconnect_loader_check) {
+      Navigator.pop(context);
+    }
+    setState(() => disconnect_loader_check = false);
   }
 
   sendAlertPopup(category, address, posted, latlon) {
@@ -844,7 +441,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           children: <Widget>[
                             RichText(
                               text: TextSpan(
-                                  text: "Quelle est votre position ?",
+                                  text: Languages.of(context).positionexc,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: getSize(18, "height", context),
@@ -892,7 +489,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer la position exacte",
+                                                hintText:
+                                                    Languages.of(context).enterexactposition,
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -939,7 +537,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            'Non, merci.',
+                                            Languages.of(context).notks,
                                             style: TextStyle(
                                               fontSize: getSize(
                                                   18, "height", context),
@@ -985,7 +583,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Oui',
+                                              Languages.of(context).yes,
                                               style: TextStyle(
                                                 fontSize: getSize(
                                                     18, "height", context),
@@ -1011,37 +609,502 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   sendAlert(identifier, category, address, posted, latlon, desc) {
-    print(_isProbablyConnected[identifier]);
+    // print(_isProbablyConnected[identifier]);
     // var readText = 'Alerte d\'embouteillage à Monde-uni Bilingual School depuis 1 heures 30 minutes.';
     // _speak(readText);
     // var readText = "Attention, vous êtes à 300 mètres d'un point Mapane";
-    print("Emission prepared");
-    if (sockets[identifier] != null) {
-      if (_isProbablyConnected[identifier]) {
-        sockets[identifier].emit("createAlert", [
-          JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
-            "desc": desc == "" || desc == null ? "desc" : desc,
-            "postedBy": posted,
-            "category": category,
-            "address": address == '' ? ' ' : address
-          })
-        ]);
-      } else {
-        initSocket(identifier);
-        sockets[identifier].emit("createAlert", [
-          JsonEncoder().convert({
-            "lat": latlon.latitude,
-            "long": latlon.longitude,
-            "desc": desc == "" || desc == null ? "desc" : desc,
-            "postedBy": posted,
-            "category": category,
-            "address": address == '' ? ' ' : address
-          })
-        ]);
-      }
-    }
+    // print("Emission prepared");
+    // if (sockets[identifier] != null) {
+    //   if (_isProbablyConnected[identifier]) {
+    //     sockets[identifier].emit("createAlert", [
+    //       JsonEncoder().convert({
+    //         "lat": latlon.latitude,
+    //         "long": latlon.longitude,
+    //         "desc": desc == "" || desc == null ? "desc" : desc,
+    //         "postedBy": posted,
+    //         "category": category,
+    //         "address": address == '' ? ' ' : address
+    //       })
+    //     ]);
+    //   } else {
+    //     initSocket(identifier);
+    //     sockets[identifier].emit("createAlert", [
+    var data = JsonEncoder().convert({
+      "lat": latlon.latitude,
+      "long": latlon.longitude,
+      "desc": desc == "" || desc == null ? "desc" : desc,
+      "postedBy": posted,
+      "category": category,
+      "address": address == '' ? ' ' : address
+    });
+    print("donneeeeeee");
+    print(data);
+    alertService
+        .createAlert(
+            latlon.latitude,
+            latlon.longitude,
+            desc == "" || desc == null ? "desc" : desc,
+            posted,
+            category,
+            address == '' ? ' ' : address)
+        .then((data) {
+          Navigator.pop(context);
+          setState(() => loadera = false);
+          context.read<AlertProvider>().getAlertList(false, addresse);
+          if (data.containsKey('message')) {
+            if (data['id'] == userId) {
+              if (data['message'] == "alerte inactive") {
+                showGeneralDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierLabel:
+                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                    barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                    transitionDuration: const Duration(milliseconds: 200),
+                    pageBuilder: (BuildContext buildContext, Animation animation,
+                        Animation secondaryAnimation) {
+                      return Center(
+                        child: Card(
+                          shadowColor: Colors.transparent,
+                          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: getSize(303, "width", context),
+                                // height: getSize(256, "height", context),
+                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                      getSize(20, "height", context)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF000000).withOpacity(0.11),
+                                      spreadRadius: 5,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 5), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(33, "height", context),
+                                      horizontal: getSize(28, "width", context)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: getSize(100, "height", context),
+                                        height: getSize(100, "height", context),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: getSize(0, "height", context),
+                                            horizontal:
+                                                getSize(0, "width", context)),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          color: AppColors.greenColor
+                                              .withOpacity(0.35),
+                                        ),
+                                        child: Stack(
+                                          overflow: Overflow.visible,
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: Center(
+                                                  child: Image.asset(
+                                                'assets/images/Map pin-3.png',
+                                                height: getSize(
+                                                    45.6, "height", context),
+                                                width: getSize(
+                                                    37.77, "width", context),
+                                              )),
+                                            ),
+                                            Positioned(
+                                              left: getSize(60, "width", context),
+                                              top: getSize(61, "height", context),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: getSize(
+                                                        9, "width", context),
+                                                    horizontal: getSize(
+                                                        9, "height", context)),
+                                                child: SizedBox(
+                                                  width: getSize(
+                                                      31, "height", context),
+                                                  height: getSize(
+                                                      31, "height", context),
+                                                  child: Card(
+                                                    elevation: 2.5,
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    100))),
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.check,
+                                                        size: getSize(
+                                                            9, "height", context),
+                                                        color: AppColors.greenColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: getSize(21, "height", context),
+                                      ),
+                                      Text(
+                                        "Alerte envoyé",
+                                        style: AppTheme.defaultParagraph,
+                                      ),
+                                      SizedBox(
+                                        height: getSize(12, "height", context),
+                                      ),
+                                      Container(
+                                        width: getSize(220, "width", context),
+                                        child: Text(
+                                          Languages.of(context).alertinactive,
+                                          style: AppTheme.bodyText1.copyWith(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.5),
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              } else {
+                showGeneralDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierLabel:
+                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                    barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                    transitionDuration: const Duration(milliseconds: 200),
+                    pageBuilder: (BuildContext buildContext, Animation animation,
+                        Animation secondaryAnimation) {
+                      return Center(
+                        child: Card(
+                          shadowColor: Colors.transparent,
+                          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: getSize(303, "width", context),
+                                // height: getSize(256, "height", context),
+                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                      getSize(20, "height", context)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF000000).withOpacity(0.11),
+                                      spreadRadius: 5,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 5), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(33, "height", context),
+                                      horizontal: getSize(28, "width", context)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: getSize(100, "height", context),
+                                        height: getSize(100, "height", context),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                getSize(36, "height", context),
+                                            horizontal:
+                                                getSize(30, "width", context)),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          color: Colors.red.withOpacity(0.35),
+                                        ),
+                                        child: Center(
+                                            child: Icon(
+                                          Icons.close,
+                                          size: getSize(38, "height", context),
+                                          color: Colors.white,
+                                        )),
+                                      ),
+                                      SizedBox(
+                                        height: getSize(21, "height", context),
+                                      ),
+                                      Text(
+                                        Languages.of(context).error,
+                                        style: AppTheme.defaultParagraph,
+                                      ),
+                                      SizedBox(
+                                        height: getSize(12, "height", context),
+                                      ),
+                                      Container(
+                                        width: getSize(220, "width", context),
+                                        child: Text(
+                                          data['message'],
+                                          style: AppTheme.bodyText1.copyWith(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.5),
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              }
+            }
+          } else {
+            if (data['alert']['postedBy']['_id'] == userId)
+              showGeneralDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  barrierLabel:
+                      MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                  barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                  transitionDuration: const Duration(milliseconds: 200),
+                  pageBuilder: (BuildContext buildContext, Animation animation,
+                      Animation secondaryAnimation) {
+                    return Center(
+                      child: Card(
+                        shadowColor: Colors.transparent,
+                        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: getSize(303, "width", context),
+                              // height: getSize(256, "height", context),
+                              // padding: EdgeInsets.all(getSize(0,"height",context)),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(
+                                    getSize(20, "height", context)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFF000000).withOpacity(0.11),
+                                    spreadRadius: 5,
+                                    blurRadius: 10,
+                                    offset:
+                                        Offset(0, 5), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: getSize(33, "height", context),
+                                    horizontal: getSize(28, "width", context)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: getSize(100, "height", context),
+                                      height: getSize(100, "height", context),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: getSize(0, "height", context),
+                                          horizontal: getSize(0, "width", context)),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(100),
+                                        color:
+                                            AppColors.greenColor.withOpacity(0.35),
+                                      ),
+                                      child: Stack(
+                                        overflow: Overflow.visible,
+                                        children: <Widget>[
+                                          Positioned(
+                                            child: Center(
+                                                child: Image.asset(
+                                              'assets/images/Map pin-3.png',
+                                              height:
+                                                  getSize(45.6, "height", context),
+                                              width:
+                                                  getSize(37.77, "width", context),
+                                            )),
+                                          ),
+                                          Positioned(
+                                            left: getSize(60, "width", context),
+                                            top: getSize(61, "height", context),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical:
+                                                      getSize(9, "width", context),
+                                                  horizontal: getSize(
+                                                      9, "height", context)),
+                                              child: SizedBox(
+                                                width:
+                                                    getSize(31, "height", context),
+                                                height:
+                                                    getSize(31, "height", context),
+                                                child: Card(
+                                                  elevation: 2.5,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  100))),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: getSize(
+                                                          9, "height", context),
+                                                      color: AppColors.greenColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: getSize(21, "height", context),
+                                    ),
+                                    Text(
+                                      Languages.of(context).alertsent,
+                                      style: AppTheme.defaultParagraph,
+                                    ),
+                                    SizedBox(
+                                      height: getSize(12, "height", context),
+                                    ),
+                                    Container(
+                                      width: getSize(220, "width", context),
+                                      child: Text(
+                                        Languages.of(context).alertsuccess,
+                                        style: AppTheme.bodyText1.copyWith(
+                                          color:
+                                              AppColors.blackColor.withOpacity(0.5),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+          }
+    }).catchError((onError) {
+      Navigator.pop(context);
+      setState(() => loadera = false);
+      showGeneralDialog(
+          context: context,
+          barrierDismissible: true,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: AppColors.whiteColor.withOpacity(0.96),
+          transitionDuration: const Duration(milliseconds: 200),
+          pageBuilder: (BuildContext buildContext, Animation animation,
+              Animation secondaryAnimation) {
+            return Center(
+              child: Card(
+                shadowColor: Colors.transparent,
+                margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: getSize(303, "width", context),
+                      // height: getSize(256, "height", context),
+                      // padding: EdgeInsets.all(getSize(0,"height",context)),
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.circular(
+                            getSize(20, "height", context)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF000000).withOpacity(0.11),
+                            spreadRadius: 5,
+                            blurRadius: 10,
+                            offset: Offset(0, 5), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: getSize(33, "height", context),
+                            horizontal: getSize(28, "width", context)),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: getSize(100, "height", context),
+                              height: getSize(100, "height", context),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: getSize(36, "height", context),
+                                  horizontal: getSize(30, "width", context)),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.red.withOpacity(0.35),
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                Icons.close,
+                                size: getSize(38, "height", context),
+                                color: Colors.white,
+                              )),
+                            ),
+                            SizedBox(
+                              height: getSize(21, "height", context),
+                            ),
+                            Text(
+                              Languages.of(context).error,
+                              style: AppTheme.defaultParagraph,
+                            ),
+                            SizedBox(
+                              height: getSize(12, "height", context),
+                            ),
+                            Container(
+                              width: getSize(220, "width", context),
+                              child: Text(
+                                onError.response == null ||
+                                        onError.response == ""
+                                    ? Languages.of(context).errormsg
+                                    : onError.response.data["message"],
+                                style: AppTheme.bodyText1.copyWith(
+                                  color: AppColors.blackColor.withOpacity(0.5),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    });
+    //     ]);
+    //   }
+    // }
   }
 
   loaderPopup() {
@@ -1181,27 +1244,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await flutterTts.awaitSpeakCompletion(true);
         await flutterTts.speak(test);
         flutterTts.setCompletionHandler(() {
-          // Future.delayed(const Duration(milliseconds: 3500), () {
-            print("brikit total phrase");
-            print(brikit);
-            print(brikit.length);
-            if (brikit.length != 1) {
-              setState(() {
-                brikit.removeAt(0);
-                bolSpeaking = false;
-              });
-            }
-            // brikit.asMap().forEach((index,element) {
-              print(brikit);
-              // if (index > 0) {
-              if (!bolSpeaking) {
-                _speak(brikit.first);
-                setState(() {
-                  brikit.removeAt(0);
-                });
-              }
-              // }
-            // });
+          if (brikit.length != 1) {
+            setState(() {
+              brikit.removeAt(0);
+              bolSpeaking = false;
+            });
+          }
+          // brikit.asMap().forEach((index,element) {
+          print(brikit);
+          // if (index > 0) {
+          if (!bolSpeaking) {
+            _speak(brikit.first);
+            setState(() {
+              brikit.removeAt(0);
+            });
+          }
+          // });
           // });
         });
       }
@@ -1236,7 +1294,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     controleMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5,size:Size.fromHeight(19)), Assets.routebarreeMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(19)),
+        Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
@@ -1283,10 +1342,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // destination
     context.read<AlertProvider>().alertList.fold((l) => null, (r) {
       int i = 1;
-      print("liste des alertes " + r.length.toString());
+      // print("liste des alertes " + r.length.toString());
       if (r.length > 0) {
         r.forEach((element) {
-          Moment.setLocaleGlobally(new LocaleFr());
+          Moment.setLocaleGlobally(context.read<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
           var moment = Moment.now();
           var dateForComparison = DateTime.parse(element.createdAt);
           print(element.category.name);
@@ -1294,10 +1353,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               position:
                   LatLng(double.parse(element.lat), double.parse(element.lon)),
               markerId: MarkerId('alerte ' + element.id),
-              icon: getAppropriateIcon(element.category.name),
+              icon: getAppropriateIcon(element.category.slug),
               infoWindow: InfoWindow(
-                  title: element.category.name,
-                  snippet: 'à '+element.address.split(',')[0]+', ' + moment.from(dateForComparison))));
+                  title: context.watch<UserProvider>().languageVal ? element.category.name : element.category.name_en,
+                  snippet: Languages.of(context).at+' ' +
+                      element.address.split(',')[0] +
+                      ', ' +
+                      moment.from(dateForComparison))));
           i++;
         });
       }
@@ -1373,28 +1435,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   getAppropriateIcon(alert) {
-    print("ezaeazeza");
+    print(alert);
     switch (alert) {
       case "Embouteillage":
         print(alert);
         return embouteillageMarker;
         break;
-      case "Route en chantier":
+      case "Route-en-chantier":
         return routechantierMarker;
         break;
-      case "Zone dangereuse":
+      case "Zone-dangereuse":
         return dangerMarker;
         break;
-      case "Controle routier":
+      case "Controle-routier":
         return controleMarker;
         break;
       case "Radar":
         return radarMarker;
         break;
-      case "Accident de circulation":
+      case "Accident-de-circulation":
         return accidentMarker;
         break;
-      case "Route barrée":
+      case "Route-barree":
         return routebarreeMarker;
         break;
       case "S.O.S":
@@ -1481,11 +1543,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     updateBottomPadding(context);
     checkPermission();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<UserProvider>()
-          .getPositionVal()
-          .then((value){
-        if(value != null) {
+      context.read<UserProvider>().getPositionVal().then((value) {
+        if (value != null) {
           CameraPosition cPositionGo = CameraPosition(
             zoom: zooming,
             tilt: CAMERA_TILT,
@@ -1532,15 +1591,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical,left: SizeConfig.blockSizeHorizontal * 1.8),
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.blockSizeVertical,
+                      left: SizeConfig.blockSizeHorizontal * 1.8),
                   child: Container(
-                    height: getSize(30,"height",context),
-                    width:  getSize(132,"width",context),
+                    height: getSize(30, "height", context),
+                    width: getSize(132, "width", context),
                     child: ClipRect(
                       child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0,sigmaY: 10.0),
-                          child: Image.asset(Assets.logoLong,fit: BoxFit.cover,)
-                      ),
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                          child: Image.asset(
+                            Assets.logoLong,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ),
                 ),
@@ -1649,7 +1712,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       child: Column(
                                         children: [
                                           Text(
-                                            "Not available right now.",
+                                            Languages.of(context).notavail,
                                             style: TextStyle(fontSize: 18.0),
                                           )
                                         ],
@@ -1691,79 +1754,85 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       SizedBox(
                         width: SizeConfig.blockSizeHorizontal * 5,
                       ),
-                      UtilButton(
-                        onTap: () async {
-                          context.read<UserProvider>().modifyPopupParam(
-                              !context.read<UserProvider>().popupVal);
-                        },
-                        height: getSize(38, "width", context),
-                        width: getSize(38, "width", context),
-                        icon: context.watch<UserProvider>().popupVal
-                            ? Icon(Icons.notifications_none_outlined)
-                            : Icon(Icons.notifications_off_outlined),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.read<UserProvider>().modifyAudioParam(
-                              !context.read<UserProvider>().audioVal);
-                        },
-                        child: UtilButton(
-                          height: getSize(38, "width", context),
-                          width: getSize(38, "width", context),
-                          icon: context.watch<UserProvider>().audioVal
-                              ? SvgPicture.asset(Assets.soundIcon)
-                              : Icon(Icons.volume_off_outlined),
-                        ),
-                      ),
-                      UtilButton(
-                        onTap: () async {
-                          final GoogleMapController controller =
-                              await _controller.future;
-                          var currentZoomLevel =
-                              await controller.getZoomLevel();
-                          setState(() {
-                            zooming = currentZoomLevel + 1;
-                          });
-                          controller.animateCamera(
-                            CameraUpdate.newCameraPosition(
-                              CameraPosition(
-                                target: cameraCurrentPosition.target,
-                                zoom: zooming,
+                      Container(
+                        child: Row(
+                          children: [
+                            UtilButton(
+                              onTap: () async {
+                                context.read<UserProvider>().modifyPopupParam(
+                                    !context.read<UserProvider>().popupVal);
+                              },
+                              height: getSize(38, "width", context),
+                              width: getSize(38, "width", context),
+                              icon: context.watch<UserProvider>().popupVal
+                                  ? Icon(Icons.notifications_none_outlined)
+                                  : Icon(Icons.notifications_off_outlined),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                context.read<UserProvider>().modifyAudioParam(
+                                    !context.read<UserProvider>().audioVal);
+                              },
+                              child: UtilButton(
+                                height: getSize(38, "width", context),
+                                width: getSize(38, "width", context),
+                                icon: context.watch<UserProvider>().audioVal
+                                    ? SvgPicture.asset(Assets.soundIcon)
+                                    : Icon(Icons.volume_off_outlined),
                               ),
                             ),
-                          );
-                        },
-                        height: getSize(38, "width", context),
-                        width: getSize(38, "width", context),
-                        icon: SvgPicture.asset(
-                          Assets.zoomPlusIcon,
-                        ),
-                      ),
-                      UtilButton(
-                        onTap: () async {
-                          final GoogleMapController controller =
-                              await _controller.future;
-                          var currentZoomLevel =
-                              await controller.getZoomLevel();
-                          setState(() {
-                            zooming = currentZoomLevel - 1;
-                          });
-                          controller.animateCamera(
-                            CameraUpdate.newCameraPosition(
-                              CameraPosition(
-                                target: cameraCurrentPosition.target,
-                                zoom: zooming,
+                            UtilButton(
+                              onTap: () async {
+                                final GoogleMapController controller =
+                                    await _controller.future;
+                                var currentZoomLevel =
+                                    await controller.getZoomLevel();
+                                setState(() {
+                                  zooming = currentZoomLevel + 1;
+                                });
+                                controller.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                      target: cameraCurrentPosition.target,
+                                      zoom: zooming,
+                                    ),
+                                  ),
+                                );
+                              },
+                              height: getSize(38, "width", context),
+                              width: getSize(38, "width", context),
+                              icon: SvgPicture.asset(
+                                Assets.zoomPlusIcon,
                               ),
                             ),
-                          );
-                        },
-                        height: getSize(38, "width", context),
-                        width: getSize(38, "width", context),
-                        icon: SvgPicture.asset(
-                          Assets.zoomMinIcon,
+                            UtilButton(
+                              onTap: () async {
+                                final GoogleMapController controller =
+                                    await _controller.future;
+                                var currentZoomLevel =
+                                    await controller.getZoomLevel();
+                                setState(() {
+                                  zooming = currentZoomLevel - 1;
+                                });
+                                controller.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                      target: cameraCurrentPosition.target,
+                                      zoom: zooming,
+                                    ),
+                                  ),
+                                );
+                              },
+                              height: getSize(38, "width", context),
+                              width: getSize(38, "width", context),
+                              icon: SvgPicture.asset(
+                                Assets.zoomMinIcon,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                      ],
                   ),
                 ),
               ),
@@ -1832,8 +1901,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     controller: _startPointController,
                                     style: TextStyle(fontSize: 17.0),
                                     onChanged: (value) {
-                                      print("resultat recehrcehe");
-                                      print(value);
                                       context
                                           .read<SearchProvider>()
                                           .getSearchResults(value);
@@ -1847,7 +1914,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     //       .toggleSearchState();
                                     // },
                                     decoration: InputDecoration(
-                                        hintText: 'Rechercher un lieu',
+                                        hintText: Languages.of(context).searchlieu,
                                         hintStyle: TextStyle(fontSize: 17.0),
                                         border: UnderlineInputBorder(
                                             borderSide:
@@ -1889,7 +1956,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                     Expanded(
                                                       flex: 2,
                                                       child: Text(
-                                                        "Avec Mapane, recherchez des lieux de vos choix et soyez informé en temps réel en cas d’alerte.",
+                                                        Languages.of(context).msgsearchbefore,
                                                         overflow:
                                                             TextOverflow.clip,
                                                       ),
@@ -1929,7 +1996,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                               children: [
                                                                 Center(
                                                                   child: Text(
-                                                                      "Aucun résultat pour cette recherche"),
+                                                                      Languages.of(context).noresult),
                                                                 )
                                                               ],
                                                             )
@@ -2125,7 +2192,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "embouteillage3",
+                                                "Embouteillage",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
@@ -2163,7 +2230,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          "Embouteillages",
+                                                          Languages.of(context).embou,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
@@ -2187,7 +2254,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "route-barree2",
+                                                "Route-barree",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
@@ -2225,7 +2292,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          "Route barrée",
+                                                          Languages.of(context).routebarre,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
@@ -2249,7 +2316,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "Route-en-chantier-2",
+                                                "Route-en-chantier",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
@@ -2287,7 +2354,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          "Route en chantier",
+                                                          Languages.of(context).routechantier,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
@@ -2311,7 +2378,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "zone-dangereuse-1",
+                                                "Zone-dangereuse",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
@@ -2349,7 +2416,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          "Zône dangereuse",
+                                                          Languages.of(context).zonedanger,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
@@ -2383,7 +2450,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
-                                                "Accident-de-circulation-1",
+                                                "Accident-de-circulation",
                                                 addresse,
                                                 userId,
                                                 /*LatLng(currentLocation.latitude,
@@ -2421,7 +2488,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(42,
                                                             "height", context),
                                                         child: Text(
-                                                          "Accident de circulation",
+                                                          Languages.of(context).accidentdecircu,
                                                           maxLines: 3,
                                                           softWrap: true,
                                                           overflow:
@@ -2538,7 +2605,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                       height: getSize(40,
                                                           "height", context),
                                                       child: Text(
-                                                        "Publier ma position",
+                                                        Languages.of(context).pubposition,
                                                         maxLines: 2,
                                                         softWrap: true,
                                                         textAlign:
@@ -2559,14 +2626,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             )),
                                         GestureDetector(
                                           onTap: () {
-                                            sendAlertPopup(
-                                                "Accident-de-circulation-1",
-                                                addresse,
-                                                userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
+                                            // sendAlertPopup(
+                                            //     "Accident-de-circulation",
+                                            //     addresse,
+                                            //     userId,
+                                            //     /*LatLng(currentLocation.latitude,
+                                            //         currentLocation.longitude)*/
+                                            //     LatLng(currentPosition.latitude,
+                                            //         currentPosition.longitude));
                                           },
                                           child: Container(
                                               width:
@@ -2705,7 +2772,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             RichText(
                               text: TextSpan(
                                   text:
-                                      "Completez les informations pour créer cette alerte",
+                                      Languages.of(context).completetocreatealert,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: getSize(18, "height", context),
@@ -2715,38 +2782,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               height: getSize(29, "height", context),
                             ),
                             SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: getSize(44, "height", context),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: Drawer(
-                                            elevation: 0,
-                                            child: Container(
-                                              color: Colors.white,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: SelectFormField(
-                                                type: SelectFormFieldType.dropdown, // or can be dialog
-                                                initialValue: 'embouteillage3',
-                                                labelText: 'Categorie',
-                                                items: Alert.items,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    customCategory = val;
-                                                  });
-                                                },
-                                                onSaved: (val) {
-                                                  setState(() {
-                                                    customCategory = val;
-                                                  });
-                                                },
-                                              ),
-                                            )))),
+                                width: MediaQuery.of(context).size.width,
+                                height: getSize(44, "height", context),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Drawer(
+                                        elevation: 0,
+                                        child: Container(
+                                          color: Colors.white,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: SelectFormField(
+                                            type: SelectFormFieldType
+                                                .dropdown, // or can be dialog
+                                            initialValue: 'Embouteillage',
+                                            labelText: Languages.of(context).cat,
+                                            items: Alert.items,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                customCategory = val;
+                                              });
+                                            },
+                                            onSaved: (val) {
+                                              setState(() {
+                                                customCategory = val;
+                                              });
+                                            },
+                                          ),
+                                        )))),
                             SizedBox(
                               height: getSize(29, "height", context),
                             ),
@@ -2789,7 +2855,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer la position exacte",
+                                                hintText:
+                                                    Languages.of(context).enterpositionexact,
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -2828,7 +2895,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            'Non, merci.',
+                                            Languages.of(context).notks,
                                             style: TextStyle(
                                               fontSize: getSize(
                                                   18, "height", context),
@@ -2846,13 +2913,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         loaderPopup();
-                                          sendAlert(
-                                              "default",
-                                              customCategory,
-                                              address,
-                                              posted,
-                                              latlon,
-                                              customAddress == "" || customAddress == null ? "test" : customAddress);
+                                        sendAlert(
+                                            "default",
+                                            customCategory,
+                                            address,
+                                            posted,
+                                            latlon,
+                                            customAddress == "" ||
+                                                    customAddress == null
+                                                ? "test"
+                                                : customAddress);
                                       },
                                       textColor: Colors.white,
                                       color: Colors.transparent,
@@ -2879,7 +2949,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Oui',
+                                              Languages.of(context).yes,
                                               style: TextStyle(
                                                 fontSize: getSize(
                                                     18, "height", context),

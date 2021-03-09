@@ -56,7 +56,7 @@ class AlertService {
         return Alert.fromJson(json);
         // }
       }).toList();
-      return schools.where((i) => i.category.name == cat).toList();
+      return schools.where((i) => i.slug == cat).toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
@@ -79,22 +79,27 @@ class AlertService {
       throw new NException(e);
     }
   }
-  Future<dynamic> createAlert(LatLng coord,String description,String userId,String slug,String address) async{
+  Future<dynamic> createAlert(double lat, double lon, String description,String userId,String slug,String address) async{
+    print("Envoie api");
+    print(lat);
     try{
       final String uri = locator<Di>().apiUrl + "/create-alert";
       Response response = await locator<Di>().dio.post(
           uri,
           data: {
-            "lat": coord.latitude,
-            "long": coord.longitude,
+            "lat": lat,
+            "long": lon,
             "desc": description,
             "postedBy": userId,
             "category": slug,
-            "address": address == '' ? ' ' : address
+            "address": address
           },
-          options: Options(headers:{"content-type": "application/json"})
+          options: Options(headers:{"Content-Type": "application/json"})
       );
-      return response.data["message"];
+      print("resultat api");
+      print(response.data);
+      print(response);
+      return response.data;
     } on DioError catch (e) {
       print(e);
       throw new NException(e);

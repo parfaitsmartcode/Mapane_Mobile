@@ -13,6 +13,7 @@ class Alert{
    bool active;
    String createdAt;
    String address;
+   String slug;
 
   Alert({
     this.id,
@@ -22,6 +23,7 @@ class Alert{
     this.userId,
     this.category,
     this.active,
+    this.slug,
     this.createdAt,
     this.address
 });
@@ -36,7 +38,7 @@ class Alert{
          desc: json['desc'],
          address: json['address'],
          userId: json['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:json['postedBy']['_id'],phone:json['postedBy']['phone']),
-         category: Category(id: json['category']['_id'],name: json['category']['name'],perimeter: json['category']['perimeter']),
+         category: Category(id: json['category']['_id'],name: json['category']['name'],name_en: json['category']['name_en'],perimeter: json['category']['perimeter'],slug: json['category']['slug']),
          active: json['active'],
          createdAt: json['createdAt'],
      );
@@ -47,7 +49,7 @@ class Alert{
 
    static List<Map<String, dynamic>> items = [
      {
-       'value': 'embouteillage3',
+       'value': 'Embouteillage',
        'label': 'Embouteillage',
        'icon': SizedBox(
          height: 40,
@@ -57,7 +59,7 @@ class Alert{
        )),
      },
      {
-       'value': 'route-barree2',
+       'value': 'Route-barree',
        'label': 'Route barrée',
        'icon': SizedBox(
          height: 40,
@@ -67,7 +69,7 @@ class Alert{
        )),
      },
      {
-       'value': 'Route-en-chantier-2',
+       'value': 'Route-en-chantier',
        'label': 'Route en chantier',
        'icon': SizedBox(
          height: 40,
@@ -77,7 +79,7 @@ class Alert{
        )),
      },
      {
-       'value': 'zone-dangereuse-1',
+       'value': 'Zone-dangereuse',
        'label': 'Zone dangereuse',
        'icon': SizedBox(
          height: 40,
@@ -87,7 +89,7 @@ class Alert{
        )),
      },
      {
-       'value': 'Accident-de-circulation-1',
+       'value': 'Accident-de-circulation',
        'label': 'Accident de circulation',
        'icon': SizedBox(
          height: 40,

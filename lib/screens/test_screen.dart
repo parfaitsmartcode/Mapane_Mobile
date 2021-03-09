@@ -1,231 +1,92 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:adhara_socket_io/adhara_socket_io.dart';
-
-void main() => runApp(TestScreen());
-
-const String URI = "http://mapane.smartcodegroup.com/";
+import 'package:mapane/localization/language/languages.dart';
+import 'package:mapane/localization/locale_constant.dart';
+import 'package:mapane/models/language_data.dart';
 
 class TestScreen extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  State<StatefulWidget> createState() => TestScreenState();
 }
 
-class _MyAppState extends State<TestScreen> {
-  List<String> toPrint = ["trying to connect"];
-  SocketIOManager manager;
-  Map<String, SocketIO> sockets = {};
-  Map<String, bool> _isProbablyConnected = {};
-
+class TestScreenState extends State<TestScreen> {
   @override
-  void initState() {
-    super.initState();
-    manager = SocketIOManager();
-    initSocket("default");
-  }
-
-  initSocket(String identifier) async {
-    setState(() => _isProbablyConnected[identifier] = true);
-    SocketIO socket = await manager.createInstance(SocketOptions(
-      //Socket IO server URI
-        URI,
-        nameSpace: (identifier == "namespaced")?"/adhara":"/",
-        //Query params - can be used for authentication
-        query: {
-          "auth": "--SOME AUTH STRING---",
-          "info": "new connection from adhara-socketio",
-          "timestamp": DateTime.now().toString()
-        },
-        //Enable or disable platform channel logging
-        enableLogging: false,
-        transports: [Transports.WEB_SOCKET/*, Transports.POLLING*/] //Enable required transport
-    ));
-    socket.onConnect((data) {
-      pprint("connected...");
-      pprint(data);
-      sendMessage(identifier);
-    });
-    socket.onConnectError(pprint);
-    socket.onConnectTimeout(pprint);
-    socket.onError(pprint);
-    socket.onDisconnect(pprint);
-    socket.on("type:string", (data) => pprint("type:string | $data"));
-    socket.on("type:bool", (data) => pprint("type:bool | $data"));
-    socket.on("type:number", (data) => pprint("type:number | $data"));
-    socket.on("type:object", (data) => pprint("type:object | $data"));
-    socket.on("type:list", (data) => pprint("type:list | $data"));
-    socket.on("message", (data) => pprint(data));
-    socket.connect();
-    sockets[identifier] = socket;
-  }
-
-  bool isProbablyConnected(String identifier){
-    return _isProbablyConnected[identifier]??false;
-  }
-
-  disconnect(String identifier) async {
-    await manager.clearInstance(sockets[identifier]);
-    setState(() => _isProbablyConnected[identifier] = false);
-  }
-
-  sendMessage(identifier) {
-    if (sockets[identifier] != null) {
-      pprint("sending message from '$identifier'...");
-      sockets[identifier].emit("message", [
-        "Hello world!",
-        1908,
-        {
-          "wonder": "Woman",
-          "comics": ["DC", "Marvel"]
-        },
-        {
-          "test": "=!./"
-        },
-        [
-          "I'm glad",
-          2019,
-          {
-            "come back": "Tony",
-            "adhara means": ["base", "foundation"]
-          },
-          {
-            "test": "=!./"
-          },
-        ]
-      ]);
-      pprint("Message emitted from '$identifier'...");
-    }
-  }
-
-  sendMessageWithACK(identifier){
-    pprint("Sending ACK message from '$identifier'...");
-    List msg = ["Hello world!", 1, true, {"p":1}, [3,'r']];
-    sockets[identifier].emitWithAck("ack-message", msg).then( (data) {
-      // this callback runs when this specific message is acknowledged by the server
-      pprint("ACK recieved from '$identifier' for $msg: $data");
-    });
-  }
-
-  pprint(data) {
-    setState(() {
-      if (data is Map) {
-        data = json.encode(data);
-      }
-      print(data);
-      toPrint.add(data);
-    });
-  }
-
-  Container getButtonSet(String identifier){
-    bool ipc = isProbablyConnected(identifier);
-    return Container(
-      height: 60.0,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            child: RaisedButton(
-              child: Text("Connect"),
-              onPressed: ipc?null:()=>initSocket(identifier),
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-            ),
-          ),
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: RaisedButton(
-                child: Text("Send Message"),
-                onPressed: ipc?()=>sendMessage(identifier):null,
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-              )
-          ),
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: RaisedButton(
-                child: Text("Send w/ ACK"), //Send message with ACK
-                onPressed: ipc?()=>sendMessageWithACK(identifier):null,
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-              )
-          ),
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: RaisedButton(
-                child: Text("Disconnect"),
-                onPressed: ipc?()=>disconnect(identifier):null,
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-              )
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          textTheme: TextTheme(
-            title: TextStyle(color: Colors.white),
-            headline: TextStyle(color: Colors.white),
-            subtitle: TextStyle(color: Colors.white),
-            subhead: TextStyle(color: Colors.white),
-            body1: TextStyle(color: Colors.white),
-            body2: TextStyle(color: Colors.white),
-            button: TextStyle(color: Colors.white),
-            caption: TextStyle(color: Colors.white),
-            overline: TextStyle(color: Colors.white),
-            display1: TextStyle(color: Colors.white),
-            display2: TextStyle(color: Colors.white),
-            display3: TextStyle(color: Colors.white),
-            display4: TextStyle(color: Colors.white),
-          ),
-          buttonTheme: ButtonThemeData(
-              padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
-              disabledColor: Colors.lightBlueAccent.withOpacity(0.5),
-              buttonColor: Colors.lightBlue,
-              splashColor: Colors.cyan
-          )
-      ),
-      home: Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         appBar: AppBar(
-          title: const Text('Adhara Socket.IO example'),
-          backgroundColor: Colors.black,
-          elevation: 0.0,
+          leading: Icon(
+            Icons.language,
+            color: Colors.white,
+          ),
+          title: Text(Languages
+              .of(context)
+              .appName),
         ),
         body: Container(
-          color: Colors.black,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                  child: Center(
-                    child: ListView(
-                      children: toPrint.map((String _) => Text(_ ?? "")).toList(),
-                    ),
-                  )
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, bottom: 8.0),
-                child: Text("Default Connection",),
-              ),
-              getButtonSet("default"),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, bottom: 8.0, top: 8.0),
-                child: Text("Alternate Connection",),
-              ),
-              getButtonSet("alternate"),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, bottom: 8.0, top: 8.0),
-                child: Text("Namespace Connection",),
-              ),
-              getButtonSet("namespaced"),
-              SizedBox(height: 12.0,)
-            ],
+          margin: EdgeInsets.all(30),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 80,
+                ),
+                Text(
+                  Languages
+                      .of(context)
+                      .labelWelcome,
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  Languages
+                      .of(context)
+                      .labelInfo,
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                  textAlign: TextAlign.center,
+
+                ),
+                SizedBox(
+                  height: 70,
+                ),
+                _createLanguageDropDown()
+              ],
+            ),
           ),
         ),
-      ),
+      );
+
+  _createLanguageDropDown() {
+    // changeLanguage(context, "en");
+    return DropdownButton<LanguageData>(
+      iconSize: 30,
+      hint: Text(Languages
+          .of(context)
+          .labelSelectLanguage),
+      onChanged: (LanguageData language) {
+        changeLanguage(context, language.languageCode);
+      },
+      items: LanguageData.languageList()
+          .map<DropdownMenuItem<LanguageData>>(
+            (e) =>
+            DropdownMenuItem<LanguageData>(
+              value: e,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                    e.flag,
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  Text(e.name)
+                ],
+              ),
+            ),
+      )
+          .toList(),
     );
   }
 }

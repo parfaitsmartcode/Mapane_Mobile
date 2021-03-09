@@ -96,9 +96,9 @@ class AlertProvider extends BaseProvider{
   makeAlert(String slug,String address,LatLng coord,String userId) async{
 
     print(userId);
-    alertService.createAlert(coord, "test", userId, slug, address).then((value) {
-      print(value);
-    });
+    // alertService.createAlert(coord, "test", userId, slug, address).then((value) {
+    //   print(value);
+    // });
     // SocketHelper.emit("createAlert",arguments: {
     //   "lat": 15,//coord.latitude,
     //   "long": 17,//coord.longitude,
