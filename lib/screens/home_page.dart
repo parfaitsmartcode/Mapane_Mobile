@@ -170,39 +170,48 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
     mapanes.forEach((element) async {
       double distance = distanceBetweenTwoGeoPoints(
-          LatLng(currentLocation.latitude, currentLocation.longitude),
+          LatLng(currentPosition.latitude, currentPosition.longitude),
           LatLng(double.parse(element.lat), double.parse(element.lon)));
-      double perimeter = element.category.perimeter * 10000.0;
+      double perimeter = element.category.perimeter * 1000.0;
       List<int> subvalues = List<int>();
       print("avant découpage");
       print(perimeter);
-      while(perimeter >= 50){
-        subvalues.add((perimeter - 50).round());
-        perimeter -= 50;
+      while (perimeter >= 50.0) {
+        subvalues.add((perimeter - 50.0).round());
+        perimeter -= 50.0;
+        print(perimeter);
       }
       print("valeurs subdivisées");
-      var greater = subvalues.where((e) => e >= distance.round()).toList()..sort();
-      greater.remove(0);
-      print(greater);
-        var text =
-            element.category.name + " à moins de " + greater.first.toString()+" mètres de votre position";
-        if (context.read<UserProvider>().audioVal){
-          setState(() {
-            brikit.add(text);
-            bolSpeaking = true;
-          });
-            print("brikit total phrase tyjty");
-            print(brikit);
-            print(brikit.length);
-          if (brikit.length == 1) {
-            await _speak(text);
-          }
+      subvalues.sort();
+      subvalues.remove(0);
+      print(subvalues);
+      var result = subvalues.reduce((value, element) =>
+          (element - distance.round()).abs() < (value - distance.round()).abs()
+              ? element
+              : value);
+      print(distance);
+      print(result);
+      var text = element.category.name +
+          " à moins de " +
+          result.round().toString() +
+          " mètres de votre position";
+      if (context.read<UserProvider>().audioVal) {
+        setState(() {
+          brikit.add(text);
+          bolSpeaking = true;
+        });
+        print("brikit total phrase tyjty");
+        print(brikit);
+        print(brikit.length);
+        if (brikit.length == 1) {
+          await _speak(text);
         }
-          // }else{
-          //   // if (brikit.length == 1) {
-          //     await _speak(text);
-          //   // }
-          // }
+      }
+      // }else{
+      //   // if (brikit.length == 1) {
+      //     await _speak(text);
+      //   // }
+      // }
     });
   }
 
@@ -256,13 +265,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print("app goes in background");
     print(state);
     if (state == AppLifecycleState.resumed) {
-     // _initMapStyle();
       setState(() {});
+       _initMapStyle();
     }
   }
-  
+
   Future<void> _initMapStyle() async {
-    mapController.setMapStyle('[{"featureType": "all","stylers": [{ "color": "#C0C0C0" }]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{ "color": "#CCFFFF" }]},{"featureType": "landscape","elementType": "labels","stylers": [{ "visibility": "off" }]}]');
+    final GoogleMapController mapController = await _controller.future;
+    mapController.setMapStyle(null);
   }
 
   @override
@@ -275,6 +285,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         : position.latitude.toString() +
             " , " +
             position.longitude.toString()));
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
@@ -285,11 +296,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-        print("daz dzakcvx vcxopkpcvx vcxvk");
-        print(testrop);
+    print("daz dzakcvx vcxopkpcvx vcxvk");
+    print(testrop);
     Geolocator.getPositionStream().listen((Position position) {
-        print("daz dzakcvx vcxopkpcvx vcxvk 2");
-        print(testrop);
+      print("daz dzakcvx vcxopkpcvx vcxvk 2");
+      print(testrop);
       print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
@@ -403,11 +414,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         brikit.clear();
       });
       if (context.read<UserProvider>().popupVal) {
-        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2] && data['alert']['category']['name'] != "S.O.S") {
+        if (addresse.split(",")[2] == data['alert']['address'].split(",")[2] &&
+            data['alert']['category']['name'] != "S.O.S") {
           audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
           context
               .read<AlertProvider>()
-              .pushNotification(Alert.fromJson(data['alert']));
+              .pushNotification(Alert.fromJson(data['alert']),userId);
         }
       }
       context.read<AlertProvider>().getAlertList(false, addresse);
@@ -779,7 +791,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               });
       }
     });
-    
   }
 
   bool isProbablyConnected(String identifier) {
@@ -792,8 +803,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   manageLoader(data) {
-      print("not connected but receive disconnected");
-      print(data);
+    print("not connected but receive disconnected");
+    print(data);
   }
 
   sendAlertPopup(category, address, posted, latlon) {
@@ -888,7 +899,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer la position exacte",
+                                                hintText:
+                                                    "Entrer la position exacte",
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -1177,26 +1189,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await flutterTts.speak(test);
         flutterTts.setCompletionHandler(() {
           // Future.delayed(const Duration(milliseconds: 3500), () {
-            print("brikit total phrase");
-            print(brikit);
-            print(brikit.length);
-            if (brikit.length != 1) {
-              setState(() {
-                brikit.removeAt(0);
-                bolSpeaking = false;
-              });
-            }
-            // brikit.asMap().forEach((index,element) {
-              print(brikit);
-              // if (index > 0) {
-              if (!bolSpeaking) {
-                _speak(brikit.first);
-                setState(() {
-                  brikit.removeAt(0);
-                });
-              }
-              // }
-            // });
+          print("brikit total phrase");
+          print(brikit);
+          print(brikit.length);
+          if (brikit.length != 1) {
+            setState(() {
+              brikit.removeAt(0);
+              bolSpeaking = false;
+            });
+          }
+          // brikit.asMap().forEach((index,element) {
+          print(brikit);
+          // if (index > 0) {
+          if (!bolSpeaking) {
+            _speak(brikit.first);
+            setState(() {
+              brikit.removeAt(0);
+            });
+          }
+          // }
+          // });
           // });
         });
       }
@@ -1215,6 +1227,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     flutterTts.stop();
   }
@@ -1231,7 +1244,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     controleMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.controleMarker2);
     routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5,size:Size.fromHeight(19)), Assets.routebarreeMarker2);
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(19)),
+        Assets.routebarreeMarker2);
     routechantierMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Assets.routechantierMarker2);
     dangerMarker = await BitmapDescriptor.fromAssetImage(
@@ -1292,7 +1306,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               icon: getAppropriateIcon(element.category.name),
               infoWindow: InfoWindow(
                   title: element.category.name,
-                  snippet: 'à '+element.address.split(',')[0]+', ' + moment.from(dateForComparison))));
+                  snippet: 'à ' +
+                      element.address.split(',')[0] +
+                      ', ' +
+                      moment.from(dateForComparison))));
           i++;
         });
       }
@@ -1476,11 +1493,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     updateBottomPadding(context);
     checkPermission();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<UserProvider>()
-          .getPositionVal()
-          .then((value){
-        if(value != null) {
+      context.read<UserProvider>().getPositionVal().then((value) {
+        if (value != null) {
           CameraPosition cPositionGo = CameraPosition(
             zoom: zooming,
             tilt: CAMERA_TILT,
@@ -1527,15 +1541,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical,left: SizeConfig.blockSizeHorizontal * 1.8),
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.blockSizeVertical,
+                      left: SizeConfig.blockSizeHorizontal * 1.8),
                   child: Container(
-                    height: getSize(30,"height",context),
-                    width:  getSize(132,"width",context),
+                    height: getSize(30, "height", context),
+                    width: getSize(132, "width", context),
                     child: ClipRect(
                       child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0,sigmaY: 10.0),
-                          child: Image.asset(Assets.logoLong,fit: BoxFit.cover,)
-                      ),
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                          child: Image.asset(
+                            Assets.logoLong,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ),
                 ),
@@ -2710,38 +2728,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               height: getSize(29, "height", context),
                             ),
                             SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: getSize(44, "height", context),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: Drawer(
-                                            elevation: 0,
-                                            child: Container(
-                                              color: Colors.white,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: SelectFormField(
-                                                type: SelectFormFieldType.dropdown, // or can be dialog
-                                                initialValue: 'embouteillage3',
-                                                labelText: 'Categorie',
-                                                items: Alert.items,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    customCategory = val;
-                                                  });
-                                                },
-                                                onSaved: (val) {
-                                                  setState(() {
-                                                    customCategory = val;
-                                                  });
-                                                },
-                                              ),
-                                            )))),
+                                width: MediaQuery.of(context).size.width,
+                                height: getSize(44, "height", context),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Drawer(
+                                        elevation: 0,
+                                        child: Container(
+                                          color: Colors.white,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: SelectFormField(
+                                            type: SelectFormFieldType
+                                                .dropdown, // or can be dialog
+                                            initialValue: 'embouteillage3',
+                                            labelText: 'Categorie',
+                                            items: Alert.items,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                customCategory = val;
+                                              });
+                                            },
+                                            onSaved: (val) {
+                                              setState(() {
+                                                customCategory = val;
+                                              });
+                                            },
+                                          ),
+                                        )))),
                             SizedBox(
                               height: getSize(29, "height", context),
                             ),
@@ -2784,7 +2801,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: "Entrer la position exacte",
+                                                hintText:
+                                                    "Entrer la position exacte",
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -2841,13 +2859,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         loaderPopup();
-                                          sendAlert(
-                                              "default",
-                                              customCategory,
-                                              address,
-                                              posted,
-                                              latlon,
-                                              customAddress == "" || customAddress == null ? "test" : customAddress);
+                                        sendAlert(
+                                            "default",
+                                            customCategory,
+                                            address,
+                                            posted,
+                                            latlon,
+                                            customAddress == "" ||
+                                                    customAddress == null
+                                                ? "test"
+                                                : customAddress);
                                       },
                                       textColor: Colors.white,
                                       color: Colors.transparent,

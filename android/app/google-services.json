@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "74678681029",
+    "project_id": "mapane-7a50f",
+    "storage_bucket": "mapane-7a50f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74678681029:android:407300c98ecba350075fac",
+        "android_client_info": {
+          "package_name": "com.smartcodegroup.mapane"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74678681029-kuu0v04s3o4c6ble8b1led4i904sje9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBPVU5RljbOdANGkW_pVdyNxGsW_n5Rvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74678681029-kuu0v04s3o4c6ble8b1led4i904sje9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

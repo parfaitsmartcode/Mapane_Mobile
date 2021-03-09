@@ -1,6 +1,8 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mapane/networking/services/push_notifications_service.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/service_locator.dart';
@@ -36,8 +38,11 @@ void main() {
 }
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   Widget build(BuildContext context) {
+    final pushNotificationService = PushNotificationService(_firebaseMessaging,context);
+    pushNotificationService.initialise();
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),

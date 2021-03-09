@@ -17,8 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
-import 'package:mapane/screens/tabs_page.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override
