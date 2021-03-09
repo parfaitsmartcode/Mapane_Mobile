@@ -19,7 +19,7 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.name != "S.O.S").toList();
+      return schools.where((i) => i.category.slug != "S.O.S").toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
@@ -38,7 +38,7 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.name != "S.O.S").toList();
+      return schools.where((i) => i.category.slug != "S.O.S").toList();
     } on DioError catch (e) {
       throw new NException(e);
     }
@@ -58,7 +58,7 @@ class AlertService {
         return Alert.fromJson(json);
         // }
       }).toList();
-      return schools.where((i) => i.slug == cat).toList();
+      return schools.where((i) => i.category.slug == cat).toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
