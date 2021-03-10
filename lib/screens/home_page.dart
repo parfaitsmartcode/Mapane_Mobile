@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:io';
+// import 'dart:util';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -186,17 +187,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         perimeter -= 50.0;
         print(perimeter);
       }
-      print("valeurs subdivisées");
       subvalues.sort();
       subvalues.remove(0);
-      print(subvalues);
       var result = subvalues.reduce((value, element) =>
           (element - distance.round()).abs() < (value - distance.round()).abs()
               ? element
               : value);
+      var finalresult = result.round() < distance.round() ? subvalues[subvalues.indexOf(result.round())+1] : result.round();
       var text = element.category.name +
           " à moins de " +
-          result.round().toString() +
+          finalresult.toString() +
           " mètres de votre position";
       if (context.read<UserProvider>().audioVal) {
         setState(() {
@@ -281,7 +281,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
     _determinePosition().then((position) => print(position == null
-        ? 'Unknow'
+        ? 'Unknown'
         : position.latitude.toString() +
             " , " +
             position.longitude.toString()));
@@ -297,17 +297,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-    print("daz dzakcvx vcxopkpcvx vcxvk");
-    print(testrop);
     Geolocator.getPositionStream().listen((Position position) {
-      print("daz dzakcvx vcxopkpcvx vcxvk 2");
-      print(testrop);
-      print("from here");
       //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
-      print("le cas false");
       // }
       if (procto != null) {
         locationTmp =
@@ -333,7 +327,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       num distance = distanceBetweenTwoGeoPoints(
           LatLng(currentPosition.latitude, currentPosition.longitude),
           LatLng(locationTmp.latitude, locationTmp.longitude));
-      print("la distance est de " + distance.toString());
       if (distance >= 50) {
         locationTmp =
             gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);

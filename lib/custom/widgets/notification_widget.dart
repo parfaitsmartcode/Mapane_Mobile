@@ -14,6 +14,7 @@ import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
 import 'package:mapane/models/language_data.dart';
 import 'package:mapane/state/user_provider.dart';
+import 'package:audioplayer/audioplayer.dart';
 
 class NotificationMapane extends StatefulWidget {
   final double CAMERA_ZOOM;
@@ -34,10 +35,12 @@ class _NotificationMapaneState extends State<NotificationMapane>
     "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
     "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
   ];
+  AudioPlayer audioPlugin = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
+    audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
     context.read<UserProvider>().getLangVal();
   }
   getAppropriateIcon(alert){

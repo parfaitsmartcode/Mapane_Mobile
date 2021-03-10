@@ -10,6 +10,7 @@ import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
 import 'package:mapane/models/language_data.dart';
 import 'package:mapane/state/user_provider.dart';
+import 'package:audioplayer/audioplayer.dart';
 
 class Notif extends StatefulWidget {
   final Function onClose;
@@ -23,6 +24,7 @@ class Notif extends StatefulWidget {
 }
 
 class _NotifState extends State<Notif> {
+  AudioPlayer audioPlugin = AudioPlayer();
   getAppropriateIcon(alert) {
     switch (alert) {
       case "Embouteillage":
@@ -57,6 +59,7 @@ class _NotifState extends State<Notif> {
   @override
   void initState() {
     super.initState();
+    audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
     context.read<UserProvider>().getLangVal();
   }
 
