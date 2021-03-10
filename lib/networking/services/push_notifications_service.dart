@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mapane/models/alert.dart';
@@ -10,7 +10,7 @@ import 'package:mapane/state/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationService {
-  final FirebaseMessaging _fcm;
+  /*final FirebaseMessaging _fcm;
   final BuildContext context;
 
   PushNotificationService(this._fcm,this.context);
@@ -52,5 +52,5 @@ class PushNotificationService {
         });
       },
     );
-  }
+  }*/
 }

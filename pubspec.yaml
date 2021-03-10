@@ -65,7 +65,6 @@ dependencies:
   geolocator: ^6.2.1
   vector_math: any
   select_form_field: ^1.1.0
-  firebase_messaging: ^7.0.3
 
 
 
