@@ -55,7 +55,12 @@ class _MyAppState extends State<MyApp> {
       _locale = locale;
     });
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<NetworkProvider>().init();
+  }
   @override
   void didChangeDependencies() async {
     getLocale().then((locale) {
@@ -72,6 +77,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     //final pushNotificationService = PushNotificationService(_firebaseMessaging,context);
     //pushNotificationService.initialise();
+
     return MaterialApp(
       title: 'Mapane',
       theme: ThemeMapane.themeMapane(context),

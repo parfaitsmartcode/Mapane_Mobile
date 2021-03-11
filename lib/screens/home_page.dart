@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:io';
-// import 'dart:util';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   LocationData currentLocation;
   Position currentPosition;
 // a reference to the destination location
-  LocationData destinationLocation;
+  LatLng destinationLocation;
 // wrapper around the location API
   Location location = new Location();
   String userId;
@@ -123,8 +122,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   dynamic languages;
   String language;
   double volume = 0.8;
-  double pitch = 1.2;
-  double rate = 1;
+  double pitch = 0.9;
+  double rate = 0.5;
   bool isCurrentLanguageInstalled = false;
   List<Alert> mapanes = List<Alert>();
   gdsy.LatLng locationTmp;
@@ -1214,6 +1213,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Future _getLanguages() async {
     languages = await flutterTts.getLanguages;
+    print("languages");
+    print(languages);
+    await flutterTts.setLanguage("fr-FR");
     if (languages != null) setState(() => languages);
   }
 
@@ -1316,10 +1318,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           currentLocation = await location.getLocation();
 
           // hard-coded destination for this example
-          destinationLocation = LocationData.fromMap({
-            "latitude": DEST_LOCATION.latitude,
-            "longitude": DEST_LOCATION.longitude
-          });
+          destinationLocation = LatLng(DEST_LOCATION.latitude,DEST_LOCATION.latitude);
         }
 
         void showPinsOnMap() {
@@ -1331,7 +1330,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           //LatLng(currentLocation.latitude, currentLocation.longitude);
           // get a LatLng out of the LocationData object
           var destPosition =
-          LatLng(destinationLocation.latitude, destinationLocation.longitude);
+          LatLng(DEST_LOCATION.latitude, DEST_LOCATION.latitude);
           // add the initial source location pin
           _markers.add(Marker(
               markerId: MarkerId('sourcePin'),
