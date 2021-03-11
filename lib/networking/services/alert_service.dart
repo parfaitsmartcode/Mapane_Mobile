@@ -44,7 +44,7 @@ class AlertService {
     }
   }
 
-  Future<List<Alert>> getAlertByUserCat(id, cat) async {
+  Future<List<Alert>> getAlertByUserCat(id, cat, addr) async {
     try {
       final String uri = locator<Di>().apiUrl + "/alerts/" + id;
       Response response = await locator<Di>().dio.get(
@@ -58,7 +58,7 @@ class AlertService {
         return Alert.fromJson(json);
         // }
       }).toList();
-      return schools.where((i) => i.category.slug == cat).toList();
+      return schools.where((i) => i.category.slug == cat && i.address.split(",")[2] == " "+addr).toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);

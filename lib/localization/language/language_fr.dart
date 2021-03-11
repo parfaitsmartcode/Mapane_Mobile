@@ -60,7 +60,7 @@ class LanguageFr extends Languages {
   String get alertsent => "Alerte envoyé";
   String get alertsuccess => "Votre alerte a été signalée à tous les utilisateurs de Mapane";
   String get at => "à";
-  String get positionexc => "Quelle est votre position ?";
+  String get positionexc => "Voulez vous renseigner le nom votre position exacte?";
   String get enterexactposition => "Entrer la position exacte";
   String get infolegale => "Informations légales";
   String get selectnumber => "Sélectionner un numéro";

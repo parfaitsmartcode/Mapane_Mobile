@@ -11,6 +11,7 @@ import 'package:mapane/state/user_provider.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class _MyAppState extends State<WelcomeMap> {
   @override
   void initState() {
     context.read<AlertProvider>().getAlertByUser("5ff34b88af0f1982ab03f3f9");
-    context.read<AlertProvider>().getAlertByUserCat("All", 1);
+    context.read<AlertProvider>().getAlertByUserCat("All", 1, context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
     super.initState();
   }
 
@@ -109,7 +110,7 @@ class _MyAppState extends State<WelcomeMap> {
                                     .getAlertByUser("5ff34b88af0f1982ab03f3f9");
                                 context
                                     .read<AlertProvider>()
-                                    .getAlertByUserCat("All", 2);
+                                    .getAlertByUserCat("All", 2, context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
                               },
                               child: Image.asset(
                                 'assets/images/refresh-icon.png',
@@ -301,7 +302,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                     : alertListHisto
                                                                 .where((i) =>
                                                                     i.category.slug ==
-                                                                    "Embouteillage")
+                                                                    "Embouteillage" && i.address.split(",")[2] == " "+context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString())
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -375,7 +376,7 @@ class _MyAppState extends State<WelcomeMap> {
                                                     : alertListHisto
                                                                 .where((i) =>
                                                                     i.category.slug ==
-                                                                    "Route-barree")
+                                                                    "Route-barree" && i.address.split(",")[2] == " "+context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString())
                                                                 .toList()
                                                                 .length >
                                                             0
@@ -796,7 +797,7 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Zone-dangereuse", 2);
+                            .getAlertByUserCat("Zone-dangereuse", 2, context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/zone-dangereuse.png',
@@ -812,7 +813,7 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Accident-de-circulation", 2);
+                            .getAlertByUserCat("Accident-de-circulation", 2, context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/accident.png',
@@ -828,7 +829,7 @@ class _MaterialModalState extends State<MaterialModal> {
                         Navigator.pop(context);
                         context
                             .read<AlertProvider>()
-                            .getAlertByUserCat("Route-en-chantier", 2);
+                            .getAlertByUserCat("Route-en-chantier", 2, context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
                         context.read<UserProvider>().checkTab(false);
                       },
                       leading: Image.asset('assets/images/new-icon-alerts/test/chantier-copie.png',

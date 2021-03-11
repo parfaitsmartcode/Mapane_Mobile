@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/user_provider.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationService {
@@ -36,7 +37,9 @@ class PushNotificationService {
         // String userId = "";
         context.read<UserProvider>().getUserId().then((value){
           print(value);
-          context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),value);
+          if (Alert.fromJson(json.decode(message['data']['body'])['alerte1']).address.split(",")[2] == " "+context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString()) {
+            context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),value);
+          }
         });
         // print(userId);
       },

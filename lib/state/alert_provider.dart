@@ -14,7 +14,15 @@ class AlertProvider extends BaseProvider{
   List<Alert> notifications = List<Alert>();
   List<Alert> countryAlerts = List<Alert>();
   Map<Alert,bool> readedAlerts = new Map<Alert,bool>();
+  String addresseStored = "";
 
+
+  updateAdresse(test){
+    addresseStored = test;
+    notifyListeners();
+    // storeLang(test);
+  }
+  
   getAlertList(loader,String country){
     loader ?? this.toggleLoadingState();
     alertService.getAlerts().then((alerts){
@@ -57,18 +65,18 @@ class AlertProvider extends BaseProvider{
     });
   }
 
-  getAlertByUserCat(id,type) async {
+  getAlertByUserCat(id,type,addr) async {
     SharedPreferences  _preferences = await SharedPreferences.getInstance();
     String userId = await  _preferences.get('user_info');
     if(type == 1){
-      alertService.getAlertByUserCat(userId,id).then((alerts){
+      alertService.getAlertByUserCat(userId,id,addr).then((alerts){
         alertListCat = Right(alerts);
       }).catchError((error){
         alertListCat = Left(error);
       });
     }else{
       this.toggleLoadingState();
-      alertService.getAlertByUserCat(userId,id).then((alerts){
+      alertService.getAlertByUserCat(userId,id,addr).then((alerts){
         alertListCat = Right(alerts);
         this.toggleLoadingState();
       }).catchError((error){

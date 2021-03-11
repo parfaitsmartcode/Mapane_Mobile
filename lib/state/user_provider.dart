@@ -31,6 +31,7 @@ class UserProvider extends BaseProvider{
   bool tabcheck;
   bool checkifmodal;
   String cPositionGo;
+  String addresseStored;
   bool languageVal;
   final TextEditingController domicilecontroller = TextEditingController();
 
@@ -51,6 +52,7 @@ class UserProvider extends BaseProvider{
       this.popupVal = true;
       this.cPositionGo = null;
       this.languageVal = true;
+      this.addresseStored = "";
       // this.first_time = true;
   }
 

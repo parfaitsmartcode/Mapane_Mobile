@@ -45,6 +45,7 @@ import 'package:mapane/networking/services/alert_service.dart';
 import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
 import 'package:mapane/models/language_data.dart';
+import 'package:screen/screen.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -280,6 +281,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
+    Screen.keepOn(true);
     _determinePosition().then((position) => print(position == null
         ? 'Unknown'
         : position.latitude.toString() +
@@ -1004,8 +1006,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     );
                   });
           }
+          Timer(Duration(seconds: 3), () => Navigator.pop(context));
     }).catchError((onError) {
       Navigator.pop(context);
+      Timer(Duration(seconds: 3), () => Navigator.pop(context));
       setState(() => loadera = false);
       showGeneralDialog(
           context: context,
@@ -1348,7 +1352,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             int i = 1;
             // print("liste des alertes " + r.length.toString());
             if (r.length > 0) {
-              r.forEach((element) {
+              var tabrebuild = r.where((i) => i.address.split(",")[2] == addresse.split(",")[2]).toList();
+              tabrebuild.forEach((element) {
                 Moment.setLocaleGlobally(context
                     .read<UserProvider>()
                     .languageVal ? LocaleFr() : LocaleEn());
@@ -1727,7 +1732,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     ", " +
                                     userPlace.city +
                                     ", " +
+                                    userPlace.state +
+                                    ", "+
                                     userPlace.country;
+                                // context.read<AlertProvider>().updateAdresse(addresse);
+                                print("adresse modifiée");
+                                print(addresse);
                               }
                               return userPlace == null
                                   ? Container(

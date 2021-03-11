@@ -6,6 +6,7 @@ import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:mapane/state/place_provider.dart';
 
 class TabsPage extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _TabsPageState extends State<TabsPage> {
               context
                   .read<AlertProvider>()
                   .getAlertByUser("5ff34b88af0f1982ab03f3f9");
-              context.read<AlertProvider>().getAlertByUserCat("All", 1);
+              context.read<AlertProvider>().getAlertByUserCat("All", 1, context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
             }
           },
           items: [
