@@ -16,7 +16,7 @@ class PushNotificationService {
 
   PushNotificationService(this._fcm,this.context);
 
-  Future initialise() async {
+  Future initialise(String country,String state) async {
     if (Platform.isIOS) {
       _fcm.requestNotificationPermissions(IosNotificationSettings());
     }
@@ -25,9 +25,16 @@ class PushNotificationService {
     // you need to get the token and input to the Firebase console
     // https://console.firebase.google.com/project/YOUR_PROJECT_ID/notification/compose
     String token = await _fcm.getToken();
+
     _fcm.subscribeToTopic('mapane-alerts').then((value){
-      print("successfully subscribe");
-    }).catchError((onError) => print("failed subscription"));
+      print("successfully subscribe to mapane-alerts");
+    }).catchError((onError) => print("failed subscription to mapane-alerts"));
+
+    _fcm.subscribeToTopic('mapane-alerts-$country-$state').then((value){
+      print("successfully subscribe to mapane-alerts-$country-$state");
+    }).catchError((onError) => print("failed subscription to mapane-alerts-$country-$state"));
+
+
     print("FirebaseMessaging token: $token");
 
     _fcm.configure(

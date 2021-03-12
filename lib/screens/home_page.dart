@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:ui';
 import 'dart:io';
 // import 'dart:util';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -17,6 +18,7 @@ import 'package:mapane/custom/widgets/notif.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/alert.dart';
+import 'package:mapane/networking/services/push_notifications_service.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
@@ -144,7 +146,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool bolSpeaking = false;
   var brikit = [];
   GoogleMapController mapController;
-
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  var pushNotificationService;
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
 
@@ -289,6 +292,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             position.longitude.toString()));
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    pushNotificationService = PushNotificationService(_firebaseMessaging,context);
     context.read<UserProvider>().getLangVal();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
@@ -300,19 +304,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
     Geolocator.getPositionStream().listen((Position position) {
-      //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
-      // }
       if (procto != null) {
         locationTmp =
             gdsy.LatLng(currentPosition.latitude, currentPosition.longitude);
         testrop = false;
       } else {
         if (testrop) {
-          // context.read<PlaceProvider>().getPlace(
-          //     LatLng(currentLocation.latitude, currentLocation.longitude));
           CameraPosition cPosition = CameraPosition(
             zoom: zooming,
             tilt: CAMERA_TILT,
@@ -1725,6 +1725,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ),
                               );
                             }, (userPlace) {
+                              pushNotificationService.initialise(userPlace.country,userPlace.state);
                               if (userPlace.name != null &&
                                   userPlace.city != null &&
                                   userPlace.country != null) {
@@ -1735,8 +1736,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     userPlace.state +
                                     ", "+
                                     userPlace.country;
-                                // context.read<AlertProvider>().updateAdresse(addresse);
-                                print("adresse modifiée");
                                 print(addresse);
                               }
                               return userPlace == null
