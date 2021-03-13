@@ -98,6 +98,16 @@ class Alert{
            'assets/images/new-icon-alerts/test/accident.png'
        )),
      },
+     {
+       'value': 'Police',
+       'label': 'Police',
+       'icon': SizedBox(
+         height: 40,
+         width: 40,
+         child:Image.asset(
+           'assets/images/controle-routier.png'
+       )),
+     },
    ];
 
 }

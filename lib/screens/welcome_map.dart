@@ -840,22 +840,22 @@ class _MaterialModalState extends State<MaterialModal> {
                               fontWeight: FontWeight.w400,
                               fontSize: getSize(16, "height", context),
                               color: Colors.black))),
-                  // ListTile(
-                  //     onTap: () {
-                  //       Navigator.pop(context);
-                  //       context
-                  //           .read<AlertProvider>()
-                  //           .getAlertByUserCat("S.O.S", 2);
-                  //       context.read<UserProvider>().checkTab(false);
-                  //     },
-                  //     leading: Image.asset('assets/images/new-icon-alerts/test/sos.png',
-                  //         height: getSize(24, "height", context),
-                  //         width: getSize(24, "width", context)),
-                  //     title: Text('S.O.S',
-                  //         style: TextStyle(
-                  //             fontWeight: FontWeight.w400,
-                  //             fontSize: getSize(16, "height", context),
-                  //             color: Colors.black))),
+                  ListTile(
+                      onTap: () {
+                        Navigator.pop(context);
+                        context
+                            .read<AlertProvider>()
+                            .getAlertByUserCat("Police", 2, context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
+                        context.read<UserProvider>().checkTab(false);
+                      },
+                      leading: Image.asset('assets/images/controle-routier.png',
+                          height: getSize(24, "height", context),
+                          width: getSize(24, "width", context)),
+                      title: Text('Police',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: getSize(16, "height", context),
+                              color: Colors.black))),
                 ]),
               ),
             ),
