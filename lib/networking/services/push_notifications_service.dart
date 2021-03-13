@@ -27,23 +27,17 @@ class PushNotificationService {
     String token = await _fcm.getToken();
 
     _fcm.subscribeToTopic('mapane-alerts').then((value){
-      print("successfully subscribe to mapane-alerts");
+
     }).catchError((onError) => print("failed subscription to mapane-alerts"));
 
     _fcm.subscribeToTopic('mapane-alerts-$country-$state').then((value){
-      print("successfully subscribe to mapane-alerts-$country-$state");
     }).catchError((onError) => print("failed subscription to mapane-alerts-$country-$state"));
 
-
-    print("FirebaseMessaging token: $token");
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        print("id de user");
-        // String userId = "";
         context.read<UserProvider>().getUserId().then((value){
-          print(value);
           if (Alert.fromJson(json.decode(message['data']['body'])['alerte1']).address.split(",")[2] == " "+context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString()) {
             context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),value);
           }
