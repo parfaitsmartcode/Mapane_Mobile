@@ -7,8 +7,6 @@ import 'package:mapane/constants/assets.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
-import 'package:mapane/models/language_data.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:audioplayer/audioplayer.dart';
 

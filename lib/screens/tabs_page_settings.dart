@@ -4,14 +4,13 @@ import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:provider/provider.dart';
 
-
 class TabsPage extends StatefulWidget {
   @override
   _TabsPageState createState() => _TabsPageState();
 }
 
 class _TabsPageState extends State<TabsPage> {
-  int _currentIndex = 0;  
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {

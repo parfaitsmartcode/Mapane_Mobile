@@ -1,18 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:mapane/state/user_provider.dart';
-import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
-import 'package:mapane/models/language_data.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -75,7 +69,9 @@ class _MyAppState extends State<Settings> {
                                       IconButton(
                                           icon: Icon(Icons.arrow_back),
                                           onPressed: () {
-                                            context.read<BottomBarProvider>().setWidget(false);
+                                            context
+                                                .read<BottomBarProvider>()
+                                                .setWidget(false);
                                           }),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
@@ -113,7 +109,8 @@ class _MyAppState extends State<Settings> {
                                             Container(
                                               // width: getSize(160, "width", context),
                                               child: Text(
-                                                Languages.of(context).notifaudio,
+                                                Languages.of(context)
+                                                    .notifaudio,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: getSize(
@@ -160,9 +157,9 @@ class _MyAppState extends State<Settings> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: getSize(39, "width", context),
-                                        child: Icon(Icons.notifications_none_outlined)
-                                      ),
+                                          width: getSize(39, "width", context),
+                                          child: Icon(Icons
+                                              .notifications_none_outlined)),
                                       Container(
                                         width: getSize(200, "width", context),
                                         child: Row(
@@ -172,7 +169,8 @@ class _MyAppState extends State<Settings> {
                                             Container(
                                               // width: getSize(160, "width", context),
                                               child: Text(
-                                                Languages.of(context).displaynotif,
+                                                Languages.of(context)
+                                                    .displaynotif,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: getSize(
@@ -234,13 +232,15 @@ class _MyAppState extends State<Settings> {
                                               Container(
                                                 // width: getSize(160, "width", context),
                                                 child: Text(
-                                                  Languages.of(context).modenoncote,
+                                                  Languages.of(context)
+                                                      .modenoncote,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       fontSize: getSize(14,
                                                           "height", context),
-                                                      color: Colors.black.withOpacity(.3)),
+                                                      color: Colors.black
+                                                          .withOpacity(.3)),
                                                 ),
                                               ),
                                               Container(
@@ -274,7 +274,7 @@ class _MyAppState extends State<Settings> {
                                                 ),
                                               ),
                                             ],
-                                          )), 
+                                          )),
                                     ],
                                   ),
                                   SizedBox(

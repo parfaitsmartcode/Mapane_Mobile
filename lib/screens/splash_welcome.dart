@@ -3,10 +3,8 @@ import 'package:walkthrough/flutterwalkthrough.dart';
 import 'package:walkthrough/walkthrough.dart';
 import 'dart:async';
 import 'dart:core';
-import 'welcome_map.dart';
 import 'package:mapane/screens/tabs_page.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
 
 class SplashWelcome extends StatefulWidget {
   @override

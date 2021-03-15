@@ -8,8 +8,6 @@ import '../utils/size_config.dart';
 import '../utils/theme_mapane.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
-import '../utils/theme_mapane.dart';
-import '../utils/size_config.dart';
 import '../state/user_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';

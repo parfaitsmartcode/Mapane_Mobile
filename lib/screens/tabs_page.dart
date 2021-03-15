@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/custom/widgets/tab_navigation_item.dart';
-import 'package:mapane/di.dart';
-import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';

@@ -1,23 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapane/models/place.dart';
 import 'package:mapane/models/user.dart';
-import 'package:mapane/networking/services/search_service.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/networking/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
 import 'base_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:mapane/constants/socket.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:io' show Platform;
 
-
-
-class UserProvider extends BaseProvider{
-  Either<NException,List<User>> userData = Right([]);
+class UserProvider extends BaseProvider {
+  Either<NException, List<User>> userData = Right([]);
 
   bool audioVal;
   bool connectVal;
@@ -35,73 +28,73 @@ class UserProvider extends BaseProvider{
   bool languageVal;
   final TextEditingController domicilecontroller = TextEditingController();
 
-  UserProvider(){
-      this.getAudioNotification().then((value) {
-        print("valeur des preferences " + value.toString());
-      } );
-      // this.getAudioNotification().then((value) => this.audioVal = value );
-      this.getConnectMode().then((value) => this.connectVal = value );
-      print("valeur du booléean " + this.audioVal.toString());
-      this.userPhone = "+237";
-      this.userDomicile = " ";
-      this.audioVal = true;
-      this.connectVal = false;
-      this.loadering = false;
-      this.tabcheck = false;
-      this.checkifmodal = false;
-      this.popupVal = true;
-      this.cPositionGo = null;
-      this.languageVal = true;
-      this.addresseStored = "";
-      // this.first_time = true;
+  UserProvider() {
+    this.getAudioNotification().then((value) {
+      print("valeur des preferences " + value.toString());
+    });
+    // this.getAudioNotification().then((value) => this.audioVal = value );
+    this.getConnectMode().then((value) => this.connectVal = value);
+    print("valeur du booléean " + this.audioVal.toString());
+    this.userPhone = "+237";
+    this.userDomicile = " ";
+    this.audioVal = true;
+    this.connectVal = false;
+    this.loadering = false;
+    this.tabcheck = false;
+    this.checkifmodal = false;
+    this.popupVal = true;
+    this.cPositionGo = null;
+    this.languageVal = true;
+    this.addresseStored = "";
+    // this.first_time = true;
   }
 
-  modifyAudioParam(test){
+  modifyAudioParam(test) {
     audioVal = test;
     notifyListeners();
     storeAudioNotification(audioVal);
   }
 
-  modifyPopupParam(test){
+  modifyPopupParam(test) {
     popupVal = test;
     notifyListeners();
     storePopupNotification(test);
   }
 
-  changeLanguage(test){
+  changeLanguage(test) {
     languageVal = test;
     notifyListeners();
     storeLang(test);
   }
 
-  modifyConnectParam(test){
+  modifyConnectParam(test) {
     connectVal = test;
     notifyListeners();
     storeConnectMode(connectVal);
   }
 
-  modifyLoader(test){
+  modifyLoader(test) {
     loadering = test;
     notifyListeners();
   }
 
-  updatePosition(test){
+  updatePosition(test) {
     cPositionGo = test;
     notifyListeners();
     storePositionMode(test);
   }
 
-  checkTab(test){
+  checkTab(test) {
     tabcheck = test;
     notifyListeners();
   }
-  
-  checkModal(test){
+
+  checkModal(test) {
     checkifmodal = test;
     notifyListeners();
   }
-  
-  updateUserPhone(test){
+
+  updateUserPhone(test) {
     userPhone = test;
     notifyListeners();
   }
@@ -115,7 +108,7 @@ class UserProvider extends BaseProvider{
   getPopupVal() async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     popupVal = await _preferences.get('popup_param');
-    if(popupVal == null){
+    if (popupVal == null) {
       storePopupNotification(true);
       popupVal = true;
     }
@@ -125,7 +118,7 @@ class UserProvider extends BaseProvider{
   getLangVal() async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     languageVal = await _preferences.get('lang');
-    if(languageVal == null){
+    if (languageVal == null) {
       storeLang(true);
       languageVal = true;
     }
@@ -135,7 +128,7 @@ class UserProvider extends BaseProvider{
   getAudioVal() async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     audioVal = await _preferences.get('audioParam');
-    if(audioVal == null){
+    if (audioVal == null) {
       storeAudioNotification(true);
       audioVal = true;
     }
@@ -150,7 +143,7 @@ class UserProvider extends BaseProvider{
 
   Future<String> getUserId() async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
-    userId= await _preferences.get('user_info');
+    userId = await _preferences.get('user_info');
     print("userId" + userId);
     return userId;
   }
@@ -162,8 +155,12 @@ class UserProvider extends BaseProvider{
     print("testify");
     print(userPhone);
     print(first_time);
-    if (first_time != null && !first_time) {// Not first time
-      if (userPhone != null && userPhone != "+237" && userPhone != "" && userPhone.length > 5) {
+    if (first_time != null && !first_time) {
+      // Not first time
+      if (userPhone != null &&
+          userPhone != "+237" &&
+          userPhone != "" &&
+          userPhone.length > 5) {
         Navigator.of(context).pushReplacementNamed('/map');
       } else {
         if (Platform.isAndroid) {
@@ -172,7 +169,8 @@ class UserProvider extends BaseProvider{
           Navigator.of(context).pushReplacementNamed('/numero-get-ios');
         }
       }
-    } else {// First time
+    } else {
+      // First time
       setFirstTime();
       Navigator.of(context).pushReplacementNamed('/walk');
     }
@@ -182,7 +180,10 @@ class UserProvider extends BaseProvider{
   checkreturngetnumberpage(context) async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     userPhone = await _preferences.get('user_phone');
-    if (userPhone != null && userPhone != "+237" && userPhone != "" && userPhone.length > 5) {
+    if (userPhone != null &&
+        userPhone != "+237" &&
+        userPhone != "" &&
+        userPhone.length > 5) {
       SystemNavigator.pop();
     }
   }
@@ -206,35 +207,35 @@ class UserProvider extends BaseProvider{
     domicilecontroller.text = userDomicile == null ? '' : userDomicile;
   }
 
-  setAudioNotification(){
-    this.getAudioNotification().then((value) => this.audioVal = value );
+  setAudioNotification() {
+    this.getAudioNotification().then((value) => this.audioVal = value);
     notifyListeners();
   }
 
-  setConnectMode(){
-    this.getConnectMode().then((value) => this.connectVal = value );
+  setConnectMode() {
+    this.getConnectMode().then((value) => this.connectVal = value);
     notifyListeners();
   }
 
   //stockage du domicile
-  storeDomicile(domicile){
+  storeDomicile(domicile) {
     this.toggleLoadingState();
-    userService.updateHouse(0, 0, domicile).then((data){
+    userService.updateHouse(0, 0, domicile).then((data) {
       userData = Right(data);
       this.toggleLoadingState();
-    }).catchError((error){
+    }).catchError((error) {
       userData = Left(error);
       this.toggleLoadingState();
     });
   }
 
   //stockage du domicile
-  updatePhone(phone, phonewrite, domicile){
+  updatePhone(phone, phonewrite, domicile) {
     this.toggleLoadingState();
-    userService.updateHouse(phone, phonewrite, domicile).then((data){
+    userService.updateHouse(phone, phonewrite, domicile).then((data) {
       userData = Right(data);
       this.toggleLoadingState();
-    }).catchError((error){
+    }).catchError((error) {
       userData = Left(error);
       this.toggleLoadingState();
     });
@@ -242,60 +243,58 @@ class UserProvider extends BaseProvider{
 
   //Modification des paramètres dans le SharedPreferences
 
-  storeAudioNotification(audioParam){
+  storeAudioNotification(audioParam) {
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
         .storeData("audioParam", audioParam, "bool");
   }
 
-  storePopupNotification(test){
+  storePopupNotification(test) {
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
-    SharedPreferenceHelper(instance)
-        .storeData("popup_param", test, "bool");
+    SharedPreferenceHelper(instance).storeData("popup_param", test, "bool");
   }
 
-  storeConnectMode(connectMode){
+  storeConnectMode(connectMode) {
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("connectMode", connectMode,"bool");
+        .storeData("connectMode", connectMode, "bool");
   }
 
-  storeLang(connectMode){
+  storeLang(connectMode) {
+    Future<SharedPreferences> instance = SharedPreferences.getInstance();
+    SharedPreferenceHelper(instance).storeData("lang", connectMode, "bool");
+  }
+
+  storePositionMode(connectMode) {
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
     SharedPreferenceHelper(instance)
-        .storeData("lang", connectMode,"bool");
+        .storeData("positionMode", connectMode, "string");
   }
 
-  storePositionMode(connectMode){
+  Future<bool> getAudioNotification() async {
     Future<SharedPreferences> instance = SharedPreferences.getInstance();
-    SharedPreferenceHelper(instance)
-        .storeData("positionMode", connectMode,"string");
-  }
-
-  Future<bool>getAudioNotification() async {
-    Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    var value = await SharedPreferenceHelper(instance).getData("audioParam","bool");
+    var value =
+        await SharedPreferenceHelper(instance).getData("audioParam", "bool");
     print("type de value " + value.runtimeType.toString());
-    if(value == null){
+    if (value == null) {
       return false;
-    }else{
+    } else {
       print(value);
       return value;
     }
   }
 
-  Future<bool>getConnectMode() async {
-    Future<SharedPreferences>  instance = SharedPreferences.getInstance();
-    var value = await SharedPreferenceHelper(instance).getData("connectMode","bool");
-    if(value == null){
+  Future<bool> getConnectMode() async {
+    Future<SharedPreferences> instance = SharedPreferences.getInstance();
+    var value =
+        await SharedPreferenceHelper(instance).getData("connectMode", "bool");
+    if (value == null) {
       return false;
-    }else{
+    } else {
       print(value);
       return value;
     }
   }
-
-
 }
 
 final UserProvider userProvider = UserProvider();

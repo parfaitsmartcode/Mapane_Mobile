@@ -5,7 +5,6 @@ import '../../di.dart';
 import '../../service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
-import 'dart:convert';
 
 class UserService {
   Future<dynamic> getSchools() async {

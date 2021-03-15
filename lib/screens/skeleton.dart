@@ -1,9 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mapane/routes.dart';
-import '../utils/theme_mapane.dart';
-import 'package:mapane/utils/size_config.dart';
 
 class Skeleton extends StatefulWidget {
   final double height;

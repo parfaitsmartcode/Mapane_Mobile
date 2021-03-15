@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -14,9 +13,9 @@ class PushNotificationService {
   final FirebaseMessaging _fcm;
   final BuildContext context;
 
-  PushNotificationService(this._fcm,this.context);
+  PushNotificationService(this._fcm, this.context);
 
-  Future initialise(String country,String state) async {
+  Future initialise(String country, String state) async {
     if (Platform.isIOS) {
       _fcm.requestNotificationPermissions(IosNotificationSettings());
     }
@@ -26,20 +25,33 @@ class PushNotificationService {
     // https://console.firebase.google.com/project/YOUR_PROJECT_ID/notification/compose
     String token = await _fcm.getToken();
 
-    _fcm.subscribeToTopic('mapane-alerts').then((value){
+    _fcm
+        .subscribeToTopic('mapane-alerts')
+        .then((value) {})
+        .catchError((onError) => print("failed subscription to mapane-alerts"));
 
-    }).catchError((onError) => print("failed subscription to mapane-alerts"));
-
-    _fcm.subscribeToTopic('mapane-alerts-$country-$state').then((value){
-    }).catchError((onError) => print("failed subscription to mapane-alerts-$country-$state"));
-
+    _fcm
+        .subscribeToTopic('mapane-alerts-$country-$state')
+        .then((value) {})
+        .catchError((onError) =>
+            print("failed subscription to mapane-alerts-$country-$state"));
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        context.read<UserProvider>().getUserId().then((value){
-          if (Alert.fromJson(json.decode(message['data']['body'])['alerte1']).address.split(",")[2] == " "+context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString()) {
-            context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['data']['body'])['alerte1']),value);
+        context.read<UserProvider>().getUserId().then((value) {
+          if (Alert.fromJson(json.decode(message['data']['body'])['alerte1'])
+                  .address
+                  .split(",")[2] ==
+              " " +
+                  context
+                      .read<PlaceProvider>()
+                      .userPlace
+                      .fold((l) => null, (r) => r.state)
+                      .toString()) {
+            context.read<AlertProvider>().pushNotification(
+                Alert.fromJson(json.decode(message['data']['body'])['alerte1']),
+                value);
           }
         });
         // print(userId);
@@ -50,8 +62,9 @@ class PushNotificationService {
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Alert alert = Alert.fromJson(json.decode(message['data']['body'])['alerte1']);
-          var cPosition = alert.lat+","+alert.lon;
+          Alert alert =
+              Alert.fromJson(json.decode(message['data']['body'])['alerte1']);
+          var cPosition = alert.lat + "," + alert.lon;
           context.read<UserProvider>().updatePosition(cPosition);
         });
       },

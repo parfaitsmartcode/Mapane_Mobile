@@ -8,7 +8,6 @@ import 'package:mapane/screens/splash_welcome.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/screens/tabs_page.dart';
-import 'package:mapane/utils/network_route.dart';
 
 
 class Routes {

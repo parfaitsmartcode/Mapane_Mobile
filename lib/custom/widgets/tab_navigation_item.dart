@@ -6,7 +6,6 @@ import 'package:mapane/custom/icons/my_flutter_app_icons.dart';
 import 'package:mapane/screens/home_page.dart';
 import 'package:mapane/screens/monCompte.dart';
 import 'package:mapane/screens/welcome_map.dart';
-import 'package:mapane/screens/monCompte.dart';
 import 'package:mapane/utils/hexcolor.dart';
 
 

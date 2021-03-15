@@ -1,9 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mapane/di.dart';
-import 'package:mapane/routes.dart';
-import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import '../utils/theme_mapane.dart';
 import 'package:mapane/state/alert_provider.dart';
@@ -18,11 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:mapane/utils/n_exception.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:simple_moment/simple_moment.dart';
-import 'package:mapane/screens/tabs_page.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
-import 'package:mapane/models/language_data.dart';
 
 class WelcomeMap extends StatefulWidget {
   @override

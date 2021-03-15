@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'package:provider/provider.dart';
 import "package:flutter/material.dart";
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/constants/assets.dart';
-import 'package:mapane/models/alert.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/utils/hexcolor.dart';
 import 'package:mapane/utils/size_config.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
-import 'package:mapane/models/language_data.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:audioplayer/audioplayer.dart';
 

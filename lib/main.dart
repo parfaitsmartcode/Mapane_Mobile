@@ -16,32 +16,31 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization/locale_constant.dart';
 import 'localization/localizations_delegate.dart';
 
-
 void main() {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_){
-    runApp(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create:(_) => BottomBarProvider()),
-            ChangeNotifierProvider(create:(_) => AlertProvider()),
-            ChangeNotifierProvider(create:(_) => UserProvider()),
-            ChangeNotifierProvider(create: (_) => SearchProvider()),
-            ChangeNotifierProvider(create: (_) => PlaceProvider()),
-            ChangeNotifierProvider(create: (_) => NetworkProvider())
-          ],
-          child:  MyApp(),
-        )
-    );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BottomBarProvider()),
+        ChangeNotifierProvider(create: (_) => AlertProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => PlaceProvider()),
+        ChangeNotifierProvider(create: (_) => NetworkProvider())
+      ],
+      child: MyApp(),
+    ));
   });
-
 }
+
 class MyApp extends StatefulWidget {
   static void setLocale(BuildContext context, Locale newLocale) {
     var state = context.findAncestorStateOfType<_MyAppState>();
     state.setLocale(newLocale);
   }
+
   @override
   State<StatefulWidget> createState() => _MyAppState();
 }

@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:mapane/networking/services/user_service.dart';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:mapane/routes.dart';
 import '../utils/theme_mapane.dart';
 import '../utils/size_config.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
-import 'package:mapane/screens/splash_welcome.dart';
 import '../state/user_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
@@ -152,7 +149,12 @@ class _MyAppState extends State<NumeroGet> {
                                     )
                                   : Padding(
                                       padding: _mobileNumber.length <= 3
-                                          ? EdgeInsets.fromLTRB(getSize(2.5, "width", context), 0, getSize(20.5, "width", context), 0) : EdgeInsets.all(0),
+                                          ? EdgeInsets.fromLTRB(
+                                              getSize(2.5, "width", context),
+                                              0,
+                                              getSize(20.5, "width", context),
+                                              0)
+                                          : EdgeInsets.all(0),
                                       child: _mobileNumber.length <= 3
                                           ? fillInput()
                                           : fillCards()),
@@ -286,7 +288,14 @@ class _MyAppState extends State<NumeroGet> {
                                                     width: getSize(
                                                         220, "width", context),
                                                     child: Text(
-                                                      value == "Ce compte existe déjà !" ? Languages.of(context).compteexiste : Languages.of(context).inscrisok,
+                                                      value ==
+                                                              "Ce compte existe déjà !"
+                                                          ? Languages.of(
+                                                                  context)
+                                                              .compteexiste
+                                                          : Languages.of(
+                                                                  context)
+                                                              .inscrisok,
                                                       style: AppTheme.bodyText1
                                                           .copyWith(
                                                         color: AppColors
@@ -415,7 +424,9 @@ class _MyAppState extends State<NumeroGet> {
                                                                   null ||
                                                               onError.response ==
                                                                   ""
-                                                          ? Languages.of(context).errormsg
+                                                          ? Languages.of(
+                                                                  context)
+                                                              .errormsg
                                                           : onError.response
                                                               .data["message"],
                                                       style: AppTheme.bodyText1
@@ -475,7 +486,8 @@ class _MyAppState extends State<NumeroGet> {
                                       ),
                                     )
                                   : Row(),
-                              Text(Languages.of(context).continuer, style: TextStyle(fontSize: 18)),
+                              Text(Languages.of(context).continuer,
+                                  style: TextStyle(fontSize: 18)),
                             ],
                           )),
                         ),
@@ -488,48 +500,54 @@ class _MyAppState extends State<NumeroGet> {
             bottom: 21,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        changeLanguage(context,"fr");
-                        context.read<UserProvider>().changeLanguage(true);
-                      },
-                      child: Text(
-                        "Fr   ",
-                        style: TextStyle(
-                            fontWeight: context.watch<UserProvider>().languageVal ? FontWeight.w900 : FontWeight.w400,
-                            fontSize: 15,
-                            color: context.watch<UserProvider>().languageVal ? Color(0xFF25296A) : Colors.black),
-                      ),
+                Row(children: [
+                  InkWell(
+                    onTap: () {
+                      changeLanguage(context, "fr");
+                      context.read<UserProvider>().changeLanguage(true);
+                    },
+                    child: Text(
+                      "Fr   ",
+                      style: TextStyle(
+                          fontWeight: context.watch<UserProvider>().languageVal
+                              ? FontWeight.w900
+                              : FontWeight.w400,
+                          fontSize: 15,
+                          color: context.watch<UserProvider>().languageVal
+                              ? Color(0xFF25296A)
+                              : Colors.black),
                     ),
-                    InkWell(
-                      child: Text(
-                        "|",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15,
-                            color: Colors.black),
-                      ),
+                  ),
+                  InkWell(
+                    child: Text(
+                      "|",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: Colors.black),
                     ),
-                    InkWell(
-                      onTap: (){
-                        changeLanguage(context,"en");
-                        context.read<UserProvider>().changeLanguage(false);
-                      },
-                      child: Text(
-                        "   En",
-                        style: TextStyle(
-                            fontWeight: !context.watch<UserProvider>().languageVal ? FontWeight.w900 : FontWeight.w400,
-                            fontSize: 15,
-                            color: !context.watch<UserProvider>().languageVal ? Color(0xFF25296A) : Colors.black),
-                      ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      changeLanguage(context, "en");
+                      context.read<UserProvider>().changeLanguage(false);
+                    },
+                    child: Text(
+                      "   En",
+                      style: TextStyle(
+                          fontWeight: !context.watch<UserProvider>().languageVal
+                              ? FontWeight.w900
+                              : FontWeight.w400,
+                          fontSize: 15,
+                          color: !context.watch<UserProvider>().languageVal
+                              ? Color(0xFF25296A)
+                              : Colors.black),
                     ),
-                  ]
-                ), 
+                  ),
+                ]),
                 SizedBox(
                   height: 0.01177 * deviceSize.height,
-                ), 
+                ),
                 Text(
                   Languages.of(context).infolegale,
                   style: TextStyle(
@@ -575,42 +593,46 @@ class _MyAppState extends State<NumeroGet> {
         .map(
           (SimCard sim) => Column(
             children: [
-              sim.number != "" && sim.number != null ? ListTile(
-                  leading: Image.asset(
-                    'assets/images/Flag-CM.png',
-                    height: 25,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _mobileNumberPhone = sim.number;
-                      isSelected = [false, false, false, false, false];
-                      isSelected[_simCard.indexOf(sim)] = true;
-                    });
-                  },
-                  title: Align(
-                    child: Text(
-                      sim.number == null ? "" : sim.number,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.black,
-                          letterSpacing: 2),
-                    ),
-                    alignment: Alignment(-0.3, 0),
-                  ),
-                  trailing:
-                      taille == 1 || isSelected[_simCard.indexOf(sim)] == true
+              sim.number != "" && sim.number != null
+                  ? ListTile(
+                      leading: Image.asset(
+                        'assets/images/Flag-CM.png',
+                        height: 25,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _mobileNumberPhone = sim.number;
+                          isSelected = [false, false, false, false, false];
+                          isSelected[_simCard.indexOf(sim)] = true;
+                        });
+                      },
+                      title: Align(
+                        child: Text(
+                          sim.number == null ? "" : sim.number,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                              color: Colors.black,
+                              letterSpacing: 2),
+                        ),
+                        alignment: Alignment(-0.3, 0),
+                      ),
+                      trailing: taille == 1 ||
+                              isSelected[_simCard.indexOf(sim)] == true
                           ? Icon(
                               Icons.check_circle,
                               size: 23.0,
                               color: Color(0xFF25296A),
                             )
-                          : Text('')) : Row(),
+                          : Text(''))
+                  : Row(),
               _simCard.indexOf(sim) != taille - 1
-                  ? sim.number != "" && sim.number != null ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.5),
-                      child: Divider(thickness: 2, color: Colors.grey[200]),
-                    ) : Row()
+                  ? sim.number != "" && sim.number != null
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.5),
+                          child: Divider(thickness: 2, color: Colors.grey[200]),
+                        )
+                      : Row()
                   : Row(),
             ],
           ),
@@ -635,9 +657,8 @@ class _MyAppState extends State<NumeroGet> {
                   });
                 },
                 selectorConfig: SelectorConfig(
-                  selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                  backgroundColor: Colors.white
-                ),
+                    selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                    backgroundColor: Colors.white),
                 textStyle: TextStyle(fontSize: 16),
                 ignoreBlank: false,
                 autoValidateMode: AutovalidateMode.disabled,
