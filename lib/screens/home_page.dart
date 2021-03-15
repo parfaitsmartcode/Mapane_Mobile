@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -16,6 +17,7 @@ import 'package:mapane/custom/widgets/notif.dart';
 import 'package:mapane/custom/widgets/notification_widget.dart';
 import 'package:mapane/custom/widgets/util_button.dart';
 import 'package:mapane/models/alert.dart';
+import 'package:mapane/networking/services/push_notifications_service.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
@@ -142,7 +144,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool bolSpeaking = false;
   var brikit = [];
   GoogleMapController mapController;
-
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  var pushNotificationService;
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
 
@@ -286,14 +289,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             position.longitude.toString()));
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    pushNotificationService =
+        PushNotificationService(_firebaseMessaging, context);
     context.read<UserProvider>().getLangVal();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
-    /*context
-        .read<UserProvider>()
-        .getPositionVal()
-        .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
     Geolocator.getPositionStream().listen((Position position) {
@@ -1347,7 +1348,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             int i = 1;
             // print("liste des alertes " + r.length.toString());
             if (r.length > 0) {
-              r.forEach((element) {
+              var tabrebuild = r
+                  .where((i) => i.address.split(",")[2] == addresse.split(",")[2])
+                  .toList();
+              tabrebuild.forEach((element) {
                 Moment.setLocaleGlobally(context
                     .read<UserProvider>()
                     .languageVal ? LocaleFr() : LocaleEn());
@@ -1719,12 +1723,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ),
                               );
                             }, (userPlace) {
+                              pushNotificationService.initialise(
+                                  userPlace.country, userPlace.state);
                               if (userPlace.name != null &&
                                   userPlace.city != null &&
                                   userPlace.country != null) {
                                 addresse = userPlace.name +
                                     ", " +
                                     userPlace.city +
+                                    ", " +
+                                    userPlace.state +
                                     ", " +
                                     userPlace.country;
                               }

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:mapane/models/category.dart';
 import 'package:mapane/utils/n_exception.dart';

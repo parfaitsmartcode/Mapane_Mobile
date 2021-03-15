@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-//import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mapane/models/alert.dart';
@@ -10,12 +9,12 @@ import 'package:mapane/state/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationService {
-  /*final FirebaseMessaging _fcm;
+  final FirebaseMessaging _fcm;
   final BuildContext context;
 
   PushNotificationService(this._fcm,this.context);
 
-  Future initialise() async {
+  Future initialise(String country, String state) async {
     if (Platform.isIOS) {
       _fcm.requestNotificationPermissions(IosNotificationSettings());
     }
@@ -24,10 +23,16 @@ class PushNotificationService {
     // you need to get the token and input to the Firebase console
     // https://console.firebase.google.com/project/YOUR_PROJECT_ID/notification/compose
     String token = await _fcm.getToken();
-    _fcm.subscribeToTopic('mapane-alerts').then((value){
-      print("successfully subscribe");
-    }).catchError((onError) => print("failed subscription"));
-    print("FirebaseMessaging token: $token");
+    _fcm
+        .subscribeToTopic('mapane-alerts')
+        .then((value) {})
+        .catchError((onError) => print("failed subscription to mapane-alerts"));
+
+    _fcm
+        .subscribeToTopic('mapane-alerts-$country-$state')
+        .then((value) {})
+        .catchError((onError) =>
+        print("failed subscription to mapane-alerts-$country-$state"));
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -52,5 +57,5 @@ class PushNotificationService {
         });
       },
     );
-  }*/
+  }
 }
