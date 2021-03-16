@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
-class Di {
+class Di{
+
   final String apiUrl = "https://mapane.smartcodegroup.com";
 
   Dio dio = new Dio();
