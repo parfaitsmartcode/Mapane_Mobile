@@ -1365,7 +1365,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     .languageVal ? LocaleFr() : LocaleEn());
                 var moment = Moment.now();
                 var dateForComparison = DateTime.parse(element.createdAt);
-                print(element.category.name);
+                // print(element.category.name);
+                var descaddr = element.desc != "desc" ? " au lieu dit "+element.desc : "";
                 _markers.add(Marker(
                     position:
                     LatLng(
@@ -1380,7 +1381,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         snippet: Languages
                             .of(context)
                             .at + ' ' +
-                            element.address.split(',')[0] +
+                            element.address.split(',')[0] +descaddr+
                             ', ' +
                             moment.from(dateForComparison))));
                 i++;
