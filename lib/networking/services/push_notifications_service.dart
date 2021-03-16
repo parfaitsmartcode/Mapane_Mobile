@@ -25,12 +25,16 @@ class PushNotificationService {
     String token = await _fcm.getToken();
     _fcm
         .subscribeToTopic('mapane-alerts')
-        .then((value) {})
+        .then((value) {
+          print("success to subscribe");
+    })
         .catchError((onError) => print("failed subscription to mapane-alerts"));
 
     _fcm
         .subscribeToTopic('mapane-alerts-$country-$state')
-        .then((value) {})
+        .then((value) {
+      print("success to subscribe");
+    })
         .catchError((onError) =>
         print("failed subscription to mapane-alerts-$country-$state"));
 

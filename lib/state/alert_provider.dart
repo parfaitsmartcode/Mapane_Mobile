@@ -80,10 +80,10 @@ class AlertProvider extends BaseProvider{
   
   pushNotification(Alert alert,String userId){
     print(alert);
-    if(alert.userId.id != userId){
+    //if(alert.userId.id != userId){
       this.notifications.insert(0,alert);
       notifyListeners();
-    }
+    //}
   }
 
   popNotification(int index) {
