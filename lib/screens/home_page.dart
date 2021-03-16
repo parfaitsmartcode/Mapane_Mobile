@@ -48,6 +48,7 @@ import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
 import 'package:mapane/models/language_data.dart';
 import 'package:screen/screen.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -1237,29 +1238,34 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // await flutterTts.setQueueMode(1);
     print(test);
     // await flutterTts.awaitSpeakCompletion(true);
-    if (test != null) {
-      if (test.isNotEmpty) {
-        await flutterTts.awaitSpeakCompletion(true);
-        await flutterTts.speak(test);
-        flutterTts.setCompletionHandler(() {
-          if (brikit.length != 1) {
-            setState(() {
-              brikit.removeAt(0);
-              bolSpeaking = false;
+    bool resultconnect = await DataConnectionChecker().hasConnection;
+    if(resultconnect){
+      if (test != null) {
+        if (test.isNotEmpty) {
+          await flutterTts.awaitSpeakCompletion(true);
+          await flutterTts.speak(test);
+          flutterTts.setCompletionHandler(() {
+            Future.delayed(const Duration(seconds: 1), () {
+              if (brikit.length != 1) {
+                setState(() {
+                  brikit.removeAt(0);
+                  bolSpeaking = false;
+                });
+              }
+              // brikit.asMap().forEach((index,element) {
+              print(brikit);
+              // if (index > 0) {
+              if (!bolSpeaking) {
+                _speak(brikit.first);
+                setState(() {
+                  brikit.removeAt(0);
+                });
+              }
             });
-          }
-          // brikit.asMap().forEach((index,element) {
-          print(brikit);
-          // if (index > 0) {
-          if (!bolSpeaking) {
-            _speak(brikit.first);
-            setState(() {
-              brikit.removeAt(0);
-            });
-          }
-          // });
-          // });
-        });
+            // });
+            // });
+          });
+        }
       }
     }
   }
