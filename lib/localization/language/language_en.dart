@@ -70,4 +70,5 @@ class LanguageEn extends Languages {
   String get mapanepresentation => "Your urban travel assistance application";
   String get closeall => "Close all";
   String get localiser => "Localize";
+  String get errornumber => "Please enter a valid phone number";
 }

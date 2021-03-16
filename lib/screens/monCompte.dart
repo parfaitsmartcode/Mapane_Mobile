@@ -31,6 +31,7 @@ class _MyAppState extends State<MonCompte> {
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
   String _mobileNumberPhoneWrite = '';
+  bool validated = false;
   bool _loading = false;
   var isSelected = [false, false, false, false, false];
   List<SimCard> _simCard = <SimCard>[];
@@ -324,8 +325,9 @@ class _MyAppState extends State<MonCompte> {
                                                       children: <Widget>[
                                                         RichText(
                                                           text: TextSpan(
-                                                              text:
-                                                                Languages.of(context).select,
+                                                              text: Languages.of(
+                                                                      context)
+                                                                  .select,
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -338,8 +340,9 @@ class _MyAppState extends State<MonCompte> {
                                                                       .black),
                                                               children: [
                                                                 TextSpan(
-                                                                  text:
-                                                                      Languages.of(context).numphone,
+                                                                  text: Languages.of(
+                                                                          context)
+                                                                      .numphone,
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -366,7 +369,9 @@ class _MyAppState extends State<MonCompte> {
                                                                 child: ListTile(
                                                                   title: Align(
                                                                     child: Text(
-                                                                      Languages.of(context).entersim,
+                                                                      Languages.of(
+                                                                              context)
+                                                                          .entersim,
                                                                       style: TextStyle(
                                                                           fontWeight: FontWeight
                                                                               .w400,
@@ -415,17 +420,9 @@ class _MyAppState extends State<MonCompte> {
                                                                     RaisedButton(
                                                                   onPressed:
                                                                       () {
-                                                                    userService
-                                                                        .updateHouse(
-                                                                            _mobileNumberPhone,
-                                                                            _mobileNumberPhoneWrite,
-                                                                            0)
-                                                                        .then(
-                                                                            (value) {
-                                                                      context.read<UserProvider>().updateUserPhone(_mobileNumberPhone ==
-                                                                              ''
-                                                                          ? _mobileNumberPhoneWrite
-                                                                          : _mobileNumberPhone);
+                                                                    if (!validated &&
+                                                                        _mobileNumber.length <=
+                                                                            3) {
                                                                       showGeneralDialog(
                                                                           context:
                                                                               context,
@@ -474,104 +471,7 @@ class _MyAppState extends State<MonCompte> {
                                                                                               padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
                                                                                               decoration: BoxDecoration(
                                                                                                 borderRadius: BorderRadius.circular(100),
-                                                                                                color: AppColors.greenColor.withOpacity(0.35),
-                                                                                              ),
-                                                                                              child: Center(
-                                                                                                  child: Icon(
-                                                                                                Icons.check,
-                                                                                                size: getSize(38, "height", context),
-                                                                                                color: AppColors.greenColor,
-                                                                                              )),
-                                                                                            ),
-                                                                                            SizedBox(
-                                                                                              height: getSize(21, "height", context),
-                                                                                            ),
-                                                                                            Text(
-                                                                                              Languages.of(context).saved,
-                                                                                              style: AppTheme.defaultParagraph,
-                                                                                            ),
-                                                                                            SizedBox(
-                                                                                              height: getSize(12, "height", context),
-                                                                                            ),
-                                                                                            Container(
-                                                                                              width: getSize(220, "width", context),
-                                                                                              child: Text(
-                                                                                                value,
-                                                                                                style: AppTheme.bodyText1.copyWith(
-                                                                                                  color: AppColors.blackColor.withOpacity(0.5),
-                                                                                                ),
-                                                                                                textAlign: TextAlign.center,
-                                                                                              ),
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            );
-                                                                          });
-                                                                      Future.delayed(
-                                                                          const Duration(
-                                                                              milliseconds: 2000),
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      });
-                                                                    }).catchError(
-                                                                            (onError) {
-                                                                      showGeneralDialog(
-                                                                          context:
-                                                                              context,
-                                                                          barrierDismissible:
-                                                                              true,
-                                                                          barrierLabel: MaterialLocalizations.of(context)
-                                                                              .modalBarrierDismissLabel,
-                                                                          barrierColor: AppColors.whiteColor.withOpacity(
-                                                                              0.96),
-                                                                          transitionDuration: const Duration(
-                                                                              milliseconds:
-                                                                                  200),
-                                                                          pageBuilder: (BuildContext buildContext,
-                                                                              Animation animation,
-                                                                              Animation secondaryAnimation) {
-                                                                            return Center(
-                                                                              child: Card(
-                                                                                shadowColor: Colors.transparent,
-                                                                                margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                                                                child: Column(
-                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      width: getSize(303, "width", context),
-                                                                                      // height: getSize(256, "height", context),
-                                                                                      // padding: EdgeInsets.all(getSize(0,"height",context)),
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: AppColors.whiteColor,
-                                                                                        borderRadius: BorderRadius.circular(getSize(20, "height", context)),
-                                                                                        boxShadow: [
-                                                                                          BoxShadow(
-                                                                                            color: Color(0xFF000000).withOpacity(0.11),
-                                                                                            spreadRadius: 5,
-                                                                                            blurRadius: 10,
-                                                                                            offset: Offset(0, 5), // changes position of shadow
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                      child: Container(
-                                                                                        padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
-                                                                                        child: Column(
-                                                                                          children: [
-                                                                                            Container(
-                                                                                              width: getSize(100, "height", context),
-                                                                                              height: getSize(100, "height", context),
-                                                                                              padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
-                                                                                              decoration: BoxDecoration(
-                                                                                                borderRadius: BorderRadius.circular(100),
-                                                                                                color: Colors.red.withOpacity(0.35),
+                                                                                                color: Colors.red.withOpacity(0.5),
                                                                                               ),
                                                                                               child: Center(
                                                                                                   child: Icon(
@@ -593,7 +493,7 @@ class _MyAppState extends State<MonCompte> {
                                                                                             Container(
                                                                                               width: getSize(220, "width", context),
                                                                                               child: Text(
-                                                                                                onError.response == null || onError.response == "" ? Languages.of(context).errormsg : onError.response.data["message"],
+                                                                                                Languages.of(context).errornumber,
                                                                                                 style: AppTheme.bodyText1.copyWith(
                                                                                                   color: AppColors.blackColor.withOpacity(0.5),
                                                                                                 ),
@@ -609,17 +509,201 @@ class _MyAppState extends State<MonCompte> {
                                                                               ),
                                                                             );
                                                                           });
+                                                                    } else {
+                                                                      userService
+                                                                          .updateHouse(
+                                                                              _mobileNumberPhone,
+                                                                              _mobileNumberPhoneWrite,
+                                                                              0)
+                                                                          .then(
+                                                                              (value) {
+                                                                        context.read<UserProvider>().updateUserPhone(_mobileNumberPhone ==
+                                                                                ''
+                                                                            ? _mobileNumberPhoneWrite
+                                                                            : _mobileNumberPhone);
+                                                                        showGeneralDialog(
+                                                                            context:
+                                                                                context,
+                                                                            barrierDismissible:
+                                                                                false,
+                                                                            barrierLabel:
+                                                                                MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                                                            barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                                                                            transitionDuration: const Duration(milliseconds: 200),
+                                                                            pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
+                                                                              return Center(
+                                                                                child: Card(
+                                                                                  shadowColor: Colors.transparent,
+                                                                                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                                                                  child: Column(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: getSize(303, "width", context),
+                                                                                        // height: getSize(256, "height", context),
+                                                                                        // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: AppColors.whiteColor,
+                                                                                          borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                          boxShadow: [
+                                                                                            BoxShadow(
+                                                                                              color: Color(0xFF000000).withOpacity(0.11),
+                                                                                              spreadRadius: 5,
+                                                                                              blurRadius: 10,
+                                                                                              offset: Offset(0, 5), // changes position of shadow
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                        child: Container(
+                                                                                          padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                          child: Column(
+                                                                                            children: [
+                                                                                              Container(
+                                                                                                width: getSize(100, "height", context),
+                                                                                                height: getSize(100, "height", context),
+                                                                                                padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                                decoration: BoxDecoration(
+                                                                                                  borderRadius: BorderRadius.circular(100),
+                                                                                                  color: AppColors.greenColor.withOpacity(0.35),
+                                                                                                ),
+                                                                                                child: Center(
+                                                                                                    child: Icon(
+                                                                                                  Icons.check,
+                                                                                                  size: getSize(38, "height", context),
+                                                                                                  color: AppColors.greenColor,
+                                                                                                )),
+                                                                                              ),
+                                                                                              SizedBox(
+                                                                                                height: getSize(21, "height", context),
+                                                                                              ),
+                                                                                              Text(
+                                                                                                Languages.of(context).saved,
+                                                                                                style: AppTheme.defaultParagraph,
+                                                                                              ),
+                                                                                              SizedBox(
+                                                                                                height: getSize(12, "height", context),
+                                                                                              ),
+                                                                                              Container(
+                                                                                                width: getSize(220, "width", context),
+                                                                                                child: Text(
+                                                                                                  value,
+                                                                                                  style: AppTheme.bodyText1.copyWith(
+                                                                                                    color: AppColors.blackColor.withOpacity(0.5),
+                                                                                                  ),
+                                                                                                  textAlign: TextAlign.center,
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            });
+                                                                        Future.delayed(
+                                                                            const Duration(milliseconds: 2000),
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        });
+                                                                      }).catchError(
+                                                                              (onError) {
+                                                                        showGeneralDialog(
+                                                                            context:
+                                                                                context,
+                                                                            barrierDismissible:
+                                                                                true,
+                                                                            barrierLabel:
+                                                                                MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                                                            barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                                                                            transitionDuration: const Duration(milliseconds: 200),
+                                                                            pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
+                                                                              return Center(
+                                                                                child: Card(
+                                                                                  shadowColor: Colors.transparent,
+                                                                                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                                                                  child: Column(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: getSize(303, "width", context),
+                                                                                        // height: getSize(256, "height", context),
+                                                                                        // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: AppColors.whiteColor,
+                                                                                          borderRadius: BorderRadius.circular(getSize(20, "height", context)),
+                                                                                          boxShadow: [
+                                                                                            BoxShadow(
+                                                                                              color: Color(0xFF000000).withOpacity(0.11),
+                                                                                              spreadRadius: 5,
+                                                                                              blurRadius: 10,
+                                                                                              offset: Offset(0, 5), // changes position of shadow
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                        child: Container(
+                                                                                          padding: EdgeInsets.symmetric(vertical: getSize(33, "height", context), horizontal: getSize(28, "width", context)),
+                                                                                          child: Column(
+                                                                                            children: [
+                                                                                              Container(
+                                                                                                width: getSize(100, "height", context),
+                                                                                                height: getSize(100, "height", context),
+                                                                                                padding: EdgeInsets.symmetric(vertical: getSize(36, "height", context), horizontal: getSize(30, "width", context)),
+                                                                                                decoration: BoxDecoration(
+                                                                                                  borderRadius: BorderRadius.circular(100),
+                                                                                                  color: Colors.red.withOpacity(0.35),
+                                                                                                ),
+                                                                                                child: Center(
+                                                                                                    child: Icon(
+                                                                                                  Icons.close,
+                                                                                                  size: getSize(38, "height", context),
+                                                                                                  color: Colors.white,
+                                                                                                )),
+                                                                                              ),
+                                                                                              SizedBox(
+                                                                                                height: getSize(21, "height", context),
+                                                                                              ),
+                                                                                              Text(
+                                                                                                Languages.of(context).error,
+                                                                                                style: AppTheme.defaultParagraph,
+                                                                                              ),
+                                                                                              SizedBox(
+                                                                                                height: getSize(12, "height", context),
+                                                                                              ),
+                                                                                              Container(
+                                                                                                width: getSize(220, "width", context),
+                                                                                                child: Text(
+                                                                                                  onError.response == null || onError.response == "" ? Languages.of(context).errormsg : onError.response.data["message"],
+                                                                                                  style: AppTheme.bodyText1.copyWith(
+                                                                                                    color: AppColors.blackColor.withOpacity(0.5),
+                                                                                                  ),
+                                                                                                  textAlign: TextAlign.center,
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            });
 
-                                                                      Future.delayed(
-                                                                          const Duration(
-                                                                              milliseconds: 2000),
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        Navigator.pop(
-                                                                            context);
+                                                                        Future.delayed(
+                                                                            const Duration(milliseconds: 2000),
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        });
                                                                       });
-                                                                    });
+                                                                    }
                                                                   },
                                                                   textColor:
                                                                       Colors
@@ -683,7 +767,8 @@ class _MyAppState extends State<MonCompte> {
                                                                               )
                                                                             : Row(),
                                                                         Text(
-                                                                          Languages.of(context).save,
+                                                                          Languages.of(context)
+                                                                              .save,
                                                                           style:
                                                                               TextStyle(
                                                                             fontSize: getSize(
@@ -1636,7 +1721,9 @@ class _MyAppState extends State<MonCompte> {
                                                                 .start,
                                                         children: <Widget>[
                                                           Text(
-                                                            Languages.of(context).exitreally,
+                                                            Languages.of(
+                                                                    context)
+                                                                .exitreally,
                                                             style: TextStyle(
                                                               fontSize: getSize(
                                                                   18,
@@ -1767,7 +1854,8 @@ class _MyAppState extends State<MonCompte> {
                                                                           Center(
                                                                         child:
                                                                             Text(
-                                                                          Languages.of(context).yes,
+                                                                          Languages.of(context)
+                                                                              .yes,
                                                                           style:
                                                                               TextStyle(
                                                                             fontSize: getSize(
@@ -1814,45 +1902,48 @@ class _MyAppState extends State<MonCompte> {
               Card(
                 shadowColor: Colors.transparent,
                 margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                child: sim.number != "" && sim.number != null ? ListTile(
-                    leading: Image.asset(
-                      'assets/images/Flag-CM.png',
-                      height: 25,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _mobileNumberPhone = sim.number;
-                        isSelected = [false, false, false, false, false];
-                        isSelected[_simCard.indexOf(sim)] = true;
-                      });
-                    },
-                    title: Align(
-                      child: Text(
-                        sim.number == null ? "" : sim.number,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18,
-                            color: Colors.black,
-                            letterSpacing: 1.7),
-                      ),
-                      alignment: Alignment(-0.3, 0),
-                    ),
-                    trailing:
-                        taille == 1 || isSelected[_simCard.indexOf(sim)] == true
+                child: sim.number != "" && sim.number != null
+                    ? ListTile(
+                        leading: Image.asset(
+                          'assets/images/Flag-CM.png',
+                          height: 25,
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _mobileNumberPhone = sim.number;
+                            isSelected = [false, false, false, false, false];
+                            isSelected[_simCard.indexOf(sim)] = true;
+                          });
+                        },
+                        title: Align(
+                          child: Text(
+                            sim.number == null ? "" : sim.number,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                                color: Colors.black,
+                                letterSpacing: 1.7),
+                          ),
+                          alignment: Alignment(-0.3, 0),
+                        ),
+                        trailing: taille == 1 ||
+                                isSelected[_simCard.indexOf(sim)] == true
                             ? Icon(
                                 Icons.check_circle,
                                 size: 23.0,
                                 color: Color(0xFF25296A),
                               )
-                            : Text('')) : Row(),
+                            : Text(''))
+                    : Row(),
               ),
               _simCard.indexOf(sim) != taille - 1
-                  ? sim.number != "" && sim.number != null ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.5),
-                      child: Divider(thickness: 2, color: Colors.grey[200]),
-                    )
-                  : Row()
-                : Row(),
+                  ? sim.number != "" && sim.number != null
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.5),
+                          child: Divider(thickness: 2, color: Colors.grey[200]),
+                        )
+                      : Row()
+                  : Row(),
             ],
           ),
         )
@@ -1886,12 +1977,19 @@ class _MyAppState extends State<MonCompte> {
                           _mobileNumberPhoneWrite = number.phoneNumber;
                         });
                       },
+                      onInputValidated: (value) {
+                        print("validé ou pas ?");
+                        print(value);
+                        setState(() {
+                          validated = value;
+                        });
+                      },
                       textStyle: TextStyle(fontSize: 16),
                       selectorConfig: SelectorConfig(
                         selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                       ),
                       ignoreBlank: false,
-                      autoValidateMode: AutovalidateMode.disabled,
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
                       selectorTextStyle: TextStyle(color: Colors.black),
                       initialValue: PhoneNumber(
                           phoneNumber: context.read<UserProvider>().userPhone,
