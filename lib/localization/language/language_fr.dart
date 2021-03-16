@@ -71,4 +71,5 @@ class LanguageFr extends Languages {
   String get mapanepresentation => "Votre application d\'aide au déplacement urbain";
   String get closeall => "Tout fermer";
   String get localiser => "Localiser";
+  String get errornumber => "Veuillez entrer un numéro de téléphone valide";
 }

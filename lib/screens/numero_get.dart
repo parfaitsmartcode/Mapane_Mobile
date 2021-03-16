@@ -32,6 +32,7 @@ class _MyAppState extends State<NumeroGet> {
   String _mobileNumber = '';
   String _mobileNumberPhone = '';
   String _mobileNumberPhoneWrite = '';
+  bool validated = false;
   bool _loading = false;
   var isSelected = [false, false, false, false, false];
   List<SimCard> _simCard = <SimCard>[];
@@ -172,17 +173,127 @@ class _MyAppState extends State<NumeroGet> {
                       padding: const EdgeInsets.symmetric(horizontal: 36),
                       child: RaisedButton(
                         onPressed: () {
+                          if (!validated && _mobileNumber.length <= 3) {
+                            showGeneralDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierLabel: MaterialLocalizations.of(context)
+                                    .modalBarrierDismissLabel,
+                                barrierColor:
+                                    AppColors.whiteColor.withOpacity(0.96),
+                                transitionDuration:
+                                    const Duration(milliseconds: 200),
+                                pageBuilder: (BuildContext buildContext,
+                                    Animation animation,
+                                    Animation secondaryAnimation) {
+                                  return Center(
+                                    child: Card(
+                                      shadowColor: Colors.transparent,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 0, vertical: 0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width:
+                                                getSize(303, "width", context),
+                                            // height: getSize(256, "height", context),
+                                            // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.whiteColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(getSize(
+                                                      20, "height", context)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color(0xFF000000)
+                                                      .withOpacity(0.11),
+                                                  spreadRadius: 5,
+                                                  blurRadius: 10,
+                                                  offset: Offset(0,
+                                                      5), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: getSize(
+                                                      33, "height", context),
+                                                  horizontal: getSize(
+                                                      28, "width", context)),
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    width: getSize(
+                                                        100, "height", context),
+                                                    height: getSize(
+                                                        100, "height", context),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: getSize(
+                                                                36,
+                                                                "height",
+                                                                context),
+                                                            horizontal: getSize(
+                                                                30,
+                                                                "width",
+                                                                context)),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      color: Colors.red
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                    child: Center(
+                                                        child: Icon(
+                                                      Icons.close,
+                                                      size: getSize(38,
+                                                          "height", context),
+                                                      color: Colors.white,
+                                                    )),
+                                                  ),
+                                                  SizedBox(
+                                                    height: getSize(
+                                                        21, "height", context),
+                                                  ),
+                                                  Text(
+                                                    Languages.of(context).error,
+                                                    style: AppTheme
+                                                        .defaultParagraph,
+                                                  ),
+                                                  SizedBox(
+                                                    height: getSize(
+                                                        12, "height", context),
+                                                  ),
+                                                  Container(
+                                                    width: getSize(
+                                                        220, "width", context),
+                                                    child: Text(
+                                                      Languages.of(context).errornumber,
+                                                      style: AppTheme.bodyText1
+                                                          .copyWith(
+                                                        color: AppColors
+                                                            .blackColor
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                          } else {
                           setState(() {
                             _loading = true;
                           });
-
-                          // CoolAlert.show(
-                          //   context: context,
-                          //   type: CoolAlertType.success,
-                          //   text: "Bienvenue",
-                          //   onConfirmBtnTap:() => Navigator.of(context).pushNamed(Routes.splash_welcome)
-                          // );
-                          // Timer(Duration(seconds: 5), () => Navigator.of(context).pushNamed(Routes.splash_welcome));
                           userService
                               .registerUser(
                                   _mobileNumberPhone, _mobileNumberPhoneWrite)
@@ -449,6 +560,7 @@ class _MyAppState extends State<NumeroGet> {
                                   );
                                 });
                           });
+                          }
                         },
                         textColor: Colors.white,
                         color: Colors.transparent,
@@ -584,11 +696,6 @@ class _MyAppState extends State<NumeroGet> {
 
   Widget fillCards() {
     var taille = _simCard.length;
-    if (taille == 1) {
-      setState(() {
-        _mobileNumberPhone = _simCard.first.number;
-      });
-    }
     List<Widget> widgets = _simCard
         .map(
           (SimCard sim) => Column(
@@ -652,8 +759,17 @@ class _MyAppState extends State<NumeroGet> {
               height: 50,
               child: InternationalPhoneNumberInput(
                 onInputChanged: (PhoneNumber number) {
+                  print("phonation");
+                  print(number);
                   setState(() {
                     _mobileNumberPhoneWrite = number.phoneNumber;
+                  });
+                },
+                onInputValidated: (value){
+                  print("validé ou pas ?");
+                  print(value);
+                  setState(() {
+                    validated = value;
                   });
                 },
                 selectorConfig: SelectorConfig(
@@ -661,7 +777,7 @@ class _MyAppState extends State<NumeroGet> {
                     backgroundColor: Colors.white),
                 textStyle: TextStyle(fontSize: 16),
                 ignoreBlank: false,
-                autoValidateMode: AutovalidateMode.disabled,
+                autoValidateMode: AutovalidateMode.onUserInteraction,
                 selectorTextStyle: TextStyle(color: Colors.black),
                 initialValue: number,
                 textFieldController: controller,

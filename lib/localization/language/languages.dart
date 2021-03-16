@@ -71,6 +71,7 @@ abstract class Languages {
   String get mapanepresentation;
   String get closeall;
   String get localiser;
+  String get errornumber;
   // String get update_number;
   // String get update_number;
   // String get update_number;
