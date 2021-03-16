@@ -304,6 +304,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
     Geolocator.getPositionStream().listen((Position position) {
+      print('variable position');
+      print(position);
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
