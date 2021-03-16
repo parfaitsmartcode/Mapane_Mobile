@@ -226,7 +226,12 @@ class _MyAppState extends State<WelcomeMap> {
                                                               Languages.of(context).noalert)
                                                         ],
                                                       )
-                                                    : ListView.builder(
+                                                    : alertListHisto
+                                                                .where((i) => i.address.split(",")[2] == " "+context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString())
+                                                                .toList()
+                                                                .length >
+                                                            0
+                                                        ? ListView.builder(
                                                         shrinkWrap: true,
                                                         physics:
                                                             NeverScrollableScrollPhysics(),
@@ -250,7 +255,13 @@ class _MyAppState extends State<WelcomeMap> {
                                                               count: alertListHisto
                                                                   .length);
                                                         },
-                                                      );
+                                                      )
+                                                        : Center(
+                                                            child: Text(
+                                                                Languages.of(context).noalert,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center));
                                               })
                                       ],
                                     ),
@@ -662,6 +673,7 @@ class AllAlerte extends StatelessWidget {
     Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(alert.createdAt);
+    var descri = alert.desc != "desc" ? " au lieu dit "+alert.desc : "";
     return type == alert.category.slug || type == "All"
         ? Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -691,7 +703,7 @@ class AllAlerte extends StatelessWidget {
                           child: Text(
                               alert.address == '' || alert.address == null
                                   ? Languages.of(context).addressunknown
-                                  : alert.address,
+                                  : alert.address+descri,
                               maxLines: 2,
                               softWrap: true,
                               style: TextStyle(
@@ -889,6 +901,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
     Moment.setLocaleGlobally(context.watch<UserProvider>().languageVal ? LocaleFr() : LocaleEn());
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(widget.alert.createdAt);
+    var descri = widget.alert.desc != "desc" ? " au lieu dit "+widget.alert.desc : "";
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -918,7 +931,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
                         widget.alert.address == '' ||
                                 widget.alert.address == null
                             ? Languages.of(context).addressunknown
-                            : widget.alert.address,
+                            : widget.alert.address+descri,
                         maxLines: 2,
                         softWrap: true,
                         style: TextStyle(

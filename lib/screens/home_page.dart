@@ -304,7 +304,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-    Geolocator.getPositionStream().listen((Position position) {
+    Geolocator.getPositionStream().listen((Position position) async {
       print('variable position');
       print(position);
       currentPosition = position;
@@ -1346,40 +1346,45 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     context.read<AlertProvider>().getAlertList(false, addresse);
 
-    // destination
-    context.read<AlertProvider>().alertList.fold((l) => null, (r) {
-      int i = 1;
-      // print("liste des alertes " + r.length.toString());
-      if (r.length > 0) {
-        var tabrebuild = r
-            .where((i) => i.address.split(",")[2] == addresse.split(",")[2])
-            .toList();
-        tabrebuild.forEach((element) {
-          Moment.setLocaleGlobally(context.read<UserProvider>().languageVal
-              ? LocaleFr()
-              : LocaleEn());
-          var moment = Moment.now();
-          var dateForComparison = DateTime.parse(element.createdAt);
-          print(element.category.name);
-          _markers.add(Marker(
-              position:
-                  LatLng(double.parse(element.lat), double.parse(element.lon)),
-              markerId: MarkerId('alerte ' + element.id),
-              icon: getAppropriateIcon(element.category.slug),
-              infoWindow: InfoWindow(
-                  title: context.read<UserProvider>().languageVal
-                      ? element.category.name
-                      : element.category.name_en,
-                  snippet: Languages.of(context).at +
-                      ' ' +
-                      element.address.split(',')[0] +
-                      ', ' +
-                      moment.from(dateForComparison))));
-          i++;
-        });
-      }
-    });
-    /*_markers.add(Marker(
+          // destination
+          context
+              .read<AlertProvider>()
+              .alertList
+              .fold((l) => null, (r) {
+            int i = 1;
+            // print("liste des alertes " + r.length.toString());
+            if (r.length > 0) {
+              var tabrebuild = r.where((i) => i.address.split(",")[2] == addresse.split(",")[2]).toList();
+              tabrebuild.forEach((element) {
+                Moment.setLocaleGlobally(context
+                    .read<UserProvider>()
+                    .languageVal ? LocaleFr() : LocaleEn());
+                var moment = Moment.now();
+                var dateForComparison = DateTime.parse(element.createdAt);
+                // print(element.category.name);
+                var descaddr = element.desc != "desc" ? " au lieu dit "+element.desc : "";
+                _markers.add(Marker(
+                    position:
+                    LatLng(
+                        double.parse(element.lat), double.parse(element.lon)),
+                    markerId: MarkerId('alerte ' + element.id),
+                    icon: getAppropriateIcon(element.category.slug),
+                    infoWindow: InfoWindow(
+                        title: context
+                            .read<UserProvider>()
+                            .languageVal ? element.category.name : element
+                            .category.name_en,
+                        snippet: Languages
+                            .of(context)
+                            .at + ' ' +
+                            element.address.split(',')[0] +descaddr+
+                            ', ' +
+                            moment.from(dateForComparison))));
+                i++;
+              });
+            }
+          });
+          /*_markers.add(Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
         icon: destinationIcon));*/
