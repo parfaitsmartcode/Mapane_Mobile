@@ -19,13 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     Location location = new Location();
-    _serviceEnabled = await location.serviceEnabled();
+    /*_serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
         return;
       }
-    }
+    }*/
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
@@ -43,50 +43,92 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new SplashScreen2(
-        seconds: 5,
-        navigateAfterSeconds: new AfterSplash(),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            new Image.asset(
-              'assets/images/Logo-long-edited.png',
-              width: 300,
-            ),
-            new Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-            ),
-            Container(
-                child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+
+    Location location = new Location();
+
+    return new FutureBuilder(
+        future:location.requestService(),
+        builder: (context,snapshot){
+          if (snapshot.hasData) {
+            print("has data");
+            if(snapshot.data){
+              print("true data");
+              return SplashScreen2(
+                  seconds: 5,
+                  navigateAfterSeconds: new AfterSplash(),
+                  title: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                    children: [
+                      new Image.asset(
+                        'assets/images/Logo-long-edited.png',
+                        width: 300,
+                      ),
+                      new Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                      ),
+                      Container(
+                          child: new Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
 
-                  Center(
-                    child: new Text('C\'est plus facile de se déplacer',
-                        style: new TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: 'Robotto',
-                          color: Colors.black.withOpacity(.8),
-                        )),
+                                Center(
+                                  child: new Text('C\'est plus facile de se déplacer',
+                                      style: new TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: 'Robotto',
+                                        color: Colors.black.withOpacity(.8),
+                                      )),
+                                ),
+                              ])),
+
+                    ],
                   ),
-                ])),
-
-          ],
-        ),
-        useLoader: false,
-        pageRoute: _createRoute(),
-        imageBackground: AssetImage("assets/images/Background.png"),
-        gradientBackground: LinearGradient(
-          colors: [
-            Color.fromRGBO(73, 113, 172, 0.6),
-            Color.fromRGBO(73, 113, 172, 0.6),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.0, 1.0],
-          tileMode: TileMode.clamp,
-        ));
+                  useLoader: false,
+                  pageRoute: _createRoute(),
+                  imageBackground: AssetImage("assets/images/Background.png"),
+                  gradientBackground: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(73, 113, 172, 0.6),
+                      Color.fromRGBO(73, 113, 172, 0.6),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp,
+                  ));
+            }else{
+              print("false data");
+              return Container(
+                child: Center(
+                  child: Text(
+                      "Activate location service"
+                  ),
+                ),
+              );
+            }
+          }else{
+            return Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/Background.png"),
+                      fit: BoxFit.cover
+                  ),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(73, 113, 172, 0.6),
+                      Color.fromRGBO(73, 113, 172, 0.6),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp,
+                  )
+              ),
+            );
+          }
+        }
+    );
   }
 }
 
@@ -349,25 +391,25 @@ class _SplashScreen2State extends State<SplashScreen2> {
                 new Expanded(
                   flex: 2,
                   child: new Container(
-                      // decoration: BoxDecoration(
-                      //   gradient: LinearGradient(
-                      //     begin: Alignment.topCenter,
-                      //     end: Alignment.bottomCenter,
-                      //     colors: [Color(0x00FFFFFF) , Color(0xD9FFFFFF), Color(0xD9FFFFFF), Color(0xD9FFFFFF),Color(0x00FFFFFF)],
-                      //     stops: [
-                      //       0,
-                      //       0.3,
-                      //       0.7,
-                      //       0,
-                      //       1
-                      //     ]
-                      //   )
-                      // ),
+                    // decoration: BoxDecoration(
+                    //   gradient: LinearGradient(
+                    //     begin: Alignment.topCenter,
+                    //     end: Alignment.bottomCenter,
+                    //     colors: [Color(0x00FFFFFF) , Color(0xD9FFFFFF), Color(0xD9FFFFFF), Color(0xD9FFFFFF),Color(0x00FFFFFF)],
+                    //     stops: [
+                    //       0,
+                    //       0.3,
+                    //       0.7,
+                    //       0,
+                    //       1
+                    //     ]
+                    //   )
+                    // ),
                       child: new Column(
 
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[widget.title],
-                  )),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[widget.title],
+                      )),
 
                 ),
               ],
