@@ -21,6 +21,7 @@ import 'package:mapane/networking/services/push_notifications_service.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/location_service_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -220,14 +221,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   checkPermission() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -298,6 +291,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
+    context.read<LocationServiceProvider>().init();
     /*context
         .read<UserProvider>()
         .getPositionVal()
@@ -1250,14 +1244,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             Future.delayed(const Duration(seconds: 1), () {
               if (brikit.length != 1) {
                 setState(() {
-                  brikit.removeAt(0);
+                  brikit.isNotEmpty ?? brikit.removeAt(0);
                   bolSpeaking = false;
                 });
               }
               // brikit.asMap().forEach((index,element) {
               print(brikit);
               // if (index > 0) {
-              if (!bolSpeaking) {
+              if (!bolSpeaking && brikit.isNotEmpty) {
                 _speak(brikit.first);
                 setState(() {
                   brikit.removeAt(0);

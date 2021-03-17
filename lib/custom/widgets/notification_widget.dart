@@ -25,12 +25,7 @@ class NotificationMapane extends StatefulWidget {
 
 class _NotificationMapaneState extends State<NotificationMapane>
     with TickerProviderStateMixin {
-  List<String> welcomeImages = [
-    "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
-    "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
-    "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
-    "https://i.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0",
-  ];
+
   AudioPlayer audioPlugin = AudioPlayer();
 
   @override
@@ -58,6 +53,9 @@ class _NotificationMapaneState extends State<NotificationMapane>
         break;
       case "Radar":
         return Assets.radarMarker3;
+        break;
+      case "Police":
+        return Assets.controleMarker2;
         break;
       case "Accident-de-circulation":
         return Assets.accidentMarker3;

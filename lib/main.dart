@@ -5,6 +5,7 @@ import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/location_service_provider.dart';
 import 'package:mapane/state/network_provider.dart';
 import 'package:provider/provider.dart';
 import './utils/theme_mapane.dart';
@@ -28,7 +29,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
         ChangeNotifierProvider(create: (_) => PlaceProvider()),
-        ChangeNotifierProvider(create: (_) => NetworkProvider())
+        ChangeNotifierProvider(create: (_) => NetworkProvider()),
+        ChangeNotifierProvider(create: (_) => LocationServiceProvider())
       ],
       child: MyApp(),
     ));

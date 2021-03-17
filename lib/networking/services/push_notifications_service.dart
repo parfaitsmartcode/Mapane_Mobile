@@ -15,6 +15,27 @@ class PushNotificationService {
 
   PushNotificationService(this._fcm, this.context);
 
+  String getRestrictedCharacters(String string){
+    const allowedCharacters = r"""abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~%""";
+    final split = string.split('');
+    Set<String> restricted = Set();
+    int i = 0;
+    split.forEach((c) {
+      if (!allowedCharacters.contains(c)) {
+        restricted.add(c);
+      }
+      i++;
+    });
+    if (restricted.isEmpty){
+      return string.replaceAll(" ", "");
+    } else {
+      restricted.forEach((element) {
+        split.removeWhere((item) => item == element);
+      });
+      return split.join("").replaceAll(" ", "");
+    }
+  }
+
   Future initialise(String country, String state) async {
     if (Platform.isIOS) {
       _fcm.requestNotificationPermissions(IosNotificationSettings());
@@ -24,6 +45,8 @@ class PushNotificationService {
     // you need to get the token and input to the Firebase console
     // https://console.firebase.google.com/project/YOUR_PROJECT_ID/notification/compose
     String token = await _fcm.getToken();
+    country = getRestrictedCharacters(country);
+    state = getRestrictedCharacters(state);
 
     _fcm
         .subscribeToTopic('mapane-alerts')
