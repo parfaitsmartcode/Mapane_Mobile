@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 import 'dart:io';
+// import 'dart:util';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -197,13 +198,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           (element - distance.round()).abs() < (value - distance.round()).abs()
               ? element
               : value);
-      var finalresult = result.round() < distance.round()
-          ? subvalues[subvalues.indexOf(result.round()) + 1]
-          : result.round();
-      var text = element.category.name +
-          " à moins de " +
-          finalresult.toString() +
-          " mètres de votre position";
+      var finalresult = result.round() < distance.round() ? subvalues[subvalues.indexOf(result.round())+1] : result.round();
+      var text = "";
+      if(!context.read<UserProvider>().languageVal && await flutterTts.isLanguageAvailable("en-US")){
+        await flutterTts.setLanguage("en-US");
+        text = element.category.name_en +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }else if(context.read<UserProvider>().languageVal && await flutterTts.isLanguageAvailable("fr-FR")){
+        await flutterTts.setLanguage("fr-FR");
+        text = element.category.name +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }else{
+        text = element.category.name +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }
       if (context.read<UserProvider>().audioVal) {
         setState(() {
           brikit.add(text);
@@ -264,7 +278,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print(state);
     if (state == AppLifecycleState.resumed) {
       setState(() {});
-      _initMapStyle();
+       _initMapStyle();
     }
   }
 
@@ -286,8 +300,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             position.longitude.toString()));
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    pushNotificationService =
-        PushNotificationService(_firebaseMessaging, context);
+    pushNotificationService = PushNotificationService(_firebaseMessaging,context);
     context.read<UserProvider>().getLangVal();
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
@@ -300,7 +313,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         .then((value) => procto = value);*/
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
-    Geolocator.getPositionStream().listen((Position position) async {
+
+    Geolocator.getPositionStream().listen((Position position) {
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
@@ -372,6 +386,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       setInitialLocation();
     }
   }
+
 
   bool isProbablyConnected(String identifier) {
     return _isProbablyConnected[identifier] ?? false;
@@ -482,8 +497,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(.22)),
-                                                hintText: Languages.of(context)
-                                                    .enterexactposition,
+                                                hintText:
+                                                    Languages.of(context).enterexactposition,
                                                 fillColor: Colors.black
                                                     .withOpacity(.04)),
                                             style: AppTheme.buttonText,
@@ -632,8 +647,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
     print("donneeeeeee");
     print(data);
-    alertService
-        .createAlert(
+    alertService.createAlert(
             latlon.latitude,
             latlon.longitude,
             desc == "" || desc == null ? "desc" : desc,
@@ -641,369 +655,369 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             category,
             address == '' ? ' ' : address)
         .then((data) {
-      Navigator.pop(context);
-      setState(() => loadera = false);
-      context.read<AlertProvider>().getAlertList(false, addresse);
-      if (data.containsKey('message')) {
-        if (data['id'] == userId) {
-          if (data['message'] == "alerte inactive") {
-            showGeneralDialog(
-                context: context,
-                barrierDismissible: false,
-                barrierLabel:
-                    MaterialLocalizations.of(context).modalBarrierDismissLabel,
-                barrierColor: AppColors.whiteColor.withOpacity(0.96),
-                transitionDuration: const Duration(milliseconds: 200),
-                pageBuilder: (BuildContext buildContext, Animation animation,
-                    Animation secondaryAnimation) {
-                  return Center(
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: getSize(303, "width", context),
-                            // height: getSize(256, "height", context),
-                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                  getSize(20, "height", context)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF000000).withOpacity(0.11),
-                                  spreadRadius: 5,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 5), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: getSize(33, "height", context),
-                                  horizontal: getSize(28, "width", context)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: getSize(100, "height", context),
-                                    height: getSize(100, "height", context),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: getSize(0, "height", context),
-                                        horizontal:
-                                            getSize(0, "width", context)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: AppColors.greenColor
-                                          .withOpacity(0.35),
+          Navigator.pop(context);
+          setState(() => loadera = false);
+          context.read<AlertProvider>().getAlertList(false, addresse);
+          if (data.containsKey('message')) {
+            if (data['id'] == userId) {
+              if (data['message'] == "alerte inactive") {
+                showGeneralDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    barrierLabel:
+                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                    barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                    transitionDuration: const Duration(milliseconds: 200),
+                    pageBuilder: (BuildContext buildContext, Animation animation,
+                        Animation secondaryAnimation) {
+                      return Center(
+                        child: Card(
+                          shadowColor: Colors.transparent,
+                          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: getSize(303, "width", context),
+                                // height: getSize(256, "height", context),
+                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                      getSize(20, "height", context)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF000000).withOpacity(0.11),
+                                      spreadRadius: 5,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 5), // changes position of shadow
                                     ),
-                                    child: Stack(
-                                      overflow: Overflow.visible,
-                                      children: <Widget>[
-                                        Positioned(
-                                          child: Center(
-                                              child: Image.asset(
-                                            'assets/images/Map pin-3.png',
-                                            height: getSize(
-                                                45.6, "height", context),
-                                            width: getSize(
-                                                37.77, "width", context),
-                                          )),
+                                  ],
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(33, "height", context),
+                                      horizontal: getSize(28, "width", context)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: getSize(100, "height", context),
+                                        height: getSize(100, "height", context),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: getSize(0, "height", context),
+                                            horizontal:
+                                                getSize(0, "width", context)),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          color: AppColors.greenColor
+                                              .withOpacity(0.35),
                                         ),
-                                        Positioned(
-                                          left: getSize(60, "width", context),
-                                          top: getSize(61, "height", context),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: getSize(
-                                                    9, "width", context),
-                                                horizontal: getSize(
-                                                    9, "height", context)),
-                                            child: SizedBox(
-                                              width: getSize(
-                                                  31, "height", context),
-                                              height: getSize(
-                                                  31, "height", context),
-                                              child: Card(
-                                                elevation: 2.5,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                100))),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    size: getSize(
-                                                        9, "height", context),
-                                                    color: AppColors.greenColor,
+                                        child: Stack(
+                                          overflow: Overflow.visible,
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: Center(
+                                                  child: Image.asset(
+                                                'assets/images/Map pin-3.png',
+                                                height: getSize(
+                                                    45.6, "height", context),
+                                                width: getSize(
+                                                    37.77, "width", context),
+                                              )),
+                                            ),
+                                            Positioned(
+                                              left: getSize(60, "width", context),
+                                              top: getSize(61, "height", context),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: getSize(
+                                                        9, "width", context),
+                                                    horizontal: getSize(
+                                                        9, "height", context)),
+                                                child: SizedBox(
+                                                  width: getSize(
+                                                      31, "height", context),
+                                                  height: getSize(
+                                                      31, "height", context),
+                                                  child: Card(
+                                                    elevation: 2.5,
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    100))),
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.check,
+                                                        size: getSize(
+                                                            9, "height", context),
+                                                        color: AppColors.greenColor,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: getSize(21, "height", context),
+                                      ),
+                                      Text(
+                                        "Alerte envoyé",
+                                        style: AppTheme.defaultParagraph,
+                                      ),
+                                      SizedBox(
+                                        height: getSize(12, "height", context),
+                                      ),
+                                      Container(
+                                        width: getSize(220, "width", context),
+                                        child: Text(
+                                          Languages.of(context).alertinactive,
+                                          style: AppTheme.bodyText1.copyWith(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.5),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: getSize(21, "height", context),
-                                  ),
-                                  Text(
-                                    "Alerte envoyé",
-                                    style: AppTheme.defaultParagraph,
-                                  ),
-                                  SizedBox(
-                                    height: getSize(12, "height", context),
-                                  ),
-                                  Container(
-                                    width: getSize(220, "width", context),
-                                    child: Text(
-                                      Languages.of(context).alertinactive,
-                                      style: AppTheme.bodyText1.copyWith(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.5),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          } else {
-            showGeneralDialog(
-                context: context,
-                barrierDismissible: false,
-                barrierLabel:
-                    MaterialLocalizations.of(context).modalBarrierDismissLabel,
-                barrierColor: AppColors.whiteColor.withOpacity(0.96),
-                transitionDuration: const Duration(milliseconds: 200),
-                pageBuilder: (BuildContext buildContext, Animation animation,
-                    Animation secondaryAnimation) {
-                  return Center(
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: getSize(303, "width", context),
-                            // height: getSize(256, "height", context),
-                            // padding: EdgeInsets.all(getSize(0,"height",context)),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                  getSize(20, "height", context)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF000000).withOpacity(0.11),
-                                  spreadRadius: 5,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 5), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: getSize(33, "height", context),
-                                  horizontal: getSize(28, "width", context)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: getSize(100, "height", context),
-                                    height: getSize(100, "height", context),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(36, "height", context),
-                                        horizontal:
-                                            getSize(30, "width", context)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: Colors.red.withOpacity(0.35),
-                                    ),
-                                    child: Center(
-                                        child: Icon(
-                                      Icons.close,
-                                      size: getSize(38, "height", context),
-                                      color: Colors.white,
-                                    )),
-                                  ),
-                                  SizedBox(
-                                    height: getSize(21, "height", context),
-                                  ),
-                                  Text(
-                                    Languages.of(context).error,
-                                    style: AppTheme.defaultParagraph,
-                                  ),
-                                  SizedBox(
-                                    height: getSize(12, "height", context),
-                                  ),
-                                  Container(
-                                    width: getSize(220, "width", context),
-                                    child: Text(
-                                      data['message'],
-                                      style: AppTheme.bodyText1.copyWith(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.5),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          }
-        }
-      } else {
-        if (data['alert']['postedBy']['_id'] == userId)
-          showGeneralDialog(
-              context: context,
-              barrierDismissible: false,
-              barrierLabel:
-                  MaterialLocalizations.of(context).modalBarrierDismissLabel,
-              barrierColor: AppColors.whiteColor.withOpacity(0.96),
-              transitionDuration: const Duration(milliseconds: 200),
-              pageBuilder: (BuildContext buildContext, Animation animation,
-                  Animation secondaryAnimation) {
-                return Center(
-                  child: Card(
-                    shadowColor: Colors.transparent,
-                    margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: getSize(303, "width", context),
-                          // height: getSize(256, "height", context),
-                          // padding: EdgeInsets.all(getSize(0,"height",context)),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(
-                                getSize(20, "height", context)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xFF000000).withOpacity(0.11),
-                                spreadRadius: 5,
-                                blurRadius: 10,
-                                offset:
-                                    Offset(0, 5), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: getSize(33, "height", context),
-                                horizontal: getSize(28, "width", context)),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: getSize(100, "height", context),
-                                  height: getSize(100, "height", context),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: getSize(0, "height", context),
-                                      horizontal: getSize(0, "width", context)),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color:
-                                        AppColors.greenColor.withOpacity(0.35),
-                                  ),
-                                  child: Stack(
-                                    overflow: Overflow.visible,
-                                    children: <Widget>[
-                                      Positioned(
-                                        child: Center(
-                                            child: Image.asset(
-                                          'assets/images/Map pin-3.png',
-                                          height:
-                                              getSize(45.6, "height", context),
-                                          width:
-                                              getSize(37.77, "width", context),
-                                        )),
-                                      ),
-                                      Positioned(
-                                        left: getSize(60, "width", context),
-                                        top: getSize(61, "height", context),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  getSize(9, "width", context),
-                                              horizontal: getSize(
-                                                  9, "height", context)),
-                                          child: SizedBox(
-                                            width:
-                                                getSize(31, "height", context),
-                                            height:
-                                                getSize(31, "height", context),
-                                            child: Card(
-                                              elevation: 2.5,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              100))),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.check,
-                                                  size: getSize(
-                                                      9, "height", context),
-                                                  color: AppColors.greenColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          textAlign: TextAlign.center,
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: getSize(21, "height", context),
-                                ),
-                                Text(
-                                  Languages.of(context).alertsent,
-                                  style: AppTheme.defaultParagraph,
-                                ),
-                                SizedBox(
-                                  height: getSize(12, "height", context),
-                                ),
-                                Container(
-                                  width: getSize(220, "width", context),
-                                  child: Text(
-                                    Languages.of(context).alertsuccess,
-                                    style: AppTheme.bodyText1.copyWith(
-                                      color:
-                                          AppColors.blackColor.withOpacity(0.5),
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-      }
-      Timer(Duration(seconds: 3), () => Navigator.pop(context));
+                      );
+                    });
+              } else {
+                showGeneralDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    barrierLabel:
+                        MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                    barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                    transitionDuration: const Duration(milliseconds: 200),
+                    pageBuilder: (BuildContext buildContext, Animation animation,
+                        Animation secondaryAnimation) {
+                      return Center(
+                        child: Card(
+                          shadowColor: Colors.transparent,
+                          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: getSize(303, "width", context),
+                                // height: getSize(256, "height", context),
+                                // padding: EdgeInsets.all(getSize(0,"height",context)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.circular(
+                                      getSize(20, "height", context)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF000000).withOpacity(0.11),
+                                      spreadRadius: 5,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 5), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: getSize(33, "height", context),
+                                      horizontal: getSize(28, "width", context)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: getSize(100, "height", context),
+                                        height: getSize(100, "height", context),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                getSize(36, "height", context),
+                                            horizontal:
+                                                getSize(30, "width", context)),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          color: Colors.red.withOpacity(0.35),
+                                        ),
+                                        child: Center(
+                                            child: Icon(
+                                          Icons.close,
+                                          size: getSize(38, "height", context),
+                                          color: Colors.white,
+                                        )),
+                                      ),
+                                      SizedBox(
+                                        height: getSize(21, "height", context),
+                                      ),
+                                      Text(
+                                        Languages.of(context).error,
+                                        style: AppTheme.defaultParagraph,
+                                      ),
+                                      SizedBox(
+                                        height: getSize(12, "height", context),
+                                      ),
+                                      Container(
+                                        width: getSize(220, "width", context),
+                                        child: Text(
+                                          data['message'],
+                                          style: AppTheme.bodyText1.copyWith(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.5),
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              }
+            }
+          } else {
+            if (data['alert']['postedBy']['_id'] == userId)
+              showGeneralDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  barrierLabel:
+                      MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                  barrierColor: AppColors.whiteColor.withOpacity(0.96),
+                  transitionDuration: const Duration(milliseconds: 200),
+                  pageBuilder: (BuildContext buildContext, Animation animation,
+                      Animation secondaryAnimation) {
+                    return Center(
+                      child: Card(
+                        shadowColor: Colors.transparent,
+                        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: getSize(303, "width", context),
+                              // height: getSize(256, "height", context),
+                              // padding: EdgeInsets.all(getSize(0,"height",context)),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(
+                                    getSize(20, "height", context)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFF000000).withOpacity(0.11),
+                                    spreadRadius: 5,
+                                    blurRadius: 10,
+                                    offset:
+                                        Offset(0, 5), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: getSize(33, "height", context),
+                                    horizontal: getSize(28, "width", context)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: getSize(100, "height", context),
+                                      height: getSize(100, "height", context),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: getSize(0, "height", context),
+                                          horizontal: getSize(0, "width", context)),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(100),
+                                        color:
+                                            AppColors.greenColor.withOpacity(0.35),
+                                      ),
+                                      child: Stack(
+                                        overflow: Overflow.visible,
+                                        children: <Widget>[
+                                          Positioned(
+                                            child: Center(
+                                                child: Image.asset(
+                                              'assets/images/Map pin-3.png',
+                                              height:
+                                                  getSize(45.6, "height", context),
+                                              width:
+                                                  getSize(37.77, "width", context),
+                                            )),
+                                          ),
+                                          Positioned(
+                                            left: getSize(60, "width", context),
+                                            top: getSize(61, "height", context),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical:
+                                                      getSize(9, "width", context),
+                                                  horizontal: getSize(
+                                                      9, "height", context)),
+                                              child: SizedBox(
+                                                width:
+                                                    getSize(31, "height", context),
+                                                height:
+                                                    getSize(31, "height", context),
+                                                child: Card(
+                                                  elevation: 2.5,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  100))),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: getSize(
+                                                          9, "height", context),
+                                                      color: AppColors.greenColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: getSize(21, "height", context),
+                                    ),
+                                    Text(
+                                      Languages.of(context).alertsent,
+                                      style: AppTheme.defaultParagraph,
+                                    ),
+                                    SizedBox(
+                                      height: getSize(12, "height", context),
+                                    ),
+                                    Container(
+                                      width: getSize(220, "width", context),
+                                      child: Text(
+                                        Languages.of(context).alertsuccess,
+                                        style: AppTheme.bodyText1.copyWith(
+                                          color:
+                                              AppColors.blackColor.withOpacity(0.5),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+          }
+          Timer(Duration(seconds: 3), () => Navigator.pop(context));
     }).catchError((onError) {
       Navigator.pop(context);
       Timer(Duration(seconds: 3), () => Navigator.pop(context));
@@ -1244,14 +1258,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             Future.delayed(const Duration(seconds: 1), () {
               if (brikit.length != 1) {
                 setState(() {
-                  brikit.isNotEmpty ?? brikit.removeAt(0);
+                  brikit.removeAt(0);
                   bolSpeaking = false;
                 });
               }
               // brikit.asMap().forEach((index,element) {
               print(brikit);
               // if (index > 0) {
-              if (!bolSpeaking && brikit.isNotEmpty) {
+              if (!bolSpeaking) {
                 _speak(brikit.first);
                 setState(() {
                   brikit.removeAt(0);
@@ -1265,80 +1279,86 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
     }
   }
+        Future _stop() async {
+          var result = await flutterTts.stop();
+          if (result == 1) setState(() => ttsState = TtsState.stopped);
+        }
 
-  Future _stop() async {
-    var result = await flutterTts.stop();
-    if (result == 1) setState(() => ttsState = TtsState.stopped);
-  }
+        Future _pause() async {
+          var result = await flutterTts.pause();
+          if (result == 1) setState(() => ttsState = TtsState.paused);
+        }
 
-  Future _pause() async {
-    var result = await flutterTts.pause();
-    if (result == 1) setState(() => ttsState = TtsState.paused);
-  }
+        @override
+        void dispose() {
+          WidgetsBinding.instance.removeObserver(this);
+          super.dispose();
+          flutterTts.stop();
+        }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-    flutterTts.stop();
-  }
+        void setSourceAndDestinationIcons() async {
+          sourceIcon = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
+          embouteillageMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.embouteillageMarker2);
+          radarMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5), Assets.radarMarker2);
+          accidentMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.accidentMarker2);
+          controleMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.controleMarker2);
+          routebarreeMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(
+                  devicePixelRatio: 2.5, size: Size.fromHeight(19)),
+              Assets.routebarreeMarker2);
+          routechantierMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.routechantierMarker2);
+          dangerMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5), Assets.dangerMarker2);
+          proximityMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.proximityMarker);
 
-  void setSourceAndDestinationIcons() async {
-    sourceIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
-    embouteillageMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.embouteillageMarker2);
-    radarMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.radarMarker2);
-    accidentMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.accidentMarker2);
-    controleMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.controleMarker2);
-    routebarreeMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5, size: Size.fromHeight(19)),
-        Assets.routebarreeMarker2);
-    routechantierMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.routechantierMarker2);
-    dangerMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.dangerMarker2);
-    proximityMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.proximityMarker);
+          destinationIcon = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              Assets.proximityMarker);
+          sosMarker = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5), Assets.sosMarker2);
+        }
 
-    destinationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.proximityMarker);
-    sosMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), Assets.sosMarker2);
-  }
+        void setInitialLocation() async {
+          // set the initial location by pulling the user's
+          // current location from the location's getLocation()
+          currentLocation = await location.getLocation();
 
-  void setInitialLocation() async {
-    // set the initial location by pulling the user's
-    // current location from the location's getLocation()
-    currentLocation = await location.getLocation();
+          // hard-coded destination for this example
+          destinationLocation = LocationData.fromMap({
+            "latitude": DEST_LOCATION.latitude,
+            "longitude": DEST_LOCATION.longitude
+          });
+        }
 
-    // hard-coded destination for this example
-    destinationLocation = LocationData.fromMap({
-      "latitude": DEST_LOCATION.latitude,
-      "longitude": DEST_LOCATION.longitude
-    });
-  }
+        void showPinsOnMap() {
+          _markers = Set<Marker>();
+          // get a LatLng for the source location
+          // from the LocationData currentLocation object
+          var pinPosition =
+          LatLng(currentPosition.latitude, currentPosition.longitude);
+          //LatLng(currentLocation.latitude, currentLocation.longitude);
+          // get a LatLng out of the LocationData object
+          var destPosition =
+          LatLng(destinationLocation.latitude, destinationLocation.longitude);
+          // add the initial source location pin
+          _markers.add(Marker(
+              markerId: MarkerId('sourcePin'),
+              position: pinPosition,
+              icon: sourceIcon));
 
-  void showPinsOnMap() {
-    _markers = Set<Marker>();
-    // get a LatLng for the source location
-    // from the LocationData currentLocation object
-    var pinPosition =
-        LatLng(currentPosition.latitude, currentPosition.longitude);
-    //LatLng(currentLocation.latitude, currentLocation.longitude);
-    // get a LatLng out of the LocationData object
-    var destPosition =
-        LatLng(destinationLocation.latitude, destinationLocation.longitude);
-    // add the initial source location pin
-    _markers.add(Marker(
-        markerId: MarkerId('sourcePin'),
-        position: pinPosition,
-        icon: sourceIcon));
-
-    context.read<AlertProvider>().getAlertList(false, addresse);
+          context.read<AlertProvider>().getAlertList(false, addresse);
 
           // destination
           context
@@ -1383,324 +1403,334 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         position: destPosition,
         icon: destinationIcon));*/
 
-    // set the route lines on the map from source to destination
-    // for more info follow this tutorial
-    setPolylines();
-    showCirclesOnMap();
-  }
+          // set the route lines on the map from source to destination
+          // for more info follow this tutorial
+          setPolylines();
+          showCirclesOnMap();
+        }
 
-  dynamic radiusTest = {"radius": 300, "level": true};
-  updateCirlce() {
-    if (radiusTest["level"]) {
-      if (radiusTest["radius"] == 100) {
-        setState(() {
-          radiusTest["level"] = false;
-          showCirclesOnMap();
-        });
-      } else {
-        setState(() {
-          radiusTest["radius"] -= 100;
-          showCirclesOnMap();
-        });
-      }
-    } else {
-      if (radiusTest["radius"] == 300) {
-        setState(() {
-          radiusTest["level"] = true;
-          showCirclesOnMap();
-        });
-      } else {
-        setState(() {
-          radiusTest["radius"] += 100;
-          showCirclesOnMap();
-        });
-      }
-    }
-  }
+        dynamic radiusTest = {"radius": 300, "level": true};
+        updateCirlce() {
+          if (radiusTest["level"]) {
+            if (radiusTest["radius"] == 100) {
+              setState(() {
+                radiusTest["level"] = false;
+                showCirclesOnMap();
+              });
+            } else {
+              setState(() {
+                radiusTest["radius"] -= 100;
+                showCirclesOnMap();
+              });
+            }
+          } else {
+            if (radiusTest["radius"] == 300) {
+              setState(() {
+                radiusTest["level"] = true;
+                showCirclesOnMap();
+              });
+            } else {
+              setState(() {
+                radiusTest["radius"] += 100;
+                showCirclesOnMap();
+              });
+            }
+          }
+        }
 
-  void showCirclesOnMap() {
-    int i = 0;
-    _circles.clear();
-    mapanes.forEach((element) {
-      _circles.add(Circle(
-          circleId: CircleId("circle" + i.toString()),
-          center: LatLng(double.parse(element.lat), double.parse(element.lon)),
-          radius: double.parse(radiusTest["radius"].toString()),
-          //element.category.perimeter * 1000,
-          fillColor: Colors.redAccent[200].withOpacity(0.1),
-          strokeWidth: 3,
-          strokeColor: Colors.red));
-      i++;
-    });
-    if (mapanes.isNotEmpty) {
-      const duration = const Duration(milliseconds: 100);
-      if (_circleTimer == null) {
-        _circleTimer = new Timer.periodic(duration, (Timer timer) {
-          updateCirlce();
-        });
-      } else {
-        if (!_circleTimer.isActive) {
-          _circleTimer = new Timer.periodic(duration, (Timer timer) {
-            updateCirlce();
+        void showCirclesOnMap() {
+          int i = 0;
+          _circles.clear();
+          mapanes.forEach((element) {
+            _circles.add(Circle(
+                circleId: CircleId("circle" + i.toString()),
+                center: LatLng(
+                    double.parse(element.lat), double.parse(element.lon)),
+                radius: double.parse(radiusTest["radius"]
+                    .toString()),
+                //element.category.perimeter * 1000,
+                fillColor: Colors.redAccent[200].withOpacity(0.1),
+                strokeWidth: 3,
+                strokeColor: Colors.red));
+            i++;
+          });
+          if (mapanes.isNotEmpty) {
+            const duration = const Duration(milliseconds: 100);
+            if (_circleTimer == null) {
+              _circleTimer = new Timer.periodic(duration, (Timer timer) {
+                updateCirlce();
+              });
+            } else {
+              if (!_circleTimer.isActive) {
+                _circleTimer = new Timer.periodic(duration, (Timer timer) {
+                  updateCirlce();
+                });
+              }
+            }
+          }
+        }
+
+        getAppropriateIcon(alert) {
+          print("le slug actuel");
+          print(alert);
+          switch (alert) {
+            case "Embouteillage":
+              print(alert);
+              return embouteillageMarker;
+              break;
+            case "Route-en-chantier":
+              return routechantierMarker;
+              break;
+            case "Zone-dangereuse":
+              return dangerMarker;
+              break;
+            case "Police":
+              return controleMarker;
+              break;
+            case "Radar":
+              return radarMarker;
+              break;
+            case "Accident-de-circulation":
+              return accidentMarker;
+              break;
+            case "Route-barree":
+              return routebarreeMarker;
+              break;
+            case "S.O.S":
+              return sosMarker;
+              break;
+            default:
+              return embouteillageMarker;
+          }
+        }
+
+        void setPolylines() async {
+          PolylineResult result = await polylinePoints
+              .getRouteBetweenCoordinates(
+            googleAPIKey,
+            PointLatLng(currentLocation.latitude, currentLocation.longitude),
+            PointLatLng(
+                destinationLocation.latitude, destinationLocation.longitude),
+          );
+
+          if (result.points.isNotEmpty) {
+            result.points.forEach((PointLatLng point) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            });
+            setState(() {
+              _polylines.add(Polyline(
+                  width: 5,
+                  // set the width of the polylines
+                  polylineId: PolylineId("poly"),
+                  visible: true,
+                  color: Color.fromARGB(255, 40, 122, 198),
+                  points: polylineCoordinates));
+            });
+          }
+        }
+
+        void updatePinOnMap() async {
+          setState(() {
+            // updated position
+            var pinPosition =
+            LatLng(currentPosition.latitude, currentPosition.longitude);
+            //LatLng(currentLocation.latitude, currentLocation.longitude);
+            _kPosition = CameraPosition(
+                zoom: zooming,
+                tilt: CAMERA_TILT,
+                bearing: CAMERA_BEARING,
+                target: pinPosition);
+
+            // the trick is to remove the marker (by id)
+            // and add it again at the updated location
+            _markers.removeWhere((m) => m.markerId.value == "sourcePin");
+            _markers.add(Marker(
+                markerId: MarkerId("sourcePin"),
+                position: pinPosition, // updated position
+                icon: sourceIcon));
+            showPinsOnMap();
           });
         }
-      }
-    }
-  }
 
-  getAppropriateIcon(alert) {
-    print("le slug actuel");
-    print(alert);
-    switch (alert) {
-      case "Embouteillage":
-        print(alert);
-        return embouteillageMarker;
-        break;
-      case "Route-en-chantier":
-        return routechantierMarker;
-        break;
-      case "Zone-dangereuse":
-        return dangerMarker;
-        break;
-      case "Police":
-        return controleMarker;
-        break;
-      case "Radar":
-        return radarMarker;
-        break;
-      case "Accident-de-circulation":
-        return accidentMarker;
-        break;
-      case "Route-barree":
-        return routebarreeMarker;
-        break;
-      case "S.O.S":
-        return sosMarker;
-        break;
-      default:
-        return embouteillageMarker;
-    }
-  }
-
-  void setPolylines() async {
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleAPIKey,
-      PointLatLng(currentLocation.latitude, currentLocation.longitude),
-      PointLatLng(destinationLocation.latitude, destinationLocation.longitude),
-    );
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-      setState(() {
-        _polylines.add(Polyline(
-            width: 5,
-            // set the width of the polylines
-            polylineId: PolylineId("poly"),
-            visible: true,
-            color: Color.fromARGB(255, 40, 122, 198),
-            points: polylineCoordinates));
-      });
-    }
-  }
-
-  void updatePinOnMap() async {
-    setState(() {
-      // updated position
-      var pinPosition =
-          LatLng(currentPosition.latitude, currentPosition.longitude);
-      //LatLng(currentLocation.latitude, currentLocation.longitude);
-      _kPosition = CameraPosition(
-          zoom: zooming,
-          tilt: CAMERA_TILT,
-          bearing: CAMERA_BEARING,
-          target: pinPosition);
-
-      // the trick is to remove the marker (by id)
-      // and add it again at the updated location
-      _markers.removeWhere((m) => m.markerId.value == "sourcePin");
-      _markers.add(Marker(
-          markerId: MarkerId("sourcePin"),
-          position: pinPosition, // updated position
-          icon: sourceIcon));
-      showPinsOnMap();
-    });
-  }
-
-  updateBottomPadding(context) {
-    if (bottomPadding == null) {
-      bottomPadding = SizeConfig.screenHeight / 50;
-      setState(() {
-        if (isExpanded) {
-          isExpanded = false;
-          alertHeight = getSize(30, "height", context);
-          print(getSize(17, "height", context));
-          bottomPadding = getSize(17, "height", context);
-        } else {
-          isExpanded = true;
-          alertHeight = getSize(300, "height", context);
-          bottomPadding = getSize(285, "height", context);
-          swiperIcon = Container(
-            child: SvgPicture.asset(
-              Assets.arrowDownIcon,
-            ),
-            height: 32.0,
-            width: 32.0,
-          );
-        }
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    updateBottomPadding(context);
-    checkPermission();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<UserProvider>().getPositionVal().then((value) {
-        if (value != null) {
-          CameraPosition cPositionGo = CameraPosition(
-            zoom: zooming,
-            tilt: CAMERA_TILT,
-            bearing: CAMERA_BEARING,
-            target: LatLng(double.parse(value.split(",")[0]),
-                double.parse(value.split(",")[1])),
-          );
-          _goTo(cPositionGo);
-        }
-        context.read<UserProvider>().updatePosition(null);
-      });
-    });
-    return SafeArea(
-        bottom: false,
-        child: Scaffold(
-          backgroundColor: Colors.white.withOpacity(0.5),
-          extendBody: true,
-          body: Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: GoogleMap(
-                  mapToolbarEnabled: false,
-                  zoomControlsEnabled: false,
-                  compassEnabled: false,
-                  markers: _markers,
-                  circles: _circles,
-                  tiltGesturesEnabled: false,
-                  polylines: _polylines,
-                  mapType: MapType.normal,
-                  initialCameraPosition: _kPosition,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    // my map has completed being created;
-                    showPinsOnMap();
-                  },
-                  onCameraMove: (CameraPosition position) {
-                    setState(() {
-                      cameraCurrentPosition = position;
-                    });
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      bottom: SizeConfig.blockSizeVertical,
-                      left: SizeConfig.blockSizeHorizontal * 1.8),
-                  child: Container(
-                    height: getSize(30, "height", context),
-                    width: getSize(132, "width", context),
-                    child: ClipRect(
-                      child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                          child: Image.asset(
-                            Assets.logoLong,
-                            fit: BoxFit.cover,
-                          )),
-                    ),
+        updateBottomPadding(context) {
+          if (bottomPadding == null) {
+            bottomPadding = SizeConfig.screenHeight / 50;
+            setState(() {
+              if (isExpanded) {
+                isExpanded = false;
+                alertHeight = getSize(30, "height", context);
+                print(getSize(17, "height", context));
+                bottomPadding = getSize(17, "height", context);
+              } else {
+                isExpanded = true;
+                alertHeight = getSize(300, "height", context);
+                bottomPadding = getSize(285, "height", context);
+                swiperIcon = Container(
+                  child: SvgPicture.asset(
+                    Assets.arrowDownIcon,
                   ),
-                ),
-              ),
-              Align(
-                  alignment: Alignment.center,
-                  child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      child:
-                          context.watch<AlertProvider>().notifications.isEmpty
-                              ? Container()
-                              : Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: context
-                                              .watch<AlertProvider>()
-                                              .notifications
-                                              .length ==
-                                          1
-                                      ? Notif(
-                                          alert: context
-                                              .watch<AlertProvider>()
-                                              .notifications[0],
-                                          onClose: () {
-                                            context
-                                                .read<AlertProvider>()
-                                                .popNotification(0);
-                                          },
-                                          move: () {
-                                            CameraPosition cPosition =
-                                                CameraPosition(
-                                              zoom: zooming,
-                                              tilt: CAMERA_TILT,
-                                              bearing: CAMERA_BEARING,
-                                              target: LatLng(
-                                                  double.parse(context
-                                                      .read<AlertProvider>()
-                                                      .notifications[0]
-                                                      .lat),
-                                                  double.parse(context
-                                                      .read<AlertProvider>()
-                                                      .notifications[0]
-                                                      .lon)),
-                                            );
-                                            _goTo(cPosition);
-                                            context
-                                                .read<AlertProvider>()
-                                                .popNotification(0);
-                                          },
-                                        )
-                                      : NotificationMapane(
-                                          CAMERA_ZOOM: zooming,
-                                          CAMERA_TILT: CAMERA_TILT,
-                                          CAMERA_BEARING: CAMERA_BEARING,
-                                          completer: _controller,
-                                        ),
-                                ))),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical * 2,
-                    left: SizeConfig.blockSizeHorizontal * 4,
-                    right: SizeConfig.blockSizeHorizontal * 4),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      context.watch<PlaceProvider>().loadingState ==
-                              LoadingState.loading
-                          ? Column(
+                  height: 32.0,
+                  width: 32.0,
+                );
+              }
+            });
+          }
+        }
+
+        @override
+        Widget build(BuildContext context) {
+          SizeConfig().init(context);
+          updateBottomPadding(context);
+          checkPermission();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<UserProvider>().getPositionVal().then((value) {
+              if (value != null) {
+                CameraPosition cPositionGo = CameraPosition(
+                  zoom: zooming,
+                  tilt: CAMERA_TILT,
+                  bearing: CAMERA_BEARING,
+                  target: LatLng(double.parse(value.split(",")[0]),
+                      double.parse(value.split(",")[1])),
+                );
+                _goTo(cPositionGo);
+              }
+              context.read<UserProvider>().updatePosition(null);
+            });
+          });
+          return SafeArea(
+              bottom: false,
+              child: Scaffold(
+                backgroundColor: Colors.white.withOpacity(0.5),
+                extendBody: true,
+                body: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: GoogleMap(
+                        mapToolbarEnabled: false,
+                        zoomControlsEnabled: false,
+                        compassEnabled: false,
+                        markers: _markers,
+                        circles: _circles,
+                        tiltGesturesEnabled: false,
+                        polylines: _polylines,
+                        mapType: MapType.normal,
+                        initialCameraPosition: _kPosition,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                          // my map has completed being created;
+                          showPinsOnMap();
+                        },
+                        onCameraMove: (CameraPosition position) {
+                          setState(() {
+                            cameraCurrentPosition = position;
+                          });
+                        },
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            bottom: SizeConfig.blockSizeVertical,
+                            left: SizeConfig.blockSizeHorizontal * 1.8),
+                        child: Container(
+                          height: getSize(30, "height", context),
+                          width: getSize(132, "width", context),
+                          child: ClipRect(
+                            child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                    sigmaX: 10.0, sigmaY: 10.0),
+                                child: Image.asset(
+                                  Assets.logoLong,
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: AnimatedSwitcher(
+                            duration: Duration(milliseconds: 500),
+                            child:
+                            context
+                                .watch<AlertProvider>()
+                                .notifications
+                                .isEmpty
+                                ? Container()
+                                : Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 5),
+                              child: context
+                                  .watch<AlertProvider>()
+                                  .notifications
+                                  .length ==
+                                  1
+                                  ? Notif(
+                                alert: context
+                                    .watch<AlertProvider>()
+                                    .notifications[0],
+                                onClose: () {
+                                  context
+                                      .read<AlertProvider>()
+                                      .popNotification(0);
+                                },
+                                move: () {
+                                  CameraPosition cPosition =
+                                  CameraPosition(
+                                    zoom: zooming,
+                                    tilt: CAMERA_TILT,
+                                    bearing: CAMERA_BEARING,
+                                    target: LatLng(
+                                        double.parse(context
+                                            .read<AlertProvider>()
+                                            .notifications[0]
+                                            .lat),
+                                        double.parse(context
+                                            .read<AlertProvider>()
+                                            .notifications[0]
+                                            .lon)),
+                                  );
+                                  _goTo(cPosition);
+                                  context
+                                      .read<AlertProvider>()
+                                      .popNotification(0);
+                                },
+                              )
+                                  : NotificationMapane(
+                                CAMERA_ZOOM: zooming,
+                                CAMERA_TILT: CAMERA_TILT,
+                                CAMERA_BEARING: CAMERA_BEARING,
+                                completer: _controller,
+                              ),
+                            ))),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.blockSizeVertical * 2,
+                          left: SizeConfig.blockSizeHorizontal * 4,
+                          right: SizeConfig.blockSizeHorizontal * 4),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            context
+                                .watch<PlaceProvider>()
+                                .loadingState ==
+                                LoadingState.loading
+                                ? Column(
                               children: [
                                 SpinKitThreeBounce(
                                   color: HexColor("#A7BACB"),
                                 ),
                               ],
                             )
-                          : context
-                              .select((PlaceProvider provider) => provider)
-                              .userPlace
-                              .fold((NException error) {
+                                : context
+                                .select((PlaceProvider provider) => provider)
+                                .userPlace
+                                .fold((NException error) {
                               return Container(
                                 width: SizeConfig.blockSizeHorizontal * 38,
                                 child: Column(
@@ -1712,8 +1742,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ),
                               );
                             }, (userPlace) {
-                              pushNotificationService.initialise(
-                                  userPlace.country, userPlace.state);
+                              pushNotificationService.initialise(userPlace.country,userPlace.state);
                               if (userPlace.name != null &&
                                   userPlace.city != null &&
                                   userPlace.country != null) {
@@ -1722,496 +1751,548 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     userPlace.city +
                                     ", " +
                                     userPlace.state +
-                                    ", " +
+                                    ", "+
                                     userPlace.country;
                                 print(addresse);
                               }
                               return userPlace == null
                                   ? Container(
-                                      width:
-                                          SizeConfig.blockSizeHorizontal * 38,
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            Languages.of(context).notavail,
-                                            style: TextStyle(fontSize: 18.0),
-                                          )
-                                        ],
+                                width:
+                                SizeConfig.blockSizeHorizontal * 38,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      Languages
+                                          .of(context)
+                                          .notavail,
+                                      style: TextStyle(fontSize: 18.0),
+                                    )
+                                  ],
+                                ),
+                              )
+                                  : Container(
+                                width:
+                                SizeConfig.blockSizeHorizontal * 38,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      userPlace.name ?? " ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0),
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig
+                                              .blockSizeHorizontal *
+                                              5,
+                                          top: SizeConfig
+                                              .blockSizeVertical /
+                                              2),
+                                      child: Text(
+                                        userPlace.city == null
+                                            ? " "
+                                            : userPlace.city +
+                                            "," +
+                                            userPlace.country,
+                                        overflow: TextOverflow.clip,
                                       ),
                                     )
-                                  : Container(
-                                      width:
-                                          SizeConfig.blockSizeHorizontal * 38,
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            userPlace.name ?? " ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18.0),
-                                            overflow: TextOverflow.clip,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig
-                                                        .blockSizeHorizontal *
-                                                    5,
-                                                top: SizeConfig
-                                                        .blockSizeVertical /
-                                                    2),
-                                            child: Text(
-                                              userPlace.city == null
-                                                  ? " "
-                                                  : userPlace.city +
-                                                      "," +
-                                                      userPlace.country,
-                                              overflow: TextOverflow.clip,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    );
+                                  ],
+                                ),
+                              );
                             }),
-                      SizedBox(
-                        width: SizeConfig.blockSizeHorizontal * 5,
-                      ),
-                      Container(
-                        child: Row(
-                          children: [
-                            UtilButton(
-                              onTap: () async {
-                                context.read<UserProvider>().modifyPopupParam(
-                                    !context.read<UserProvider>().popupVal);
-                              },
-                              height: getSize(38, "width", context),
-                              width: getSize(38, "width", context),
-                              icon: context.watch<UserProvider>().popupVal
-                                  ? Icon(Icons.notifications_none_outlined)
-                                  : Icon(Icons.notifications_off_outlined),
+                            SizedBox(
+                              width: SizeConfig.blockSizeHorizontal * 5,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                context.read<UserProvider>().modifyAudioParam(
-                                    !context.read<UserProvider>().audioVal);
-                              },
-                              child: UtilButton(
-                                height: getSize(38, "width", context),
-                                width: getSize(38, "width", context),
-                                icon: context.watch<UserProvider>().audioVal
-                                    ? SvgPicture.asset(Assets.soundIcon)
-                                    : Icon(Icons.volume_off_outlined),
-                              ),
-                            ),
-                            UtilButton(
-                              onTap: () async {
-                                final GoogleMapController controller =
-                                    await _controller.future;
-                                var currentZoomLevel =
-                                    await controller.getZoomLevel();
-                                setState(() {
-                                  zooming = currentZoomLevel + 1;
-                                });
-                                controller.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      target: cameraCurrentPosition.target,
-                                      zoom: zooming,
+                            Container(
+                              child: Row(
+                                children: [
+                                  UtilButton(
+                                    onTap: () async {
+                                      context.read<UserProvider>()
+                                          .modifyPopupParam(
+                                          !context
+                                              .read<UserProvider>()
+                                              .popupVal);
+                                    },
+                                    height: getSize(38, "width", context),
+                                    width: getSize(38, "width", context),
+                                    icon: context
+                                        .watch<UserProvider>()
+                                        .popupVal
+                                        ? Icon(
+                                        Icons.notifications_none_outlined)
+                                        : Icon(
+                                        Icons.notifications_off_outlined),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<UserProvider>()
+                                          .modifyAudioParam(
+                                          !context
+                                              .read<UserProvider>()
+                                              .audioVal);
+                                    },
+                                    child: UtilButton(
+                                      height: getSize(38, "width", context),
+                                      width: getSize(38, "width", context),
+                                      icon: context
+                                          .watch<UserProvider>()
+                                          .audioVal
+                                          ? SvgPicture.asset(Assets.soundIcon)
+                                          : Icon(Icons.volume_off_outlined),
                                     ),
                                   ),
-                                );
-                              },
-                              height: getSize(38, "width", context),
-                              width: getSize(38, "width", context),
-                              icon: SvgPicture.asset(
-                                Assets.zoomPlusIcon,
-                              ),
-                            ),
-                            UtilButton(
-                              onTap: () async {
-                                final GoogleMapController controller =
-                                    await _controller.future;
-                                var currentZoomLevel =
-                                    await controller.getZoomLevel();
-                                setState(() {
-                                  zooming = currentZoomLevel - 1;
-                                });
-                                controller.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      target: cameraCurrentPosition.target,
-                                      zoom: zooming,
+                                  UtilButton(
+                                    onTap: () async {
+                                      final GoogleMapController controller =
+                                      await _controller.future;
+                                      var currentZoomLevel =
+                                      await controller.getZoomLevel();
+                                      setState(() {
+                                        zooming = currentZoomLevel + 1;
+                                      });
+                                      controller.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                            target: cameraCurrentPosition
+                                                .target,
+                                            zoom: zooming,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    height: getSize(38, "width", context),
+                                    width: getSize(38, "width", context),
+                                    icon: SvgPicture.asset(
+                                      Assets.zoomPlusIcon,
                                     ),
                                   ),
-                                );
-                              },
-                              height: getSize(38, "width", context),
-                              width: getSize(38, "width", context),
-                              icon: SvgPicture.asset(
-                                Assets.zoomMinIcon,
+                                  UtilButton(
+                                    onTap: () async {
+                                      final GoogleMapController controller =
+                                      await _controller.future;
+                                      var currentZoomLevel =
+                                      await controller.getZoomLevel();
+                                      setState(() {
+                                        zooming = currentZoomLevel - 1;
+                                      });
+                                      controller.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                            target: cameraCurrentPosition
+                                                .target,
+                                            zoom: zooming,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    height: getSize(38, "width", context),
+                                    width: getSize(38, "width", context),
+                                    icon: SvgPicture.asset(
+                                      Assets.zoomMinIcon,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              AnimatedPadding(
-                duration: Duration(milliseconds: 500),
-                padding: EdgeInsets.only(
-                    bottom: !isExpanded
-                        ? getSize(160, "height", context)
-                        : getSize(422, "height", context),
-                    right: SizeConfig.blockSizeHorizontal * 6),
-                child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: UtilButton(
-                      height: getSize(46, "width", context),
-                      width: getSize(46, "width", context),
-                      icon: Icon(Icons.my_location),
-                      onTap: () {
-                        _goToMyPosition();
-                      },
-                    )),
-              ),
-              AnimatedPadding(
-                duration: Duration(milliseconds: 500),
-                padding: EdgeInsets.only(
-                    bottom: !isExpanded
-                        ? getSize(100, "height", context)
-                        : getSize(365, "height", context),
-                    right: SizeConfig.blockSizeHorizontal * 6),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: UtilButton(
-                    onTap: () {
-                      showMaterialModalBottomSheet(
-                        context: context,
-                        builder: (context) => SingleChildScrollView(
-                          controller: ModalScrollController.of(context),
-                          child: Container(
-                            height: SizeConfig.blockSizeVertical * 50,
-                            width: SizeConfig.screenWidth,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(35),
-                                  topRight: Radius.circular(35)),
-                            ),
-                            child: Stack(
-                              overflow: Overflow.visible,
-                              children: [
-                                Positioned(
-                                    bottom: getSize(320, "height", context),
+                    ),
+                    AnimatedPadding(
+                      duration: Duration(milliseconds: 500),
+                      padding: EdgeInsets.only(
+                          bottom: !isExpanded
+                              ? getSize(160, "height", context)
+                              : getSize(422, "height", context),
+                          right: SizeConfig.blockSizeHorizontal * 6),
+                      child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: UtilButton(
+                            height: getSize(46, "width", context),
+                            width: getSize(46, "width", context),
+                            icon: Icon(Icons.my_location),
+                            onTap: () {
+                              _goToMyPosition();
+                            },
+                          )),
+                    ),
+                    AnimatedPadding(
+                      duration: Duration(milliseconds: 500),
+                      padding: EdgeInsets.only(
+                          bottom: !isExpanded
+                              ? getSize(100, "height", context)
+                              : getSize(365, "height", context),
+                          right: SizeConfig.blockSizeHorizontal * 6),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: UtilButton(
+                          onTap: () {
+                            showMaterialModalBottomSheet(
+                              context: context,
+                              builder: (context) =>
+                                  SingleChildScrollView(
+                                    controller: ModalScrollController.of(
+                                        context),
                                     child: Container(
-                                      width: getSize(375, "width", context),
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        Assets.arrowDownIcon,
+                                      height: SizeConfig.blockSizeVertical * 50,
+                                      width: SizeConfig.screenWidth,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(35),
+                                            topRight: Radius.circular(35)),
                                       ),
-                                    )),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 5,
-                                      left: SizeConfig.blockSizeHorizontal * 7,
-                                      right:
-                                          SizeConfig.blockSizeHorizontal * 7),
-                                  child: TextField(
-                                    textInputAction: TextInputAction.go,
-                                    controller: _startPointController,
-                                    style: TextStyle(fontSize: 17.0),
-                                    onChanged: (value) {
-                                      context
-                                          .read<SearchProvider>()
-                                          .getSearchResults(value);
-                                      // context
-                                      //     .read<SearchProvider>()
-                                      //     .toggleSearchState();
-                                    },
-                                    // onTap: () {
-                                    //   context
-                                    //       .read<SearchProvider>()
-                                    //       .toggleSearchState();
-                                    // },
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            Languages.of(context).searchlieu,
-                                        hintStyle: TextStyle(fontSize: 17.0),
-                                        border: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.red)),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.grey[200])),
-                                        suffixIcon: Icon(Icons.search)),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 5),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              SizeConfig.blockSizeHorizontal *
-                                                  7),
-                                      child:
-                                          context
-                                                      .watch<SearchProvider>()
-                                                      .isSearchEnable ==
-                                                  false
-                                              ? Row(
+                                      child: Stack(
+                                        overflow: Overflow.visible,
+                                        children: [
+                                          Positioned(
+                                              bottom: getSize(
+                                                  320, "height", context),
+                                              child: Container(
+                                                width: getSize(
+                                                    375, "width", context),
+                                                alignment: Alignment.center,
+                                                child: SvgPicture.asset(
+                                                  Assets.arrowDownIcon,
+                                                ),
+                                              )),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: SizeConfig
+                                                    .blockSizeVertical * 5,
+                                                left: SizeConfig
+                                                    .blockSizeHorizontal * 7,
+                                                right:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    7),
+                                            child: TextField(
+                                              textInputAction: TextInputAction
+                                                  .go,
+                                              controller: _startPointController,
+                                              style: TextStyle(fontSize: 17.0),
+                                              onChanged: (value) {
+                                                context
+                                                    .read<SearchProvider>()
+                                                    .getSearchResults(value);
+                                                // context
+                                                //     .read<SearchProvider>()
+                                                //     .toggleSearchState();
+                                              },
+                                              // onTap: () {
+                                              //   context
+                                              //       .read<SearchProvider>()
+                                              //       .toggleSearchState();
+                                              // },
+                                              decoration: InputDecoration(
+                                                  hintText: Languages
+                                                      .of(context)
+                                                      .searchlieu,
+                                                  hintStyle: TextStyle(
+                                                      fontSize: 17.0),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide:
+                                                      BorderSide(
+                                                          color: Colors.red)),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors
+                                                              .grey[200])),
+                                                  suffixIcon: Icon(
+                                                      Icons.search)),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: SizeConfig
+                                                    .blockSizeVertical * 5),
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                    SizeConfig
+                                                        .blockSizeHorizontal *
+                                                        7),
+                                                child:
+                                                context
+                                                    .watch<SearchProvider>()
+                                                    .isSearchEnable ==
+                                                    false
+                                                    ? Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                                   children: [
                                                     SvgPicture.asset(
                                                       Assets.illustration,
                                                     ),
                                                     SizedBox(
                                                       width: SizeConfig
-                                                              .blockSizeHorizontal *
+                                                          .blockSizeHorizontal *
                                                           6,
                                                     ),
                                                     Expanded(
                                                       flex: 2,
                                                       child: Text(
-                                                        Languages.of(context)
+                                                        Languages
+                                                            .of(context)
                                                             .msgsearchbefore,
                                                         overflow:
-                                                            TextOverflow.clip,
+                                                        TextOverflow.clip,
                                                       ),
                                                     )
                                                   ],
                                                 )
-                                              : context
-                                                          .watch<
-                                                              SearchProvider>()
-                                                          .loadingState ==
-                                                      LoadingState.loading
-                                                  ? Center(
-                                                      child: SpinKitChasingDots(
-                                                        color:
-                                                            HexColor("#A7BACB"),
-                                                      ),
-                                                    )
-                                                  : context
-                                                      .select((SearchProvider
-                                                              provider) =>
-                                                          provider)
-                                                      .placesResult
-                                                      .fold((NException error) {
-                                                      return Column(
-                                                        children: [
-                                                          Center(
-                                                            child: Text(
-                                                              error.message,
+                                                    : context
+                                                    .watch<
+                                                    SearchProvider>()
+                                                    .loadingState ==
+                                                    LoadingState.loading
+                                                    ? Center(
+                                                  child: SpinKitChasingDots(
+                                                    color:
+                                                    HexColor("#A7BACB"),
+                                                  ),
+                                                )
+                                                    : context
+                                                    .select((SearchProvider
+                                                provider) =>
+                                                provider)
+                                                    .placesResult
+                                                    .fold((NException error) {
+                                                  return Column(
+                                                    children: [
+                                                      Center(
+                                                        child: Text(
+                                                          error.message,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  );
+                                                }, (placesResult) {
+                                                  return placesResult
+                                                      .isEmpty
+                                                      ? Column(
+                                                    children: [
+                                                      Center(
+                                                        child: Text(
+                                                            Languages
+                                                                .of(context)
+                                                                .noresult),
+                                                      )
+                                                    ],
+                                                  )
+                                                      : Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: SizeConfig
+                                                            .blockSizeVertical *
+                                                            7),
+                                                    child: Container(
+                                                      child: ListView
+                                                          .separated(
+                                                        itemBuilder:
+                                                            (context,
+                                                            index) {
+                                                          String name = placesResult[index]
+                                                              .name !=
+                                                              null
+                                                              ? placesResult[index]
+                                                              .name
+                                                              : " ";
+                                                          String osm_value = placesResult[index]
+                                                              .osm_value !=
+                                                              null
+                                                              ? placesResult[index]
+                                                              .osm_value +
+                                                              ","
+                                                              : " ";
+                                                          String city = placesResult[index]
+                                                              .city !=
+                                                              null
+                                                              ? placesResult[index]
+                                                              .city +
+                                                              ","
+                                                              : " ";
+                                                          String country = placesResult[index]
+                                                              .country !=
+                                                              null
+                                                              ? placesResult[index]
+                                                              .country +
+                                                              ","
+                                                              : " ";
+                                                          return ListTile(
+                                                            leading:
+                                                            SvgPicture
+                                                                .asset(
+                                                              Assets
+                                                                  .pathIcon,
                                                             ),
-                                                          )
-                                                        ],
-                                                      );
-                                                    }, (placesResult) {
-                                                      return placesResult
-                                                              .isEmpty
-                                                          ? Column(
-                                                              children: [
-                                                                Center(
-                                                                  child: Text(Languages.of(
-                                                                          context)
-                                                                      .noresult),
-                                                                )
-                                                              ],
-                                                            )
-                                                          : Padding(
-                                                              padding: EdgeInsets.only(
-                                                                  top: SizeConfig
-                                                                          .blockSizeVertical *
-                                                                      7),
-                                                              child: Container(
-                                                                child: ListView
-                                                                    .separated(
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
-                                                                    String name = placesResult[index].name !=
-                                                                            null
-                                                                        ? placesResult[index]
-                                                                            .name
-                                                                        : " ";
-                                                                    String osm_value = placesResult[index].osm_value !=
-                                                                            null
-                                                                        ? placesResult[index].osm_value +
-                                                                            ","
-                                                                        : " ";
-                                                                    String city = placesResult[index].city !=
-                                                                            null
-                                                                        ? placesResult[index].city +
-                                                                            ","
-                                                                        : " ";
-                                                                    String country = placesResult[index].country !=
-                                                                            null
-                                                                        ? placesResult[index].country +
-                                                                            ","
-                                                                        : " ";
-                                                                    return ListTile(
-                                                                      leading:
-                                                                          SvgPicture
-                                                                              .asset(
-                                                                        Assets
-                                                                            .pathIcon,
-                                                                      ),
-                                                                      title:
-                                                                          Text(
-                                                                        placesResult[index].name !=
-                                                                                null
-                                                                            ? placesResult[index].name
-                                                                            : " ",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                17.0,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            color: Colors.black),
-                                                                      ),
-                                                                      subtitle:
-                                                                          Text(
-                                                                        osm_value +
-                                                                            city +
-                                                                            country,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                12.0,
-                                                                            color:
-                                                                                Colors.grey),
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        CameraPosition positionToGo = CameraPosition(
-                                                                            bearing:
-                                                                                CAMERA_BEARING,
-                                                                            target:
-                                                                                LatLng(placesResult[index].coordinates[1], placesResult[index].coordinates[0]),
-                                                                            tilt: CAMERA_TILT,
-                                                                            zoom: zooming);
-                                                                        _goTo(
-                                                                            positionToGo);
-                                                                      },
-                                                                      onLongPress:
-                                                                          () {
-                                                                        sendAlertFromSearchPopup(
-                                                                            name +
-                                                                                city +
-                                                                                country,
-                                                                            userId,
-                                                                            LatLng(placesResult[index].coordinates[1],
-                                                                                placesResult[index].coordinates[0]));
-                                                                      },
-                                                                    );
-                                                                  },
-                                                                  itemCount:
-                                                                      placesResult
-                                                                          .length,
-                                                                  separatorBuilder:
-                                                                      (index,
-                                                                          count) {
-                                                                    return Divider(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                    }),
+                                                            title:
+                                                            Text(
+                                                              placesResult[index]
+                                                                  .name !=
+                                                                  null
+                                                                  ? placesResult[index]
+                                                                  .name
+                                                                  : " ",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                  17.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            subtitle:
+                                                            Text(
+                                                              osm_value +
+                                                                  city +
+                                                                  country,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                  12.0,
+                                                                  color:
+                                                                  Colors.grey),
+                                                            ),
+                                                            onTap:
+                                                                () {
+                                                              CameraPosition positionToGo = CameraPosition(
+                                                                  bearing:
+                                                                  CAMERA_BEARING,
+                                                                  target:
+                                                                  LatLng(
+                                                                      placesResult[index]
+                                                                          .coordinates[1],
+                                                                      placesResult[index]
+                                                                          .coordinates[0]),
+                                                                  tilt: CAMERA_TILT,
+                                                                  zoom: zooming);
+                                                              _goTo(
+                                                                  positionToGo);
+                                                            },
+                                                            onLongPress:
+                                                                () {
+                                                              sendAlertFromSearchPopup(
+                                                                  name +
+                                                                      city +
+                                                                      country,
+                                                                  userId,
+                                                                  LatLng(
+                                                                      placesResult[index]
+                                                                          .coordinates[1],
+                                                                      placesResult[index]
+                                                                          .coordinates[0]));
+                                                            },
+                                                          );
+                                                        },
+                                                        itemCount:
+                                                        placesResult
+                                                            .length,
+                                                        separatorBuilder:
+                                                            (index,
+                                                            count) {
+                                                          return Divider(
+                                                            color: Colors
+                                                                .transparent,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
+                            );
+                          },
+                          height: getSize(46, "width", context),
+                          width: getSize(46, "width", context),
+                          icon: SvgPicture.asset(
+                            Assets.searchIcon,
                           ),
                         ),
-                      );
-                    },
-                    height: getSize(46, "width", context),
-                    width: getSize(46, "width", context),
-                    icon: SvgPicture.asset(
-                      Assets.searchIcon,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: SizeConfig.blockSizeVertical * 7.27),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedContainer(
-                    alignment: Alignment.topCenter,
-                    height: alertHeight,
-                    width: SizeConfig.screenWidth,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(isExpanded ? 35 : 0),
-                            topRight: Radius.circular(isExpanded ? 35 : 0)),
-                        color: isExpanded
-                            ? Colors.white
-                            : Colors.white.withOpacity(0.3),
-                        boxShadow: [
-                          isExpanded
-                              ? BoxShadow(
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: SizeConfig.blockSizeVertical * 7.27),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AnimatedContainer(
+                          alignment: Alignment.topCenter,
+                          height: alertHeight,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(isExpanded ? 35 : 0),
+                                  topRight: Radius.circular(
+                                      isExpanded ? 35 : 0)),
+                              color: isExpanded
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.3),
+                              boxShadow: [
+                                isExpanded
+                                    ? BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
                                   spreadRadius: 5,
                                   blurRadius: 7,
                                   offset: Offset(
                                       0, 3), // changes position of shadow
                                 )
-                              : BoxShadow(
+                                    : BoxShadow(
                                   color: Colors.transparent,
                                 )
-                        ]),
-                    duration: Duration(milliseconds: 500),
-                    child: Stack(
-                      overflow: Overflow.visible,
-                      children: [
-                        AnimatedPositioned(
+                              ]),
                           duration: Duration(milliseconds: 500),
-                          bottom: bottomPadding,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: getSize(375, "width", context),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (isExpanded) {
-                                    isExpanded = false;
-                                    alertHeight =
-                                        getSize(30, "height", context);
-                                    print(getSize(17, "height", context));
-                                    bottomPadding =
-                                        getSize(17, "height", context);
-                                  } else {
-                                    isExpanded = true;
-                                    alertHeight =
-                                        getSize(300, "height", context);
-                                    bottomPadding =
-                                        getSize(285, "height", context);
-                                  }
-                                });
-                              },
-                              child: swiperIcon,
-                            ),
-                          ),
-                        ),
-                        isExpanded
-                            ? Padding(
+                          child: Stack(
+                            overflow: Overflow.visible,
+                            children: [
+                              AnimatedPositioned(
+                                duration: Duration(milliseconds: 500),
+                                bottom: bottomPadding,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: getSize(375, "width", context),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        if (isExpanded) {
+                                          isExpanded = false;
+                                          alertHeight =
+                                              getSize(30, "height", context);
+                                          print(getSize(17, "height", context));
+                                          bottomPadding =
+                                              getSize(17, "height", context);
+                                        } else {
+                                          isExpanded = true;
+                                          alertHeight =
+                                              getSize(300, "height", context);
+                                          bottomPadding =
+                                              getSize(285, "height", context);
+                                        }
+                                      });
+                                    },
+                                    child: swiperIcon,
+                                  ),
+                                ),
+                              ),
+                              isExpanded
+                                  ? Padding(
                                 padding: const EdgeInsets.all(28.0),
                                 child: Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -2226,7 +2307,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2254,17 +2335,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          Languages.of(context)
+                                                          Languages
+                                                              .of(context)
                                                               .embou,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2289,7 +2371,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2317,17 +2399,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          Languages.of(context)
+                                                          Languages
+                                                              .of(context)
                                                               .routebarre,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2352,7 +2435,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2380,17 +2463,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          Languages.of(context)
+                                                          Languages
+                                                              .of(context)
                                                               .routechantier,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2415,7 +2499,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2443,17 +2527,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(30,
                                                             "height", context),
                                                         child: Text(
-                                                          Languages.of(context)
+                                                          Languages
+                                                              .of(context)
                                                               .zonedanger,
                                                           maxLines: 2,
                                                           softWrap: true,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2471,9 +2556,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         height: getSize(30, "height", context)),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -2488,7 +2573,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2516,19 +2601,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                         height: getSize(42,
                                                             "height", context),
                                                         child: Text(
-                                                          Languages.of(context)
+                                                          Languages
+                                                              .of(context)
                                                               .accidentdecircu,
                                                           maxLines: 3,
                                                           softWrap: true,
                                                           overflow:
-                                                              TextOverflow.clip,
+                                                          TextOverflow.clip,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2553,7 +2639,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2585,14 +2671,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                           maxLines: 3,
                                                           softWrap: true,
                                                           overflow:
-                                                              TextOverflow.clip,
+                                                          TextOverflow.clip,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2617,7 +2703,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                           },
                                           child: Container(
                                               width:
-                                                  getSize(75, "width", context),
+                                              getSize(75, "width", context),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -2649,14 +2735,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                           maxLines: 3,
                                                           softWrap: true,
                                                           overflow:
-                                                              TextOverflow.clip,
+                                                          TextOverflow.clip,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      .5),
+                                                                  .5),
                                                               fontSize: getSize(
                                                                   11,
                                                                   "height",
@@ -2670,7 +2756,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         ),
                                         Container(
                                             width:
-                                                getSize(75, "width", context),
+                                            getSize(75, "width", context),
                                             child: Column(
                                               children: [
                                                 Row(
@@ -2698,16 +2784,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                       height: getSize(40,
                                                           "height", context),
                                                       child: Text(
-                                                        Languages.of(context)
+                                                        Languages
+                                                            .of(context)
                                                             .pubposition,
                                                         maxLines: 2,
                                                         softWrap: true,
                                                         textAlign:
-                                                            TextAlign.center,
+                                                        TextAlign.center,
                                                         style: TextStyle(
                                                             color: Colors.black
                                                                 .withOpacity(
-                                                                    .5),
+                                                                .5),
                                                             fontSize: getSize(
                                                                 12,
                                                                 "height",
@@ -2718,290 +2805,330 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 ),
                                               ],
                                             )),
+                                        
                                       ],
                                     ),
                                   ],
                                 ),
                               )
-                            : Container()
-                      ],
-                    ),
-                    onEnd: () {
-                      setState(() {
-                        if (!isExpanded) {
-                          swiperIcon = Container(
-                            child: SvgPicture.asset(
-                              Assets.arrowUpIcon,
-                            ),
-                            height: 32.0,
-                            width: 32.0,
-                          );
-                          context
-                              .read<BottomBarProvider>()
-                              .modifyColor(Colors.white.withOpacity(0.3));
-                        } else {
-                          context
-                              .read<BottomBarProvider>()
-                              .modifyColor(Colors.white);
-                          swiperIcon = Container(
-                            child: SvgPicture.asset(
-                              Assets.arrowDownIcon,
-                            ),
-                            height: 32.0,
-                            width: 32.0,
-                          );
-                        }
-                      });
-                    },
-                  ),
-                ),
-              )
-            ],
-          ),
-        ));
-  }
-
-  sendAlertFromSearchPopup(address, posted, latlon) {
-    print(latlon.toString());
-    showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
-        barrierColor: AppColors.whiteColor.withOpacity(0.96),
-        transitionDuration: const Duration(milliseconds: 200),
-        pageBuilder: (BuildContext buildContext, Animation animation,
-            Animation secondaryAnimation) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: getSize(303, "width", context),
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius:
-                        BorderRadius.circular(getSize(20, "height", context)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF000000).withOpacity(0.11),
-                        spreadRadius: 5,
-                        blurRadius: 10,
-                        offset: Offset(0, 5), // changes position of shadow
+                                  : Container()
+                            ],
+                          ),
+                          onEnd: () {
+                            setState(() {
+                              if (!isExpanded) {
+                                swiperIcon = Container(
+                                  child: SvgPicture.asset(
+                                    Assets.arrowUpIcon,
+                                  ),
+                                  height: 32.0,
+                                  width: 32.0,
+                                );
+                                context
+                                    .read<BottomBarProvider>()
+                                    .modifyColor(Colors.white.withOpacity(0.3));
+                              } else {
+                                context
+                                    .read<BottomBarProvider>()
+                                    .modifyColor(Colors.white);
+                                swiperIcon = Container(
+                                  child: SvgPicture.asset(
+                                    Assets.arrowDownIcon,
+                                  ),
+                                  height: 32.0,
+                                  width: 32.0,
+                                );
+                              }
+                            });
+                          },
+                        ),
                       ),
-                    ],
-                  ),
+                    )
+                  ],
+                ),
+              ));
+        }
+
+        sendAlertFromSearchPopup(address, posted, latlon) {
+          print(latlon.toString());
+          showGeneralDialog(
+              context: context,
+              barrierDismissible: true,
+              barrierLabel:
+              MaterialLocalizations
+                  .of(context)
+                  .modalBarrierDismissLabel,
+              barrierColor: AppColors.whiteColor.withOpacity(0.96),
+              transitionDuration: const Duration(milliseconds: 200),
+              pageBuilder: (BuildContext buildContext, Animation animation,
+                  Animation secondaryAnimation) {
+                return Center(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(getSize(20, "height", context)),
+                        width: getSize(303, "width", context),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius:
+                          BorderRadius.circular(getSize(20, "height", context)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF000000).withOpacity(0.11),
+                              spreadRadius: 5,
+                              blurRadius: 10,
+                              offset: Offset(
+                                  0, 5), // changes position of shadow
+                            ),
+                          ],
+                        ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            RichText(
-                              text: TextSpan(
-                                  text: Languages.of(context)
-                                      .completetocreatealert,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: getSize(18, "height", context),
-                                      color: Colors.black)),
-                            ),
-                            SizedBox(
-                              height: getSize(29, "height", context),
-                            ),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: getSize(44, "height", context),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Drawer(
-                                        elevation: 0,
-                                        child: Container(
-                                          color: Colors.white,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: SelectFormField(
-                                            type: SelectFormFieldType.dropdown,
-                                            // or can be dialog
-                                            initialValue: 'Embouteillage',
-                                            labelText:
-                                                Languages.of(context).cat,
-                                            items: Alert.items,
-                                            onChanged: (val) {
-                                              setState(() {
-                                                customCategory = val;
-                                              });
-                                            },
-                                            onSaved: (val) {
-                                              setState(() {
-                                                customCategory = val;
-                                              });
-                                            },
-                                          ),
-                                        )))),
-                            SizedBox(
-                              height: getSize(29, "height", context),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Flexible(
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: getSize(44, "height", context),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                      child: Drawer(
-                                        elevation: 0,
-                                        child: Container(
-                                          color: Colors.white,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: TextField(
-                                            controller:
-                                                TextEditingController(text: ""),
-                                            onChanged: (value) {
-                                              customAddress = value;
-                                            },
-                                            decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide.none,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                ),
-                                                filled: true,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        vertical: 5.0,
-                                                        horizontal: 12),
-                                                hintStyle: TextStyle(
-                                                    color: Colors.black
-                                                        .withOpacity(.22)),
-                                                hintText: Languages.of(context)
-                                                    .enterpositionexact,
-                                                fillColor: Colors.black
-                                                    .withOpacity(.04)),
-                                            style: AppTheme.buttonText,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  getSize(20, "height", context)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  RichText(
+                                    text: TextSpan(
+                                        text:
+                                        Languages
+                                            .of(context)
+                                            .completetocreatealert,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: getSize(
+                                                18, "height", context),
+                                            color: Colors.black)),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: getSize(16, "height", context),
-                            ),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
                                   SizedBox(
-                                    child: Container(
-                                      height: getSize(40, "height", context),
-                                      width: getSize(162, "width", context),
-                                      child: FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        color: Color(0x162C306F),
-                                        padding: EdgeInsets.fromLTRB(
-                                            0,
-                                            getSize(5, "height", context),
-                                            0,
-                                            getSize(5, "height", context)),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            Languages.of(context).notks,
-                                            style: TextStyle(
-                                              fontSize: getSize(
-                                                  18, "height", context),
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    height: getSize(29, "height", context),
                                   ),
-                                  Container(
-                                    height: getSize(40, "height", context),
-                                    width: getSize(91, "width", context),
-                                    child: FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        loaderPopup();
-                                        sendAlert(
-                                            "default",
-                                            customCategory,
-                                            address,
-                                            posted,
-                                            latlon,
-                                            customAddress == "" ||
-                                                    customAddress == null
-                                                ? "test"
-                                                : customAddress);
-                                      },
-                                      textColor: Colors.white,
-                                      color: Colors.transparent,
-                                      padding: EdgeInsets.all(0),
+                                  SizedBox(
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
+                                      height: getSize(44, "height", context),
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xFFA7BACB),
-                                              Color(0xFF25296A),
-                                            ],
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(
+                                                100),
                                           ),
-                                        ),
-                                        padding: EdgeInsets.fromLTRB(
-                                            0,
-                                            getSize(5, "height", context),
-                                            0,
-                                            getSize(5, "height", context)),
-                                        child: Center(
-                                            child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              Languages.of(context).yes,
-                                              style: TextStyle(
-                                                fontSize: getSize(
-                                                    18, "height", context),
-                                                fontWeight: FontWeight.w400,
+                                          child: Drawer(
+                                              elevation: 0,
+                                              child: Container(
+                                                color: Colors.white,
+                                                width:
+                                                MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width,
+                                                child: SelectFormField(
+                                                  type: SelectFormFieldType
+                                                      .dropdown,
+                                                  // or can be dialog
+                                                  initialValue: 'Embouteillage',
+                                                  labelText: Languages
+                                                      .of(context)
+                                                      .cat,
+                                                  items: Alert.items,
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      customCategory = val;
+                                                    });
+                                                  },
+                                                  onSaved: (val) {
+                                                    setState(() {
+                                                      customCategory = val;
+                                                    });
+                                                  },
+                                                ),
+                                              )))),
+                                  SizedBox(
+                                    height: getSize(29, "height", context),
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: SizedBox(
+                                          width: MediaQuery
+                                              .of(context)
+                                              .size
+                                              .width,
+                                          height: getSize(
+                                              44, "height", context),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius:
+                                              BorderRadius.circular(100),
+                                            ),
+                                            child: Drawer(
+                                              elevation: 0,
+                                              child: Container(
+                                                color: Colors.white,
+                                                width:
+                                                MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width,
+                                                child: TextField(
+                                                  controller:
+                                                  TextEditingController(
+                                                      text: ""),
+                                                  onChanged: (value) {
+                                                    customAddress = value;
+                                                  },
+                                                  decoration: InputDecoration(
+                                                      border: OutlineInputBorder(
+                                                        borderSide: BorderSide
+                                                            .none,
+                                                        borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                      ),
+                                                      filled: true,
+                                                      contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 5.0,
+                                                          horizontal: 12),
+                                                      hintStyle: TextStyle(
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                              .22)),
+                                                      hintText:
+                                                      Languages
+                                                          .of(context)
+                                                          .enterpositionexact,
+                                                      fillColor: Colors.black
+                                                          .withOpacity(.04)),
+                                                  style: AppTheme.buttonText,
+                                                ),
                                               ),
                                             ),
-                                          ],
-                                        )),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ])
+                                  SizedBox(
+                                    height: getSize(16, "height", context),
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          child: Container(
+                                            height: getSize(
+                                                40, "height", context),
+                                            width: getSize(
+                                                162, "width", context),
+                                            child: FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              color: Color(0x162C306F),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0,
+                                                  getSize(5, "height", context),
+                                                  0,
+                                                  getSize(
+                                                      5, "height", context)),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(100),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  Languages
+                                                      .of(context)
+                                                      .notks,
+                                                  style: TextStyle(
+                                                    fontSize: getSize(
+                                                        18, "height", context),
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: getSize(
+                                              40, "height", context),
+                                          width: getSize(91, "width", context),
+                                          child: FlatButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              loaderPopup();
+                                              sendAlert(
+                                                  "default",
+                                                  customCategory,
+                                                  address,
+                                                  posted,
+                                                  latlon,
+                                                  customAddress == "" ||
+                                                      customAddress == null
+                                                      ? "test"
+                                                      : customAddress);
+                                            },
+                                            textColor: Colors.white,
+                                            color: Colors.transparent,
+                                            padding: EdgeInsets.all(0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(100),
+                                                gradient: LinearGradient(
+                                                  colors: <Color>[
+                                                    Color(0xFFA7BACB),
+                                                    Color(0xFF25296A),
+                                                  ],
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0,
+                                                  getSize(5, "height", context),
+                                                  0,
+                                                  getSize(
+                                                      5, "height", context)),
+                                              child: Center(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        Languages
+                                                            .of(context)
+                                                            .yes,
+                                                        style: TextStyle(
+                                                          fontSize: getSize(
+                                                              18, "height",
+                                                              context),
+                                                          fontWeight: FontWeight
+                                                              .w400,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            ),
+                                          ),
+                                        ),
+                                      ])
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-}
+                );
+              });
+        }
+      }

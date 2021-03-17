@@ -60,7 +60,9 @@ class _NotifState extends State<Notif> {
   @override
   void initState() {
     super.initState();
-    audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
+    if (context.read<UserProvider>().audioVal) {
+      audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
+    }
     context.read<UserProvider>().getLangVal();
   }
 
