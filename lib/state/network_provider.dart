@@ -10,10 +10,12 @@ class NetworkProvider extends ChangeNotifier{
   init() {
     new Timer.periodic(Duration(seconds: 3), (Timer timer) async {
       bool result = await DataConnectionChecker().hasConnection;
-      if (result == true) {
+      print("valeur du test de connexion $result $i");
+      if(result && i==1) {
+        print("clean du boat");
         BotToast.cleanAll();
         i=0;
-      } else {
+      } else if(!result && i==0){
         if (i == 0) {
           BotToast.showCustomNotification(
             enableSlideOff: false,

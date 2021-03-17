@@ -22,6 +22,7 @@ import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/location_service_provider.dart';
+import 'package:mapane/state/network_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -291,6 +292,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
+    context.read<NetworkProvider>().init();
     context.read<LocationServiceProvider>().init();
     /*context
         .read<UserProvider>()
@@ -299,8 +301,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<UserProvider>().getUserId().then((value) => userId = value);
     polylinePoints = PolylinePoints();
     Geolocator.getPositionStream().listen((Position position) async {
-      print('variable position');
-      print(position);
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
