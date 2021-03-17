@@ -44,7 +44,7 @@ class LocationServiceConnexion extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         horizontal: getSize(35, "width", context)),
                     child: Text(
-                      "Impossible d’acceder au service de localisation. Veuillez l'activer dans le centre de notification ou dans les paramètres",
+                      "Impossible d’acceder au service de localisation. Veuillez l'activer.",
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
@@ -56,38 +56,6 @@ class LocationServiceConnexion extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              bottom: getSize(50, "height", context),
-              child: Column(
-                children: [
-                  FlatButton(
-                    onPressed: () {},
-                    textColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(68.0),
-                      side: BorderSide(color: Colors.black),
-                    ),
-                    child: Container(
-                      color: Colors.transparent,
-                      width: getSize(245, "width", context),
-                      padding: const EdgeInsets.fromLTRB(15, 12, 15, 12),
-                      child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Actualiser',
-                                  style: TextStyle(fontSize: 16)),
-                              Image.asset(
-                                'assets/images/refresh-icon.png',
-                                height: getSize(15, "height", context),
-                              )
-                            ],
-                          )),
-                    ),
-                  )
-                ],
-              ),
-            )
           ]),
         ),
       ),
