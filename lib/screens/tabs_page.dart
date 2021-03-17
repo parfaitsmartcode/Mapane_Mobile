@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapane/custom/widgets/tab_navigation_item.dart';
-import 'package:mapane/di.dart';
-import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/place_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:flutter/services.dart';
@@ -10,13 +9,9 @@ import 'package:flutter/services.dart';
 class TabsPage extends StatefulWidget {
   @override
   _TabsPageState createState() => _TabsPageState();
-  // CameraPosition latlon;
-  // TabsPage(latlon, {this.latlon});
 }
 
 class _TabsPageState extends State<TabsPage> {
-  int _currentIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -43,7 +38,7 @@ class _TabsPageState extends State<TabsPage> {
               context
                   .read<AlertProvider>()
                   .getAlertByUser("5ff34b88af0f1982ab03f3f9");
-              context.read<AlertProvider>().getAlertByUserCat("All", 1);
+              context.read<AlertProvider>().getAlertByUserCat("All", 1,context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
             }
           },
           items: [

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mapane/custom/widgets/connexion_widget.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/walk.dart';
 import 'package:mapane/screens/numero_get.dart';
@@ -8,7 +7,6 @@ import 'package:mapane/screens/splash_welcome.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/screens/tabs_page.dart';
-import 'package:mapane/utils/network_route.dart';
 
 
 class Routes {
@@ -23,7 +21,6 @@ class Routes {
   static const String welcome_map = '/welcome-map';
   static const String settings = '/settings';
   static const String map = '/map';
-  static const String network = '/network';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -34,7 +31,6 @@ class Routes {
     welcome_map: (BuildContext context) => WelcomeMap(),
     settings: (BuildContext context) => Settings(),
     map: (BuildContext context) => TabsPage(),
-    network: (BuildContext context) => LostConnexion()
 
   };
 }

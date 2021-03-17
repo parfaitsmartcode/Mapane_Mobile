@@ -21,6 +21,8 @@ import 'package:mapane/networking/services/push_notifications_service.dart';
 import 'package:mapane/state/LoadingState.dart';
 import 'package:mapane/state/alert_provider.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
+import 'package:mapane/state/location_service_provider.dart';
+import 'package:mapane/state/network_provider.dart';
 import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/search_provider.dart';
 import 'package:mapane/state/user_provider.dart';
@@ -33,6 +35,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart'
     as PermissionHandler;
 import 'package:provider/provider.dart';
+import 'package:screen/screen.dart';
 import 'package:select_form_field/select_form_field.dart';
 import '../utils/theme_mapane.dart';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
@@ -44,8 +47,6 @@ import 'package:simple_moment/simple_moment.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:mapane/networking/services/alert_service.dart';
 import 'package:mapane/localization/language/languages.dart';
-import 'package:mapane/localization/locale_constant.dart';
-import 'package:mapane/models/language_data.dart';
 
 const String URI = "http://mapane.smartcodegroup.com/";
 
@@ -218,14 +219,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   checkPermission() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -264,8 +257,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("app goes in background");
-    print(state);
     if (state == AppLifecycleState.resumed) {
       setState(() {});
        _initMapStyle();
@@ -282,6 +273,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!Platform.isIOS) {
       PermissionHelper.checkPermission(PermissionHandler.Permission.location);
     }
+    Screen.keepOn(true);
     _determinePosition().then((position) => print(position == null
         ? 'Unknown'
         : position.latitude.toString() +
@@ -295,10 +287,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     context.read<AlertProvider>().getAlertList(false, addresse);
     context.read<UserProvider>().getPopupVal();
     context.read<UserProvider>().getAudioVal();
+    context.read<NetworkProvider>().init();
+    context.read<LocationServiceProvider>().init();
     context.read<UserProvider>().getUserId().then((value) => userId = value);
+
     polylinePoints = PolylinePoints();
     Geolocator.getPositionStream().listen((Position position) {
-      //currentLocation = LocationData(position.latitude,position.longitude,0,0,0,0,0,0);
       currentPosition = position;
       context.read<PlaceProvider>().getPlace(
           LatLng(currentPosition.latitude, currentPosition.longitude));
@@ -1357,6 +1351,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     .languageVal ? LocaleFr() : LocaleEn());
                 var moment = Moment.now();
                 var dateForComparison = DateTime.parse(element.createdAt);
+                var descaddr = element.desc != "desc" ? " au lieu dit "+element.desc : "";
                 print(element.category.name);
                 _markers.add(Marker(
                     position:
@@ -1372,7 +1367,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         snippet: Languages
                             .of(context)
                             .at + ' ' +
-                            element.address.split(',')[0] +
+                            element.address.split(',')[0] + descaddr +
                             ', ' +
                             moment.from(dateForComparison))));
                 i++;
@@ -1465,7 +1460,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             case "Zone-dangereuse":
               return dangerMarker;
               break;
-            case "Controle-routier":
+            case "Police":
               return controleMarker;
               break;
             case "Radar":

@@ -60,7 +60,7 @@ class LanguageFr extends Languages {
   String get alertsent => "Alerte envoyé";
   String get alertsuccess => "Votre alerte a été signalée à tous les utilisateurs de Mapane";
   String get at => "à";
-  String get positionexc => "Quelle est votre position ?";
+  String get positionexc => "Voulez vous renseigner le nom votre position exacte?";
   String get enterexactposition => "Entrer la position exacte";
   String get infolegale => "Informations légales";
   String get selectnumber => "Sélectionner un numéro";
@@ -71,4 +71,7 @@ class LanguageFr extends Languages {
   String get mapanepresentation => "Votre application d\'aide au déplacement urbain";
   String get closeall => "Tout fermer";
   String get localiser => "Localiser";
+  String get amoins => " à moins de ";
+  String get metrepos => " mètres de votre position";
+  String get errornumber => "Veuillez entrer un numéro de téléphone valide";
 }
