@@ -39,15 +39,34 @@ class _MyAppState extends State<MonCompte> {
 
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'CM';
+  String initialIso = 'CM';
+  String initialDial = '237';
   PhoneNumber number = PhoneNumber(isoCode: 'CM');
 
   void takenumber(String value) {
     setState(() => _mobileNumberPhone = value);
   }
 
+  void getIsoNumber(String phoneNumber) async {
+    PhoneNumber number =
+        await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
+    setState(() {
+      initialIso = number.isoCode;
+    });
+  }
+
+  void getDialNumber(String phoneNumber) async {
+    PhoneNumber number =
+        await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
+    setState(() {
+      initialDial = number.dialCode;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    // recup();
     context.read<UserProvider>().getUserPhone();
     context.read<UserProvider>().getUserDomicile();
     context.read<UserProvider>().getLangVal();
@@ -1954,6 +1973,8 @@ class _MyAppState extends State<MonCompte> {
   }
 
   Widget fillInput() {
+    getIsoNumber(context.read<UserProvider>().userPhone);
+    getDialNumber(context.read<UserProvider>().userPhone);
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Form(
@@ -1973,6 +1994,9 @@ class _MyAppState extends State<MonCompte> {
                     color: Colors.white,
                     child: InternationalPhoneNumberInput(
                       onInputChanged: (PhoneNumber number) {
+                        print("tout le phone number");
+                        print(number.dialCode);
+                        print(number.isoCode);
                         setState(() {
                           _mobileNumberPhoneWrite = number.phoneNumber;
                         });
@@ -1993,8 +2017,8 @@ class _MyAppState extends State<MonCompte> {
                       selectorTextStyle: TextStyle(color: Colors.black),
                       initialValue: PhoneNumber(
                           phoneNumber: context.read<UserProvider>().userPhone,
-                          isoCode: "CM",
-                          dialCode: "237"),
+                          isoCode: initialIso,
+                          dialCode: initialDial),
                       textFieldController: controller,
                       formatInput: false,
                       keyboardType: TextInputType.numberWithOptions(
