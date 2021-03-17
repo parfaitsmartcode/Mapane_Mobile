@@ -199,10 +199,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ? element
               : value);
       var finalresult = result.round() < distance.round() ? subvalues[subvalues.indexOf(result.round())+1] : result.round();
-      var text = element.category.name +
-          " à moins de " +
-          finalresult.toString() +
-          " mètres de votre position";
+      var text = "";
+      if(!context.read<UserProvider>().languageVal && await flutterTts.isLanguageAvailable("en-US")){
+        await flutterTts.setLanguage("en-US");
+        text = element.category.name_en +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }else if(context.read<UserProvider>().languageVal && await flutterTts.isLanguageAvailable("fr-FR")){
+        await flutterTts.setLanguage("fr-FR");
+        text = element.category.name +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }else{
+        text = element.category.name +
+            Languages.of(context).amoins +
+            finalresult.toString() +
+            Languages.of(context).metrepos;
+      }
       if (context.read<UserProvider>().audioVal) {
         setState(() {
           brikit.add(text);
