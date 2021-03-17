@@ -57,6 +57,8 @@ class AlertProvider extends BaseProvider{
     String userId = await  _preferences.get('user_info');
     this.toggleLoadingState();
     alertService.getAlertByUser(userId).then((alerts){
+      print('adresse stocké');
+      print(addresseStored);
       alertListHisto = Right(alerts);
       this.toggleLoadingState();
     }).catchError((error){

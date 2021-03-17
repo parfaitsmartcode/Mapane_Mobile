@@ -682,7 +682,9 @@ class AllAlerte extends StatelessWidget {
     var moment = Moment.now();
     var dateForComparison = DateTime.parse(alert.createdAt);
     var descri = alert.desc != "desc" ? " au lieu dit "+alert.desc : "";
-    return type == alert.category.slug || type == "All"
+    // print("addresse cpouarnte");
+    // print(context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
+    return (type == alert.category.slug || type == "All") && alert.address.split(",")[2] == " "+context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString()
         ? Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -712,7 +714,7 @@ class AllAlerte extends StatelessWidget {
                               alert.address == '' || alert.address == null
                                   ? Languages.of(context).addressunknown
                                   : alert.address+descri,
-                              maxLines: 2,
+                              maxLines: 3,
                               softWrap: true,
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
@@ -940,7 +942,7 @@ class _AutreAlerteState extends State<AutreAlerte> {
                                 widget.alert.address == null
                             ? Languages.of(context).addressunknown
                             : widget.alert.address+descri,
-                        maxLines: 2,
+                        maxLines: 3,
                         softWrap: true,
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
