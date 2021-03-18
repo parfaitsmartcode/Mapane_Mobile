@@ -2008,6 +2008,7 @@ class _MyAppState extends State<MonCompte> {
                       textStyle: TextStyle(fontSize: 16),
                       selectorConfig: SelectorConfig(
                         selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                        backgroundColor: Colors.white
                       ),
                       ignoreBlank: false,
                       autoValidateMode: AutovalidateMode.onUserInteraction,
