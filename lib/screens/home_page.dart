@@ -1275,7 +1275,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
         void setSourceAndDestinationIcons() async {
           sourceIcon = await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(devicePixelRatio: 2.5), Assets.locationMarker);
+              ImageConfiguration(devicePixelRatio: 2.5,size: Size.square(2)), Assets.locationMarker);
           embouteillageMarker = await BitmapDescriptor.fromAssetImage(
               ImageConfiguration(devicePixelRatio: 2.5),
               Assets.embouteillageMarker2);
@@ -2605,6 +2605,70 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         GestureDetector(
                                           onTap: () {
                                             sendAlertPopup(
+                                                "Police",
+                                                addresse,
+                                                userId,
+                                                /*LatLng(currentLocation.latitude,
+                                                    currentLocation.longitude)*/
+                                                LatLng(currentPosition.latitude,
+                                                    currentPosition.longitude));
+                                          },
+                                          child: Container(
+                                              width:
+                                              getSize(75, "width", context),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        child: Image.asset(
+                                                            'assets/images/controle-routier.png',
+                                                            height: getSize(
+                                                                56,
+                                                                "height",
+                                                                context)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: getSize(15,
+                                                          "height", context)),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        height: getSize(42,
+                                                            "height", context),
+                                                        child: Text(
+                                                          "Police",
+                                                          maxLines: 3,
+                                                          softWrap: true,
+                                                          overflow:
+                                                          TextOverflow.clip,
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                  .5),
+                                                              fontSize: getSize(
+                                                                  11,
+                                                                  "height",
+                                                                  context)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            sendAlertPopup(
                                                 "S.O.S",
                                                 addresse,
                                                 userId,
@@ -2717,70 +2781,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 ),
                                               ],
                                             )),
-                                        GestureDetector(
-                                          onTap: () {
-                                            // sendAlertPopup(
-                                            //     "Accident-de-circulation",
-                                            //     addresse,
-                                            //     userId,
-                                            //     /*LatLng(currentLocation.latitude,
-                                            //         currentLocation.longitude)*/
-                                            //     LatLng(currentPosition.latitude,
-                                            //         currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                              getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/accident-circulation.pn',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(42,
-                                                            "height", context),
-                                                        child: Text(
-                                                          " ",
-                                                          maxLines: 3,
-                                                          softWrap: true,
-                                                          overflow:
-                                                          TextOverflow.clip,
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                  .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
+
                                       ],
                                     ),
                                   ],
