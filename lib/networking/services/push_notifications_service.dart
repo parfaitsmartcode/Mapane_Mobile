@@ -69,22 +69,15 @@ class PushNotificationService {
         print("id de user");
         // String userId = "";
         context.read<UserProvider>().getUserId().then((value){
-          if (Alert.fromJson(json.decode(message['data']['body'])['alerte1'])
-              .address
-              .split(",")[2] ==
-              " " +
-                  context
-                      .read<PlaceProvider>()
-                      .userPlace
-                      .fold((l) => null, (r) => r.state)
-                      .toString()) {
             context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['body'])['alerte1']),value);
-          }
         });
         // print(userId);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        context.read<UserProvider>().getUserId().then((value){
+          context.read<AlertProvider>().pushNotification(Alert.fromJson(json.decode(message['body'])['alerte1']),value);
+        });
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
