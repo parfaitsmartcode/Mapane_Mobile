@@ -38,7 +38,6 @@ import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:select_form_field/select_form_field.dart';
 import '../utils/theme_mapane.dart';
-import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -86,9 +85,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   CameraPosition cameraCurrentPosition =
       new CameraPosition(target: LatLng(15, 15));
   List<String> toPrint = ["trying to connect"];
-  SocketIOManager manager;
   gdsy.Geodesy geodesy = new gdsy.Geodesy();
-  Map<String, SocketIO> sockets = {};
   Map<String, bool> _isProbablyConnected = {};
   Alert notifications = new Alert();
   Set<Marker> _markers = Set<Marker>();
@@ -368,24 +365,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-
-  bool isProbablyConnected(String identifier) {
-    return _isProbablyConnected[identifier] ?? false;
-  }
-
-  disconnect(String identifier) async {
-    await manager.clearInstance(sockets[identifier]);
-    setState(() => _isProbablyConnected[identifier] = false);
-  }
-
-  manageLoader() {
-    print("not connected but receive disconnected");
-    if (disconnect_loader_check) {
-      Navigator.pop(context);
-    }
-    setState(() => disconnect_loader_check = false);
-  }
-
   sendAlertPopup(category, address, posted, latlon) {
     showGeneralDialog(
         context: context,
@@ -598,26 +577,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   sendAlert(identifier, category, address, posted, latlon, desc) {
-    // print(_isProbablyConnected[identifier]);
-    // var readText = 'Alerte d\'embouteillage à Monde-uni Bilingual School depuis 1 heures 30 minutes.';
-    // _speak(readText);
-    // var readText = "Attention, vous êtes à 300 mètres d'un point Mapane";
-    // print("Emission prepared");
-    // if (sockets[identifier] != null) {
-    //   if (_isProbablyConnected[identifier]) {
-    //     sockets[identifier].emit("createAlert", [
-    //       JsonEncoder().convert({
-    //         "lat": latlon.latitude,
-    //         "long": latlon.longitude,
-    //         "desc": desc == "" || desc == null ? "desc" : desc,
-    //         "postedBy": posted,
-    //         "category": category,
-    //         "address": address == '' ? ' ' : address
-    //       })
-    //     ]);
-    //   } else {
-    //     initSocket(identifier);
-    //     sockets[identifier].emit("createAlert", [
     var data = JsonEncoder().convert({
       "lat": latlon.latitude,
       "long": latlon.longitude,
@@ -626,8 +585,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       "category": category,
       "address": address == '' ? ' ' : address
     });
-    print("donneeeeeee");
-    print(data);
     alertService.createAlert(
             latlon.latitude,
             latlon.longitude,
@@ -660,8 +617,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             children: [
                               Container(
                                 width: getSize(303, "width", context),
-                                // height: getSize(256, "height", context),
-                                // padding: EdgeInsets.all(getSize(0,"height",context)),
                                 decoration: BoxDecoration(
                                   color: AppColors.whiteColor,
                                   borderRadius: BorderRadius.circular(
@@ -792,8 +747,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             children: [
                               Container(
                                 width: getSize(303, "width", context),
-                                // height: getSize(256, "height", context),
-                                // padding: EdgeInsets.all(getSize(0,"height",context)),
                                 decoration: BoxDecoration(
                                   color: AppColors.whiteColor,
                                   borderRadius: BorderRadius.circular(
@@ -885,8 +838,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           children: [
                             Container(
                               width: getSize(303, "width", context),
-                              // height: getSize(256, "height", context),
-                              // padding: EdgeInsets.all(getSize(0,"height",context)),
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(
@@ -1019,8 +970,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   children: [
                     Container(
                       width: getSize(303, "width", context),
-                      // height: getSize(256, "height", context),
-                      // padding: EdgeInsets.all(getSize(0,"height",context)),
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(
@@ -1227,9 +1176,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(rate);
     await flutterTts.setPitch(pitch);
-    // await flutterTts.setQueueMode(1);
-    print(test);
-    // await flutterTts.awaitSpeakCompletion(true);
     if (test != null) {
       if (test.isNotEmpty) {
         await flutterTts.awaitSpeakCompletion(true);
@@ -1279,8 +1225,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           embouteillageMarker = await BitmapDescriptor.fromAssetImage(
               ImageConfiguration(devicePixelRatio: 2.5),
               Assets.embouteillageMarker2);
-          radarMarker = await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(devicePixelRatio: 2.5), Assets.radarMarker2);
           accidentMarker = await BitmapDescriptor.fromAssetImage(
               ImageConfiguration(devicePixelRatio: 2.5),
               Assets.accidentMarker2);
@@ -1322,25 +1266,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           // from the LocationData currentLocation object
           var pinPosition =
           LatLng(currentPosition.latitude, currentPosition.longitude);
-          //LatLng(currentLocation.latitude, currentLocation.longitude);
-          // get a LatLng out of the LocationData object
-          var destPosition =
-          LatLng(DEST_LOCATION.latitude, DEST_LOCATION.latitude);
-          // add the initial source location pin
           _markers.add(Marker(
               markerId: MarkerId('sourcePin'),
               position: pinPosition,
               icon: sourceIcon));
-
           context.read<AlertProvider>().getAlertList(false, addresse);
-
           // destination
           context
               .read<AlertProvider>()
               .alertList
               .fold((l) => null, (r) {
-            int i = 1;
-            // print("liste des alertes " + r.length.toString());
             if (r.length > 0) {
               var tabrebuild = r
                   .where((i) => i.address.split(",")[2] == addresse.split(",")[2])
@@ -1370,14 +1305,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             element.address.split(',')[0] + descaddr +
                             ', ' +
                             moment.from(dateForComparison))));
-                i++;
               });
             }
           });
-          /*_markers.add(Marker(
-        markerId: MarkerId('destPin'),
-        position: destPosition,
-        icon: destinationIcon));*/
 
           // set the route lines on the map from source to destination
           // for more info follow this tutorial
@@ -1510,7 +1440,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             // updated position
             var pinPosition =
             LatLng(currentPosition.latitude, currentPosition.longitude);
-            //LatLng(currentLocation.latitude, currentLocation.longitude);
             _kPosition = CameraPosition(
                 zoom: zooming,
                 tilt: CAMERA_TILT,
@@ -1954,15 +1883,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 context
                                                     .read<SearchProvider>()
                                                     .getSearchResults(value);
-                                                // context
-                                                //     .read<SearchProvider>()
-                                                //     .toggleSearchState();
                                               },
-                                              // onTap: () {
-                                              //   context
-                                              //       .read<SearchProvider>()
-                                              //       .toggleSearchState();
-                                              // },
                                               decoration: InputDecoration(
                                                   hintText: Languages
                                                       .of(context)
@@ -2276,8 +2197,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "Embouteillage",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
@@ -2340,8 +2259,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "Route-barree",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
@@ -2468,8 +2385,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "Zone-dangereuse",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
@@ -2542,8 +2457,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "Accident-de-circulation",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
@@ -2608,8 +2521,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "Police",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
@@ -2672,8 +2583,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                 "S.O.S",
                                                 addresse,
                                                 userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
                                                 LatLng(currentPosition.latitude,
                                                     currentPosition.longitude));
                                           },
