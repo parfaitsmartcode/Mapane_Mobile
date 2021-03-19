@@ -14,6 +14,7 @@ class Assets {
   static const String highwayIcon = "assets/icons/highway.svg";
   static const String pathIcon = "assets/icons/path10635.svg";
   static const String roadblockIcon = "assets/icons/road-block.svg";
+  static const String gpsPicture = "assets/images/1590585.png";
   static const String mapIn = "assets/icons/Map pin-3.svg";
   static const String searchIcon = "assets/icons/search-icon.svg";
   static const String soundIcon = "assets/icons/Sound-icon.svg";
