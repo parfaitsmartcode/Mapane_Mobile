@@ -40,9 +40,6 @@ class _NotifState extends State<Notif> {
       case "Zone-dangereuse":
         return Assets.dangerMarker3;
         break;
-      case "Radar":
-        return Assets.radarMarker3;
-        break;
       case "Accident-de-circulation":
         return Assets.accidentMarker3;
         break;
