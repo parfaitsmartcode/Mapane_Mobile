@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:near_me/constants/assets.dart';
 import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
@@ -13,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _navigate = false;
-
+  double value = 0.01;
 
   @override
   void initState() {
@@ -33,12 +32,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Scaffold(
             backgroundColor: Colors.black,
             body: Container(
-                constraints: BoxConstraints.expand(),
                 decoration: _navigate
                     ? BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(Assets.backgroundImage)))
-                    : null,
+                    : BoxDecoration(),
                 child: Container(
                   decoration: _navigate ? BoxDecoration(
                     gradient: LinearGradient(
@@ -47,12 +45,12 @@ class _SplashScreenState extends State<SplashScreen> {
                       colors: [Colors.black.withOpacity(0.7),Colors.black,HexColor("#2082D6")],
                       stops: [0.58,0.8,1.0]
                     )
-                  ) : null,
+                  ) : BoxDecoration(),
                   child: Stack(
                       children: [
                         AnimatedPadding(
-                          duration: Duration(seconds: 3),
-                          padding: _navigate ? EdgeInsets.only(bottom: SizeConfig.screenHeight/ 4.3) : EdgeInsets.all(0.01),
+                          duration: Duration(milliseconds: 400),
+                          padding:  EdgeInsets.only(bottom: _navigate ? SizeConfig.screenHeight/ 4.3 : 0.01),
                           child: Align(
                             alignment: Alignment.center,
                             child: Image.asset(
@@ -61,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         ),
                           AnimatedPadding(
-                            duration: Duration(seconds: 1),
-                            padding: _navigate ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 2.7,left: SizeConfig.blockSizeHorizontal * 2,right: SizeConfig.blockSizeHorizontal * 2) : EdgeInsets.all(0.01),
+                            duration: Duration(milliseconds: 50),
+                            padding: _navigate ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 2.5,left: SizeConfig.blockSizeHorizontal * 2,right: SizeConfig.blockSizeHorizontal * 2) : EdgeInsets.all(0.01),
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: _navigate ? Text(
@@ -76,8 +74,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             )
                           ),
                         AnimatedPadding(
-                            duration: Duration(seconds: 1),
-                            padding: _navigate ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 4) : EdgeInsets.all(0.01),
+                            duration: Duration(milliseconds: 400),
+                            padding:  EdgeInsets.only(bottom: _navigate ? SizeConfig.screenHeight / 3.6 : 0.01),
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: _navigate ? Container(
@@ -95,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         AnimatedPadding(
                             padding: _navigate ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 40) : EdgeInsets.all(0.01),
-                            duration: Duration(seconds: 1),
+                            duration: Duration(milliseconds: 100),
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: _navigate ?
