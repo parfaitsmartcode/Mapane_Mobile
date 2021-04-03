@@ -23,9 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>I need it </string>
+	<string>Your position is required to alert you when close from a road incident</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Because</string>
+	<string>Your position is required to alert you when close from a road incident</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
