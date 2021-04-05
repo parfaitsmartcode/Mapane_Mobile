@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:near_me/constants/assets.dart';
+import 'package:near_me/routes.dart';
 import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
 
@@ -75,11 +76,11 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         AnimatedPadding(
                             duration: Duration(milliseconds: 400),
-                            padding:  EdgeInsets.only(bottom: _navigate ? SizeConfig.screenHeight / 3.6 : 0.01),
+                            padding:  EdgeInsets.only(bottom: _navigate ? SizeConfig.screenHeight / 3.4 : 0.01),
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: _navigate ? Container(
-                                width: SizeConfig.screenWidth /1.3,
+                                width: SizeConfig.screenWidth /1.28,
                                 child: Text(
                                   "Near Me vous permet de trouver des personnes ou services à proximité de vous pour répondre à votre besoin.",
                                   textAlign: TextAlign.justify,
@@ -103,25 +104,36 @@ class _SplashScreenState extends State<SplashScreen> {
                                 Container(
                                   width: SizeConfig.screenWidth / 1.2,
                                   height: SizeConfig.screenHeight / 14,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 6)),
+                                  child: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(26),
+                                      side: BorderSide(
+                                        color: Colors.cyan.withOpacity(0.4),
+                                        width: 2
+                                      )
+                                    ),
                                     color: HexColor("#2082D6"),
-                                  ),
-                                  child: ListTile(
-                                    leading: SizedBox(),
-                                      title: Text(
-                                        "Créer mon compte",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(),
+                                        Text(
+                                          "Créer mon compte",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20
+                                          ),
                                         ),
-                                      ),
-                                      trailing: Icon(
-                                        Icons.arrow_forward_rounded,
-                                        color: Colors.white,
-                                      ),
-                                      onTap: (){}
-                                      ),
+                                        Icon(
+                                          Icons.arrow_forward_rounded,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: (){
+                                      Navigator.pushReplacementNamed(context, Routes.selectAccount);
+                                    },
+                                ),
                                 ),
                                 SizedBox(
                                   height: SizeConfig.blockSizeVertical * 2,
