@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:near_me/utils/hexcolor.dart';
 
 class MyTextField extends StatelessWidget {
   final Widget prefixIcon;
@@ -17,16 +16,16 @@ class MyTextField extends StatelessWidget {
           prefixIcon: prefixIcon,
           hintText: hintText,
           hintStyle: TextStyle(
-            color: HexColor("#32586D"),
+            color: Colors.white.withOpacity(0.3),
             fontSize: 20.0,
           ),
           contentPadding:
           EdgeInsets.symmetric(horizontal: 30, vertical: 16),
           border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.5)),
+              borderSide: BorderSide(color: Colors.white.withOpacity(0.3),width: 2),
               borderRadius: BorderRadius.circular(20)),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: HexColor("#32586D")),
+              borderSide: BorderSide(color: Colors.white.withOpacity(0.3),width: 2),
               borderRadius: BorderRadius.circular(20)),
         )
     );

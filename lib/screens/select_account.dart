@@ -141,7 +141,7 @@ class _SelectAccountState extends State<SelectAccount> {
                                   height: SizeConfig.blockSizeVertical * 1.5,
                                 ),
                                 Text(
-                                  "Demandeur",
+                                  "Professionel",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 34),
                                 ),
