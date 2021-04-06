@@ -21,7 +21,7 @@ class _SelectAccountState extends State<SelectAccount> {
             body: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage(Assets.backgroundImage))),
+                        image: AssetImage(Assets.backgroundImage),fit: BoxFit.fill)),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -184,7 +184,7 @@ class _SelectAccountState extends State<SelectAccount> {
                             height: SizeConfig.screenHeight / 14,
                             child: RaisedButton(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(26),
+                                  borderRadius: BorderRadius.circular(20),
                                   side: BorderSide(
                                       color: Colors.cyan.withOpacity(0.4),
                                       width: 2)),
@@ -199,7 +199,7 @@ class _SelectAccountState extends State<SelectAccount> {
                                   Navigator.pushNamed(
                                       context, Routes.demandeurRegister);
                                 }else{
-                                  Navigator.pushNamed(context, Routes.demandeurRegister);
+                                  Navigator.pushNamed(context, Routes.professionelRegister);
                                 }
                               },
                             ),

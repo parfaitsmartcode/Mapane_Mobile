@@ -5,6 +5,7 @@ import 'package:near_me/routes.dart';
 import 'package:near_me/screens/splashscreen.dart';
 import 'package:near_me/service_locator.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer_util.dart';
 
 void main() {
   setupLocator();
@@ -23,14 +24,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Near Me',
-      routes: Routes.routes,
-      theme: ThemeData(
-        textTheme: GoogleFonts.firaSansTextTheme(),
-      ),
-      home: SplashScreen(),
-      debugShowCheckedModeBanner: false,
+    return LayoutBuilder(
+      builder: (context,constraints){
+        return OrientationBuilder(builder: (context,orientation){
+          SizerUtil().init(constraints, orientation);
+          return MaterialApp(
+            title: 'Near Me',
+            routes: Routes.routes,
+            theme: ThemeData(
+              textTheme: GoogleFonts.firaSansTextTheme(),
+              canvasColor: Colors.transparent,
+            ),
+            home: SplashScreen(),
+            debugShowCheckedModeBanner: false,
+          );
+        });
+      },
     );
   }
+
 }
