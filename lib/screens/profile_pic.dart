@@ -13,13 +13,15 @@ class ProfilePic extends StatefulWidget {
 class _ProfilePicState extends State<ProfilePic> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return SafeArea(
         child: Scaffold(
             body: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(Assets.backgroundImage),
-                        fit: BoxFit.fill)),
+                        fit: BoxFit.fill)
+                ),
                 child: Container(
                   height: SizeConfig.screenHeight,
                   decoration: BoxDecoration(

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <g id="chat-icon" opacity="0.4">
+    <path id="Tracé_1114" data-name="Tracé 1114" d="M0,0H28V28H0Z" fill="none"/>
+    <path id="Tracé_1115" data-name="Tracé 1115" d="M2,9.992A6.988,6.988,0,0,1,9,3h9.333a7.005,7.005,0,0,1,7,6.992V24H9a7.005,7.005,0,0,1-7-6.992ZM23,21.665V9.992a4.671,4.671,0,0,0-4.666-4.659H9A4.655,4.655,0,0,0,4.333,9.992v7.013A4.671,4.671,0,0,0,9,21.665Zm-7-9.333h2.333v2.333H16Zm-7,0h2.333v2.333H9Z" transform="translate(0.334 0.501)" fill="#fff"/>
+  </g>
+</svg>

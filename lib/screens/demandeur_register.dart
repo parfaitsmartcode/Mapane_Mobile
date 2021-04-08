@@ -14,6 +14,7 @@ class DemandeurRegister extends StatefulWidget {
 class _DemandeurRegisterState extends State<DemandeurRegister> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.black,

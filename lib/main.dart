@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
               textTheme: GoogleFonts.firaSansTextTheme(),
               canvasColor: Colors.transparent,
             ),
-            home: SplashScreen(),
+            initialRoute: Routes.homePage,
             debugShowCheckedModeBanner: false,
           );
         });

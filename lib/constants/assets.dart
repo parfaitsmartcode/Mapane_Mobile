@@ -12,4 +12,9 @@ class Assets {
   static const String userStarIcon = "assets/user-star-icon.svg";
   static const String phoneIcon = "assets/phone-icon.svg";
   static const String backgroundImage = "assets/Users.png";
+  static const String appBackground = "assets/appbackground.png";
+  static const String searchAppbar = "assets/search-appbar.svg";
+  static const String walletAppbar = "assets/wallet-icon.svg";
+  static const String chatAppbar = "assets/chat-icon.svg";
+  static const String userAppbar = "assets/user-appbar.svg";
 }
