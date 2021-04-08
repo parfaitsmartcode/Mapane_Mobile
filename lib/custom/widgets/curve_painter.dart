@@ -17,7 +17,6 @@ class CurvePainter extends CustomPainter {
     paint.style = PaintingStyle.stroke;
 
     var path = Path();
-    print("size " + size.width.toString());
     paint.strokeWidth = 5;
     path.moveTo(x1, y1);
     path.cubicTo(x1, y1, x2, y2, x3, y3);

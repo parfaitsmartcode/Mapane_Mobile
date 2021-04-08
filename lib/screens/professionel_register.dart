@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:near_me/constants/assets.dart';
 import 'package:near_me/custom/widgets/mytexfield.dart';
+import 'package:near_me/routes.dart';
 import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
 import 'package:sizer/sizer.dart';
@@ -35,7 +36,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 4.0.h),
+                    padding: EdgeInsets.only(top: 3.0.h),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Image.asset(Assets.logoWidthPng),
@@ -46,7 +47,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 8,
+                        height: SizeConfig.safeBlockVertical * 4,
                       ),
                       Text(
                         "Création du compte",
@@ -83,7 +84,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 3,
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
                       Container(
                         width: SizeConfig.blockSizeHorizontal * 85,
@@ -101,7 +102,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 3,
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
                       Container(
                         width: SizeConfig.blockSizeHorizontal * 85,
@@ -118,7 +119,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 3,
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
                       Container(
                         width: SizeConfig.blockSizeHorizontal * 85,
@@ -131,7 +132,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                               builder: (context) => SingleChildScrollView(
                                 controller: ModalScrollController.of(context),
                                 child: Container(
-                                  height: 55.0.h,
+                                  height: 60.0.h,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.only(
@@ -266,7 +267,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                                                       context: context,
                                                       builder: (context) =>
                                                           Container(
-                                                        height: 45.0.h,
+                                                        height: 50.0.h,
                                                         decoration:
                                                             BoxDecoration(
                                                           color: Colors.white,
@@ -355,7 +356,9 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                                                             ),
                                                             Padding(
                                                               padding: EdgeInsets.only(
-                                                                bottom: SizeConfig.safeBlockVertical * 10,
+                                                                  bottom: SizeConfig
+                                                                          .safeBlockVertical *
+                                                                      10,
                                                                   right: SizeConfig
                                                                           .safeBlockHorizontal *
                                                                       7,
@@ -372,7 +375,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                                                                       1.2,
                                                                   height: SizeConfig
                                                                           .screenHeight /
-                                                                      15,
+                                                                      17,
                                                                   child:
                                                                       RaisedButton(
                                                                     shape: RoundedRectangleBorder(
@@ -394,38 +397,174 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                                                                               20),
                                                                     ),
                                                                     onPressed:
-                                                                        () {},
+                                                                        () {
+                                                                      showMaterialModalBottomSheet(
+                                                                          context:
+                                                                              context,
+                                                                          builder: (context) => Container(
+                                                                              height: 50.0.h,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Colors.white,
+                                                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                                                                              ),
+                                                                              child: Stack(
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                                                    child: Align(
+                                                                                      alignment: Alignment.topCenter,
+                                                                                      child: Container(
+                                                                                        height: 0.5.h,
+                                                                                        width: 15.0.w,
+                                                                                        decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 7, left: SizeConfig.safeBlockHorizontal * 7),
+                                                                                    child: Align(
+                                                                                        alignment: Alignment.topLeft,
+                                                                                        child: Text(
+                                                                                          "Informatique",
+                                                                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0.sp),
+                                                                                        )),
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 12, right: SizeConfig.safeBlockHorizontal * 7, left: SizeConfig.safeBlockHorizontal * 7),
+                                                                                    child: Align(
+                                                                                        alignment: Alignment.topLeft,
+                                                                                        child: Text(
+                                                                                          "Offrez-vous aussi cette compétence dans un endroit  fixe ou un atelier ?",
+                                                                                          style: TextStyle(color: Colors.black.withOpacity(0.3), fontSize: 15.0.sp),
+                                                                                        )),
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 7, left: SizeConfig.safeBlockHorizontal * 7,bottom: SizeConfig.safeBlockVertical * 5),
+                                                                                    child: Align(
+                                                                                      alignment: Alignment.center,
+                                                                                      child: SizedBox(
+                                                                                        height: 6.5.h,
+                                                                                        child: TextFormField(
+                                                                                            style: TextStyle(
+                                                                                                color: Colors.black),
+                                                                                            decoration: InputDecoration(
+                                                                                              suffixIcon: Icon(
+                                                                                                Icons.location_on_outlined,
+                                                                                                color: Colors.black,
+                                                                                              ),
+                                                                                              hintText: "Géo-localiser",
+                                                                                              hintStyle: TextStyle(
+                                                                                                color: Colors.grey
+                                                                                                    .withOpacity(0.5),
+                                                                                                fontSize: 15.0.sp,
+                                                                                              ),
+                                                                                              contentPadding:
+                                                                                              EdgeInsets.symmetric(
+                                                                                                  horizontal: 30,
+                                                                                                  vertical: 16),
+                                                                                              border: OutlineInputBorder(
+                                                                                                  borderSide: BorderSide(
+                                                                                                      color: Colors.grey
+                                                                                                          .withOpacity(0.5),
+                                                                                                      width: 1),
+                                                                                                  borderRadius:
+                                                                                                  BorderRadius.circular(
+                                                                                                      30)),
+                                                                                              enabledBorder:
+                                                                                              OutlineInputBorder(
+                                                                                                  borderSide: BorderSide(
+                                                                                                      color: Colors.grey
+                                                                                                          .withOpacity(
+                                                                                                          0.5),
+                                                                                                      width: 1),
+                                                                                                  borderRadius:
+                                                                                                  BorderRadius
+                                                                                                      .circular(
+                                                                                                      26)),
+                                                                                            ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Padding(
+                                                                                      padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 9, right: SizeConfig.safeBlockHorizontal * 7, left: SizeConfig.safeBlockHorizontal * 7),
+                                                                                      child: Align(
+                                                                                          alignment: Alignment.bottomCenter,
+                                                                                          child: Container(
+                                                                                              width: SizeConfig.screenWidth / 1.2,
+                                                                                              height: SizeConfig.screenHeight / 17,
+                                                                                              child: RaisedButton(
+                                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: Colors.cyan.withOpacity(0.4), width: 2)),
+                                                                                                color: HexColor("#2082D6"),
+                                                                                                child: Text(
+                                                                                                  "Sauvegarder",
+                                                                                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                                                                                ),
+                                                                                                onPressed: (){
+
+                                                                                                },
+                                                                                              )))),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1.5, right: SizeConfig.safeBlockHorizontal * 7, left: SizeConfig.safeBlockHorizontal * 7),
+                                                                                    child: Align(
+                                                                                      alignment: Alignment.bottomCenter,
+                                                                                      child: Container(
+                                                                                        width: SizeConfig.screenWidth / 1.2,
+                                                                                        height: SizeConfig.screenHeight / 17,
+                                                                                        child: RaisedButton(
+                                                                                          color: Colors.black,
+                                                                                          shape: RoundedRectangleBorder(
+                                                                                            borderRadius: BorderRadius.circular(20),
+                                                                                          ),
+                                                                                          child: Text(
+                                                                                            "Annuler",
+                                                                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                                                                          ),
+                                                                                          onPressed: () {
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              )));
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
                                                             Padding(
                                                               padding: EdgeInsets.only(
-                                                                  bottom: SizeConfig.safeBlockVertical,
+                                                                  bottom: SizeConfig
+                                                                          .safeBlockVertical *
+                                                                      1.5,
                                                                   right: SizeConfig
-                                                                      .safeBlockHorizontal *
+                                                                          .safeBlockHorizontal *
                                                                       7,
                                                                   left: SizeConfig
-                                                                      .safeBlockHorizontal *
+                                                                          .safeBlockHorizontal *
                                                                       7),
                                                               child: Align(
                                                                 alignment: Alignment
                                                                     .bottomCenter,
                                                                 child:
-                                                                Container(
+                                                                    Container(
                                                                   width: SizeConfig
-                                                                      .screenWidth /
+                                                                          .screenWidth /
                                                                       1.2,
                                                                   height: SizeConfig
-                                                                      .screenHeight /
-                                                                      15,
+                                                                          .screenHeight /
+                                                                      17,
                                                                   child:
-                                                                  RaisedButton(
-                                                                    color: Colors.black,
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20),
+                                                                      RaisedButton(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20),
                                                                     ),
                                                                     child: Text(
                                                                       "Non",
@@ -433,10 +572,13 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                                                                           color: Colors
                                                                               .white,
                                                                           fontSize:
-                                                                          20),
+                                                                              20),
                                                                     ),
                                                                     onPressed:
-                                                                        () {},
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ),
@@ -500,9 +642,13 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                               Assets.userStarIcon,
                             ),
                           ),
-                          suffixIcon: Icon(
-                            Icons.keyboard_arrow_down_sharp,
-                            color: Colors.white,
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.only(
+                                top: SizeConfig.safeBlockVertical / 8,
+                                bottom: SizeConfig.safeBlockVertical / 8),
+                            child: SvgPicture.asset(
+                              Assets.arrowDownSvg,
+                            ),
                           ),
                         ),
                       ),
@@ -513,17 +659,19 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                           height: SizeConfig.screenHeight / 14,
                           child: RaisedButton(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(22),
                                 side: BorderSide(
                                     color: Colors.cyan.withOpacity(0.4),
                                     width: 2)),
                             color: HexColor("#2082D6"),
                             child: Text(
-                              "Commencer",
+                              "Suivant",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, Routes.profilePic);
+                            },
                           ),
                         ),
                       )
