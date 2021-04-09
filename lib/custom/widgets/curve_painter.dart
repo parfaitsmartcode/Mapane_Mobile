@@ -15,7 +15,7 @@ class CurvePainter extends CustomPainter {
     var paint = Paint();
     paint.color = color;
     paint.style = PaintingStyle.stroke;
-
+    print(size.width);
     var path = Path();
     paint.strokeWidth = 5;
     path.moveTo(x1, y1);
