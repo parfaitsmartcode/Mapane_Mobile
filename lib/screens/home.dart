@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:near_me/constants/assets.dart';
+import 'package:near_me/screens/disable_screen.dart';
 import 'package:near_me/screens/search_screen.dart';
 import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
             body: TabBarView(
               children: [
-               SearchScreen(),
+               DisableScreen(),
                 Center(
                     child: Text(
                       "1",

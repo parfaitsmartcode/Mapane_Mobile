@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:near_me/constants/assets.dart';
 import 'package:near_me/custom/widgets/curve_painter.dart';
-import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,6 +13,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
