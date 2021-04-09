@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:near_me/constants/assets.dart';
+import 'package:near_me/routes.dart';
 import 'package:near_me/utils/hexcolor.dart';
 import 'package:near_me/utils/size_config.dart';
 import 'package:sizer/sizer.dart';
@@ -126,6 +127,7 @@ class _ProfilePicState extends State<ProfilePic> {
                                     color: Colors.white, fontSize: 20),
                               ),
                               onPressed: () {
+                                Navigator.pushNamed(context, Routes.homePage);
                               },
                             ),
                           ),
