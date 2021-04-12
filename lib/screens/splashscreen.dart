@@ -18,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Status _navigate = Status.SPLASH;
   double value = 0.01;
   int indexPage = 0;
-  String logo = Assets.logoPng;
   @override
   void initState() {
     // TODO: implement initState
@@ -54,15 +53,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   child:  Stack(
                         children: [
                           AnimatedPadding(
-                            onEnd: (){
-
-                            },
-                            duration: Duration(milliseconds: 500),
-                            padding:  EdgeInsets.only(bottom: _navigate == Status.ONBOARDING || _navigate == Status.START ? 52.0.h : 0.01),
+                            duration: Duration(milliseconds: _navigate == Status.ONBOARDING ? 500 : 400),
+                            padding:  EdgeInsets.only(bottom: _navigate == Status.ONBOARDING ? 52.0.h : _navigate == Status.START ? 33.0.h : 0.01),
                             child: Align(
                               alignment: Alignment.center,
                               child:  AnimatedContainer(
-                                duration: Duration(milliseconds: 400),
+                                duration: Duration(milliseconds: 500),
                                 height: _navigate == Status.ONBOARDING ? 22.0.h : SizeConfig.screenHeight,
                                 child: Image.asset(
                                     Assets.logoPng
@@ -71,83 +67,201 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                           ),
                             AnimatedPadding(
-                              duration: Duration(milliseconds: 50),
+                              duration: Duration(milliseconds: 500),
                               padding:  _navigate == Status.START ? EdgeInsets.only(bottom: 40.0.h,left: SizeConfig.safeBlockHorizontal * 2,right: SizeConfig.safeBlockHorizontal * 2) : _navigate == Status.ONBOARDING ? EdgeInsets.only(bottom: 10.0.h,left: SizeConfig.safeBlockHorizontal * 2,right: SizeConfig.safeBlockHorizontal * 2) : EdgeInsets.all(0.01),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: _navigate == Status.ONBOARDING ?
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                    PageView(
+                                      onPageChanged: (int index){
+                                        setState(() {
+                                          indexPage = index;
+                                        });
+                                      },
                                       children: [
-                                        SvgPicture.asset(Assets.searchOnboarding),
-                                        SizedBox(
-                                          height: SizeConfig.blockSizeVertical * 4,
-                                        ),
-                                        Text(
-                                          "Recherche",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0.sp,
-                                              fontWeight: FontWeight.bold
+                                        Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          SvgPicture.asset(Assets.searchOnboarding),
+                                          SizedBox(
+                                            height: SizeConfig.blockSizeVertical * 4,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.blockSizeVertical / 2,
-                                        ),
-                                        Text(
-                                          "Simple et Vocale",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0.sp,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.blockSizeVertical * 3,
-                                        ),
-                                        Padding(
-                                          padding:  EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 6),
-                                          child: RichText(
-                                            textAlign: TextAlign.center,
-                                            text: TextSpan(
-                                              text: "Retrouvez les professionnels et services (plombiers,répétiteurs,pharmacies etc...)",
-                                              style: TextStyle(
-                                                fontSize: 13.75.sp
-                                              ),
-                                              children: [
-                                                TextSpan(
-                                                  text: "      les plus proches de vous",
-                                                  style: TextStyle(
-                                                    color: HexColor("#FCD222"),
-                                                      fontSize: 13.0.sp
-                                                  )
-                                                ),
-                                                TextSpan(
-                                                  text: ", avec une recherche simple ou avec notre assistant vocal",
-                                                  style: TextStyle(
-                                                      fontSize: 13.0.sp
-                                                  )
-                                                ),
-                                              ]
+                                          Text(
+                                            "Recherche",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0.sp,
+                                                fontWeight: FontWeight.bold
                                             ),
                                           ),
-                                        )
-                                      ],
+                                          SizedBox(
+                                            height: SizeConfig.blockSizeVertical / 2,
+                                          ),
+                                          Text(
+                                            "Simple et Vocale",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0.sp,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: SizeConfig.blockSizeVertical * 3,
+                                          ),
+                                          Padding(
+                                            padding:  EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5),
+                                            child: RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                text: "Retrouvez les professionnels et services (plombiers,répétiteurs,pharmacies etc...)",
+                                                style: TextStyle(
+                                                  fontSize: 13.0.sp
+                                                ),
+                                                children: [
+                                                  TextSpan(
+                                                    text: "      les plus proches de vous",
+                                                    style: TextStyle(
+                                                      color: HexColor("#FCD222"),
+                                                        fontSize: 13.0.sp
+                                                    )
+                                                  ),
+                                                  TextSpan(
+                                                    text: ", avec une recherche simple ou avec notre assistant vocal",
+                                                    style: TextStyle(
+                                                        fontSize: 13.0.sp
+                                                    )
+                                                  ),
+                                                ]
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(Assets.freeSearch),
+                                            SizedBox(
+                                              height: SizeConfig.blockSizeVertical * 6,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 20),
+                                              child: RichText(
+                                                textAlign: TextAlign.center,
+                                                  text: TextSpan(
+                                                    text: "5",
+                                                    style: TextStyle(
+                                                      fontSize: 40.0.sp,
+                                                      fontWeight: FontWeight.bold
+                                                    ),
+                                                    children: [
+                                                      TextSpan(
+                                                        text: " recherches",
+                                                        style: TextStyle(
+                                                            fontSize: 20.0.sp,
+                                                          color: HexColor("#FCD222"),
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: " gratuites",
+                                                        style: TextStyle(
+                                                            fontSize: 20.0.sp,
+                                                          color: HexColor("#FCD222"),
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: " offertes",
+                                                        style: TextStyle(
+                                                            fontSize: 20.0.sp,
+                                                        ),
+                                                      )
+                                                    ]
+                                                  )
+                                              ),
+                                            ),
+
+                                            SizedBox(
+                                              height: SizeConfig.blockSizeVertical * 5,
+                                            ),
+                                            Padding(
+                                              padding:  EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 13),
+                                              child: Text(
+                                                "Vous avez droit à 5 recherches gratuites pour débuter",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 14.0.sp,
+                                                  color: Colors.white
+                                                ),
+                                              )
+                                            )
+                                          ],
+                                        ),
+
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(Assets.walletOnboarding),
+                                            SizedBox(
+                                              height: SizeConfig.blockSizeVertical * 8,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 20),
+                                              child: Text(
+                                                "Toujours gratuit ?",
+                                                style: TextStyle(
+                                                  fontSize: 20.0.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white
+                                              ),
+                                              )
+                                            ),
+                                            SizedBox(
+                                              height: SizeConfig.blockSizeVertical * 3,
+                                            ),
+                                            Padding(
+                                                padding:  EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 6),
+                                                child: RichText(
+                                                  textAlign: TextAlign.center,
+                                                  text: TextSpan(
+                                                    text: "Pour effectuer des recherches, rechargez votre compte par cartes bancaires ou paiement mobile.",
+                                                    style: TextStyle(
+                                                      fontSize: 13.5.sp
+                                                    ),
+                                                    children: [
+                                                      TextSpan(
+                                                        text:"  Vous ne payez que lorsque nous avons au moins un professionel à vous recommander.",
+                                                        style: TextStyle(
+                                                            fontSize: 13.5.sp,
+                                                          color: HexColor("#FCD222"),
+                                                        )
+                                                      )
+                                                    ]
+                                                  )
+                                                )
+                                            )
+                                          ],
+                                        ),
+                                      ]
                                     )
                                     : _navigate == Status.START ?
-                                Text(
-                                  "Les meilleures compétences à proximité",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19.0,
-                                      fontWeight: FontWeight.bold
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 10),
+                                  child: Text(
+                                    "Les meilleures compétences à proximité",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17.0.sp,
+                                        fontWeight: FontWeight.bold
+                                    ),
                                   ),
                                 ) : SizedBox(),
                               )
                             ),
                           AnimatedPadding(
                               duration: Duration(milliseconds: 400),
-                              padding:  EdgeInsets.only(bottom: _navigate == Status.ONBOARDING || _navigate == Status.START ? 28.0.h : 0.01),
+                              padding:  EdgeInsets.only(bottom: _navigate == Status.START ? 28.0.h : 0.01),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child:  _navigate == Status.START ? Container(
@@ -164,8 +278,8 @@ class _SplashScreenState extends State<SplashScreen> {
                               )
                             ),
                           AnimatedPadding(
-                              padding: _navigate == Status.ONBOARDING || _navigate == Status.START ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 40) : EdgeInsets.all(0.01),
-                              duration: Duration(milliseconds: 100),
+                              padding: _navigate == Status.START ? EdgeInsets.only(bottom: SizeConfig.screenHeight / 40) : EdgeInsets.all(0.01),
+                              duration: Duration(milliseconds: 500),
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: _navigate == Status.START ?
@@ -226,7 +340,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 ],
                               ) : _navigate == Status.ONBOARDING ?
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5),
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5,vertical: SizeConfig.safeBlockHorizontal * 3),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [

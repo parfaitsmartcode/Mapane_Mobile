@@ -4,6 +4,8 @@ class Assets {
   static const String logoPng = "assets/logo_.png";
   static const String logoOnboarding = "assets/logo-onboarding.png";
   static const String searchOnboarding = "assets/search-onboarding.svg";
+  static const String walletOnboarding = "assets/wallet-onboarding.svg";
+  static const String freeSearch = "assets/free-search.svg";
   static const String profilePicture = "assets/Profile-picture.png";
   static const String logoWidthPng = "assets/logo_width_.png";
   static const String cardIcon = "assets/card.png";
