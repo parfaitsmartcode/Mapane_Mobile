@@ -583,16 +583,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   sendAlert(identifier, category, address, posted, latlon, desc) {
-    var data = JsonEncoder().convert({
-      "lat": latlon.latitude,
-      "long": latlon.longitude,
-      "desc": desc == "" || desc == null ? "desc" : desc,
-      "postedBy": posted,
-      "category": category,
-      "address": address == '' ? ' ' : address
-    });
     print("donneeeeeee");
-    print(data);
+    print(posted);
     alertService
         .createAlert(
             latlon.latitude,
@@ -960,6 +952,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       Timer(Duration(seconds: 3), () => Navigator.pop(context));
     }).catchError((onError) {
+      print("checking des erreurs");
+      print(onError);
       Navigator.pop(context);
       Timer(Duration(seconds: 3), () => Navigator.pop(context));
       setState(() => loadera = false);
@@ -981,8 +975,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   children: [
                     Container(
                       width: getSize(303, "width", context),
-                      // height: getSize(256, "height", context),
-                      // padding: EdgeInsets.all(getSize(0,"height",context)),
+                       height: getSize(256, "height", context),
+                       padding: EdgeInsets.all(getSize(0,"height",context)),
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(
@@ -1975,17 +1969,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                     String osm_value = placesResult[index].osm_value !=
                                                                             null
                                                                         ? placesResult[index].osm_value +
-                                                                            ","
+                                                                            ", "
                                                                         : " ";
                                                                     String city = placesResult[index].city !=
                                                                             null
                                                                         ? placesResult[index].city +
-                                                                            ","
+                                                                            ", "
                                                                         : " ";
                                                                     String country = placesResult[index].country !=
                                                                             null
-                                                                        ? placesResult[index].country +
-                                                                            ","
+                                                                        ? placesResult[index].country
                                                                         : " ";
                                                                     return ListTile(
                                                                       leading:
@@ -2033,8 +2026,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                                       onLongPress:
                                                                           () {
                                                                         sendAlertFromSearchPopup(
-                                                                            name +
-                                                                                city +
+                                                                            name + ", "+
+                                                                                city+
+                                                                                placesResult[index].state+ ", " +
                                                                                 country,
                                                                             userId,
                                                                             LatLng(placesResult[index].coordinates[1],
@@ -2683,6 +2677,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   sendAlertFromSearchPopup(address, posted, latlon) {
     print(latlon.toString());
+    print("nouvelle addresse");
+    print(address);
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
