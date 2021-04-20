@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mapane/models/alert.dart';
 import 'package:mapane/state/alert_provider.dart';
-import 'package:mapane/state/place_provider.dart';
 import 'package:mapane/state/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -51,14 +50,12 @@ class PushNotificationService {
     _fcm
         .subscribeToTopic('mapane-alerts')
         .then((value) {
-          print("success to subscribe");
     })
         .catchError((onError) => print("failed subscription to mapane-alerts"));
 
     _fcm
         .subscribeToTopic('mapane-alerts-$country-$state')
         .then((value) {
-      print("success to subscribe");
     })
         .catchError((onError) =>
         print("failed subscription to mapane-alerts-$country-$state"));

@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.smartcodegroup.mapane-app</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -15,17 +15,29 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Media Library access required for audio notification inside app</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>App required to use calendar to get date before publishing an alert</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Contact usage is required to autofill number in registration form</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Your position is required to alert you when close from a road incident</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your position is required to alert you when close from a road incident</string>
+	<key>NSMotionUsageDescription</key>
+	<string>App requires motion manager to calibrate user position on map</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>App requires speech recognition to vocally alert user when close of a road incident</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -49,8 +61,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 </dict>
 </plist>

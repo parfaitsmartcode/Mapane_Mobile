@@ -18,7 +18,7 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.slug != "S.O.S").toList();
+      return schools.where((i) => i.category.slug != "S.O.S" && i.category.slug != "Police").toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
@@ -37,7 +37,7 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.slug != "S.O.S").toList();
+      return schools.where((i) => i.category.slug != "S.O.S" && i.category.slug != "Police").toList();
     } on DioError catch (e) {
       throw new NException(e);
     }
@@ -83,7 +83,7 @@ class AlertService {
   }
   Future<dynamic> createAlert(double lat, double lon, String description,String userId,String slug,String address) async{
     print("Envoie api");
-    print(lat);
+    print(slug);
     try{
       final String uri = locator<Di>().apiUrl + "/create-alert";
       Response response = await locator<Di>().dio.post(

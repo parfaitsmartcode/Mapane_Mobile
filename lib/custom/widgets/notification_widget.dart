@@ -60,9 +60,9 @@ class _NotificationMapaneState extends State<NotificationMapane>
       case "Zone-dangereuse":
         return Assets.dangerMarker3;
         break;
-      case "Police":
-        return Assets.controleMarker2;
-        break;
+      // case "Police":
+      //   return Assets.controleMarker2;
+      //   break;
       case "Accident-de-circulation":
         return Assets.accidentMarker3;
         break;

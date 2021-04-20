@@ -42,9 +42,9 @@ class _NotifState extends State<Notif> {
       case "Zone-dangereuse":
         return Assets.dangerMarker3;
         break;
-      case "Police":
-        return Assets.controleMarker2;
-        break;
+      // case "Police":
+      //   return Assets.controleMarker2;
+      //   break;
       case "Accident-de-circulation":
         return Assets.accidentMarker3;
         break;
@@ -59,7 +59,7 @@ class _NotifState extends State<Notif> {
   @override
   void initState() {
     super.initState();
-    audioPlugin.play("http://mapane.smartcodegroup.com/alert_notif.mp3");
+    audioPlugin.play("https://mapane.app/alert_notif.mp3");
     context.read<UserProvider>().getLangVal();
   }
 
