@@ -38,6 +38,8 @@ dependencies:
   location: ^3.2.4
   geolocator: ^6.2.1
   google_fonts: ^1.1.2
+  sizer: ^1.1.8
+  modal_bottom_sheet: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
