@@ -12,7 +12,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp( MyApp());
+    runApp(MyApp());
   });
 }
 
@@ -22,11 +22,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context,constraints){
-        return OrientationBuilder(builder: (context,orientation){
+      builder: (context, constraints) {
+        return OrientationBuilder(builder: (context, orientation) {
           SizerUtil().init(constraints, orientation);
           return MaterialApp(
             title: 'Near Me',
@@ -42,5 +41,4 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-
 }
