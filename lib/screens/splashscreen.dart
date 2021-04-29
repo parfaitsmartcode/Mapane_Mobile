@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child:  Stack(
                         children: [
                           AnimatedPadding(
-                            duration: Duration(milliseconds: _navigate == Status.ONBOARDING ? 500 : 400),
+                            duration: Duration(milliseconds: 500 ),
                             padding:  EdgeInsets.only(bottom: _navigate == Status.ONBOARDING ? 52.0.h : _navigate == Status.START ? 33.0.h : 0.01),
                             child: Align(
                               alignment: Alignment.center,
@@ -340,7 +340,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 ],
                               ) : _navigate == Status.ONBOARDING ?
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5,vertical: SizeConfig.safeBlockHorizontal * 3),
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5,vertical: SizeConfig.safeBlockHorizontal * 4),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [

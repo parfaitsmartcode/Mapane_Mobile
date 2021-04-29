@@ -132,7 +132,7 @@ class _ProfessionelRegisterState extends State<ProfessionelRegister> {
                               builder: (context) => SingleChildScrollView(
                                 controller: ModalScrollController.of(context),
                                 child: Container(
-                                  height: 60.0.h,
+                                  height: getSize(60, "height", context) ,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.only(
