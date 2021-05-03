@@ -6,7 +6,7 @@ getSize(taille, type, resp) {
     size = MediaQuery.of(resp).size.width * (taille / 375);
   }
   if (type == "height") {
-    size = MediaQuery.of(resp).size.height * (taille / 667);
+    size = MediaQuery.of(resp).size.height * (taille / 812);
   }
   return size;
 }
