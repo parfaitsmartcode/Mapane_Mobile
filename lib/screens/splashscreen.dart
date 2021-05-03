@@ -471,6 +471,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                     ),
                                   ),
                                 ],
+<<<<<<< HEAD
                               ),
                             )
                           : SizedBox()),
@@ -479,6 +480,73 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     ));
+=======
+                              ) : _navigate == Status.ONBOARDING ?
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5,vertical: SizeConfig.safeBlockHorizontal * 4),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          //color: Colors.red,
+                                          width: SizeConfig.safeBlockHorizontal * 20,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: indexPage == 0 ? Colors.white : Colors.white.withOpacity(0.3),
+                                                radius: 6,
+                                              ),
+                                              CircleAvatar(
+                                                backgroundColor: indexPage == 1 ? Colors.white : Colors.white.withOpacity(0.3),
+                                                radius: 6,
+                                              ),
+                                              CircleAvatar(
+                                                backgroundColor: indexPage == 2 ? Colors.white : Colors.white.withOpacity(0.3),
+                                                radius: 6,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              _navigate = Status.START;
+                                            });
+                                          },
+                                          child: Container(
+                                            width: SizeConfig.safeBlockHorizontal * 25,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Suivant",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0.sp
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_forward_rounded,
+                                                  color: Colors.white,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  : SizedBox()
+                            ),
+                          )
+                          ]
+                      ),
+                  ),
+                  ),
+                )
+            );
+>>>>>>> 13f474e88a42c4a19d437f9e39d1c2e6373c1119
   }
 }
 
