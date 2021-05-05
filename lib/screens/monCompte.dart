@@ -166,7 +166,7 @@ class _MyAppState extends State<MonCompte> {
                                       ),
                                 ),
                                 Text(
-                                  context.watch<UserProvider>().userPhone,
+                                  "context.watch<UserProvider>().userPhone",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline3

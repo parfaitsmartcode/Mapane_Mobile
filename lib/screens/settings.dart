@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -20,6 +21,26 @@ class _MyAppState extends State<Settings> {
     userProvider.setAudioNotification();
     userProvider.setConnectMode();
     context.read<UserProvider>().getPopupVal();
+  }
+
+  _launchURL() async {
+    var url = "https://mapane.app/terms-and-conditions";
+    print(await canLaunch(url));
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  _launchURL2() async {
+    var url = "https://mapane.app/privacy";
+    print(await canLaunch(url));
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
   }
 
   @override
@@ -280,27 +301,61 @@ class _MyAppState extends State<Settings> {
                                   SizedBox(
                                     height: getSize(16, "height", context),
                                   ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: getSize(39, "width", context),
-                                        child: Image.asset(
-                                          'assets/images/FIle-icon.png',
-                                          height: getSize(20, "width", context),
+                                  GestureDetector(
+                                    onTap:
+                                        _launchURL,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: getSize(39, "width", context),
+                                          child: Image.asset(
+                                            'assets/images/FIle-icon.png',
+                                            height:
+                                                getSize(20, "width", context),
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: getSize(174, "width", context),
-                                        child: Text(
-                                          Languages.of(context).termandcond,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: getSize(
-                                                  14, "height", context),
-                                              color: Colors.black),
+                                        Container(
+                                          width: getSize(174, "width", context),
+                                          child: Text(
+                                            Languages.of(context).termandcond,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: getSize(
+                                                    14, "height", context),
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: getSize(16, "height", context),
+                                  ),
+                                  GestureDetector(
+                                    onTap: _launchURL2,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: getSize(39, "width", context),
+                                          child: Image.asset(
+                                            'assets/images/FIle-icon.png',
+                                            height:
+                                                getSize(20, "width", context),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: getSize(174, "width", context),
+                                          child: Text(
+                                            Languages.of(context).privacy,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: getSize(
+                                                    14, "height", context),
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: getSize(16, "height", context),

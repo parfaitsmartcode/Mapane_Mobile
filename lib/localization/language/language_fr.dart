@@ -74,4 +74,5 @@ class LanguageFr extends Languages {
   String get amoins => " à moins de ";
   String get metrepos => " mètres de votre position";
   String get errornumber => "Veuillez entrer un numéro de téléphone valide";
+  String get privacy => "Confidentialités";
 }

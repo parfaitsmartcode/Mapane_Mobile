@@ -74,7 +74,7 @@ abstract class Languages {
   String get errornumber;
   String get amoins;
   String get metrepos;
-  // String get update_number;
+  String get privacy;
   // String get update_number;
   // String get update_number;
   // String get update_number;

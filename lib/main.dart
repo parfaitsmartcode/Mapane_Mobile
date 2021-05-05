@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
+import 'package:mapane/screens/monCompte.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/location_service_provider.dart';
@@ -82,7 +83,7 @@ class _MyAppState extends State<MyApp> {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       routes: Routes.routes,
-      home: SplashScreen(),
+      home: MonCompte(),
       debugShowCheckedModeBanner: false,
       locale: _locale,
       supportedLocales: [
