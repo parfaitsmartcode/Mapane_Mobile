@@ -43,6 +43,26 @@ class _MyAppState extends State<Settings> {
     }
   }
 
+  _launchURL3() async {
+    var url = "https://mapane.app";
+    print(await canLaunch(url));
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  _launchURL4() async {
+    var url = "https://mapane.app/contact";
+    print(await canLaunch(url));
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -360,52 +380,60 @@ class _MyAppState extends State<Settings> {
                                   SizedBox(
                                     height: getSize(16, "height", context),
                                   ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: getSize(39, "width", context),
-                                        child: Image.asset(
-                                          'assets/images/Info-icon.png',
-                                          height: getSize(20, "width", context),
+                                  GestureDetector(
+                                    onTap:
+                                        _launchURL3,
+                                                                      child: Row(
+                                      children: [
+                                        Container(
+                                          width: getSize(39, "width", context),
+                                          child: Image.asset(
+                                            'assets/images/Info-icon.png',
+                                            height: getSize(20, "width", context),
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: getSize(174, "width", context),
-                                        child: Text(
-                                          Languages.of(context).apropos,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: getSize(
-                                                  14, "height", context),
-                                              color: Colors.black),
+                                        Container(
+                                          width: getSize(174, "width", context),
+                                          child: Text(
+                                            Languages.of(context).apropos,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: getSize(
+                                                    14, "height", context),
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: getSize(16, "height", context),
                                   ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: getSize(39, "width", context),
-                                        child: Image.asset(
-                                          'assets/images/Help-icon.png',
-                                          height: getSize(20, "width", context),
+                                  GestureDetector(
+                                    onTap:
+                                        _launchURL4,
+                                                                      child: Row(
+                                      children: [
+                                        Container(
+                                          width: getSize(39, "width", context),
+                                          child: Image.asset(
+                                            'assets/images/Help-icon.png',
+                                            height: getSize(20, "width", context),
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: getSize(174, "width", context),
-                                        child: Text(
-                                          Languages.of(context).aide,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: getSize(
-                                                  14, "height", context),
-                                              color: Colors.black),
+                                        Container(
+                                          width: getSize(174, "width", context),
+                                          child: Text(
+                                            Languages.of(context).aide,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: getSize(
+                                                    14, "height", context),
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ])))))),
               ],
