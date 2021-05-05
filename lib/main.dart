@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       routes: Routes.routes,
-      home: MonCompte(),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       locale: _locale,
       supportedLocales: [
