@@ -102,7 +102,8 @@ class AlertService {
       print(response);
       return response.data;
     } on DioError catch (e) {
-      print(e);
+      print("erreur de création");
+      print(e.message);
       throw new NException(e);
     }
   }

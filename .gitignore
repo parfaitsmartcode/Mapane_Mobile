@@ -33,7 +33,7 @@ Nylon fayadort qui est dans le panier dans son placa
 .pub-cache/
 .pub/
 /build/
-
+/android/key.properties
 # Web related
 lib/generated_plugin_registrant.dart
 
