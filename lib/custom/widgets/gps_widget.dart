@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:mapane/constants/assets.dart';
 import 'package:mapane/utils/size_config.dart';
 
 class LocationServiceConnexion extends StatelessWidget {
@@ -25,7 +26,7 @@ class LocationServiceConnexion extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset(
-                    'assets/images/Rounded Icon box.png',
+                    Assets.gpsPicture,
                   ),
                   SizedBox(
                     height: getSize(15, "height", context),
