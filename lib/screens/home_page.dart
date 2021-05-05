@@ -945,6 +945,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               });
       }
     }).catchError((onError) {
+      print("testifions ca");
+      print(onError);
       Navigator.pop(context);
       setState(() => loadera = false);
       showGeneralDialog(
