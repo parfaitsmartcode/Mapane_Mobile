@@ -75,4 +75,5 @@ class LanguageFr extends Languages {
   String get metrepos => " mètres de votre position";
   String get errornumber => "Veuillez entrer un numéro de téléphone valide";
   String get privacy => "Confidentialités";
+  String get acceptcondterm => "En cliquant sur le bouton Continuer, vous acceptez les ";
 }

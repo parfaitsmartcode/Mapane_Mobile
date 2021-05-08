@@ -75,6 +75,7 @@ abstract class Languages {
   String get amoins;
   String get metrepos;
   String get privacy;
+  String get acceptcondterm;
   // String get update_number;
   // String get update_number;
   // String get update_number;

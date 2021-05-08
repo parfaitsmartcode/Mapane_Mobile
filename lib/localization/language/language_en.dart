@@ -74,4 +74,5 @@ class LanguageEn extends Languages {
   String get metrepos => " meters from your position";
   String get errornumber => "Please enter a valid phone number";
   String get privacy => "Privacy policy";
+  String get acceptcondterm => "By clicking on the Continue button, you agree to the ";
 }

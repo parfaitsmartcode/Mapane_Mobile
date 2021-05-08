@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../state/user_provider.dart';
 import 'package:mapane/localization/language/languages.dart';
 import 'package:mapane/localization/locale_constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -48,6 +49,16 @@ class _MyAppState extends State<NumeroGetIos> {
   void initState() {
     super.initState();
     context.read<UserProvider>().getLangVal();
+  }
+
+  _launchURL() async {
+    var url = "https://mapane.app/terms-and-conditions";
+    print(await canLaunch(url));
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
   }
 
   @override
@@ -122,6 +133,46 @@ class _MyAppState extends State<NumeroGetIos> {
               ),
               SizedBox(
                 height: 0.02177 * deviceSize.height,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45),
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          Languages.of(context).acceptcondterm,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          softWrap: true,
+                          style: TextStyle(
+                            fontSize: getSize(11, "height", context),
+                          )
+                        ),
+                        GestureDetector(
+                          onTap: _launchURL,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0,8,0,0),
+                            child: Text(
+                              Languages.of(context).termandcond,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              softWrap: true,
+                              style: TextStyle(
+                                fontSize: getSize(11, "height", context),
+                                color: Color(0xFF25296A),
+                                decoration: TextDecoration.underline
+                              )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 0.03177 * deviceSize.height,
               ),
               _mobileNumber != null
                   ? Padding(
