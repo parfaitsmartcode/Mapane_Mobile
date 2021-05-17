@@ -583,8 +583,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   sendAlert(identifier, category, address, posted, latlon, desc) {
-    print("donneeeeeee");
-    print(posted);
+    // print("donneeeeeee");
+    // print(posted);
     alertService
         .createAlert(
             latlon.latitude,

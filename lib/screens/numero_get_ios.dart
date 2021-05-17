@@ -65,6 +65,8 @@ class _MyAppState extends State<NumeroGetIos> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
         body: Container(
       alignment: Alignment.center,
       decoration: new BoxDecoration(
@@ -135,40 +137,38 @@ class _MyAppState extends State<NumeroGetIos> {
                 height: 0.02177 * deviceSize.height,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          Languages.of(context).acceptcondterm,
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: getSize(11, "height", context),
-                          )
-                        ),
-                        GestureDetector(
-                          onTap: _launchURL,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0,8,0,0),
-                            child: Text(
-                              Languages.of(context).termandcond,
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                              softWrap: true,
-                              style: TextStyle(
-                                fontSize: getSize(11, "height", context),
-                                color: Color(0xFF25296A),
-                                decoration: TextDecoration.underline
-                              )
-                            ),
+                padding: const EdgeInsets.symmetric(horizontal: 38),
+                child: Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        Languages.of(context).acceptcondterm,
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: getSize(10.5, "height", context),
+                        )
+                      ),
+                      GestureDetector(
+                        onTap: _launchURL,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0,8,0,0),
+                          child: Text(
+                            Languages.of(context).termandcond,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                            softWrap: true,
+                            style: TextStyle(
+                              fontSize: getSize(10.5, "height", context),
+                              color: Color(0xFF25296A),
+                              decoration: TextDecoration.underline
+                            )
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -698,6 +698,7 @@ class _MyAppState extends State<NumeroGetIos> {
               },
               selectorConfig: SelectorConfig(
                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                backgroundColor: Colors.white
               ),
               ignoreBlank: false,
               autoValidateMode: AutovalidateMode.onUserInteraction,
