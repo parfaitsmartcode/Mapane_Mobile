@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:mapane/routes.dart';
 import 'package:mapane/screens/splash_screen.dart';
 import 'package:mapane/screens/monCompte.dart';
+import 'package:mapane/screens/numero_get.dart';
 import 'package:mapane/service_locator.dart';
 import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:mapane/state/location_service_provider.dart';

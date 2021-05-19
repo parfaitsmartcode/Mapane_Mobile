@@ -66,6 +66,20 @@ class AlertProvider extends BaseProvider{
       this.toggleLoadingState();
     });
   }
+  getAlertByUserReal(adress) async {
+    SharedPreferences  _preferences = await SharedPreferences.getInstance();
+    String userId = await  _preferences.get('user_info');
+    this.toggleLoadingState();
+    alertService.getAlertByUserReal(userId,adress).then((alerts){
+      print('adresse stocké');
+      print(addresseStored);
+      alertListHisto = Right(alerts);
+      this.toggleLoadingState();
+    }).catchError((error){
+      alertListHisto = Left(error);
+      this.toggleLoadingState();
+    });
+  }
 
   getAlertByUserCat(id,type,addr) async {
     SharedPreferences  _preferences = await SharedPreferences.getInstance();

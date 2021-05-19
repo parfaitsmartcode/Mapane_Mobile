@@ -38,7 +38,7 @@ class Alert{
          desc: json['desc'],
          address: json['address'],
          userId: json['postedBy'] == null ? PostedBy(id:'0',phone:'1234') : PostedBy(id:json['postedBy']['_id'],phone:json['postedBy']['phone']),
-         category: Category(id: json['category']['_id'],name: json['category']['name'],name_en: json['category']['name_en'],perimeter: json['category']['perimeter'],slug: json['category']['slug']),
+         category: Category(id: json['category']['_id'],name: json['category']['name'],name_en: json['category']['name_en'],perimeter: json['category']['perimeter'],slug: json['category']['slug'], delete_time: json['category']['delete_time']),
          active: json['active'],
          createdAt: json['createdAt'],
      );
