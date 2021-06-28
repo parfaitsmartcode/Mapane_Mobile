@@ -38,7 +38,7 @@ class _TabsPageState extends State<TabsPage> {
               context
                   .read<AlertProvider>()
                   .getAlertByUser("5ff34b88af0f1982ab03f3f9");
-              context.read<AlertProvider>().getAlertByUserCat("All", 1,context.watch<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
+              context.read<AlertProvider>().getAlertByUserCat("All", 1,context.read<PlaceProvider>().userPlace.fold((l) => null, (r) => r.state).toString());
             }
           },
           items: [

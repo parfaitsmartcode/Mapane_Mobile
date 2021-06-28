@@ -3,6 +3,7 @@ class Category{
    String name;
    String name_en;
    String slug;
+   String delete_time;
    num perimeter;
 
   Category({
@@ -10,7 +11,8 @@ class Category{
     this.name,
     this.name_en,
     this.slug,
-    this.perimeter
+    this.perimeter,
+    this.delete_time
 });
 
    factory Category.fromJson(Map<String, dynamic> json) {
@@ -19,7 +21,8 @@ class Category{
          name: json['name'],
          name_en: json['name_en'],
          perimeter: json['perimeter'],
-         slug: json['slug']
+         slug: json['slug'],
+         delete_time: json['delete_time']
      );
    }
 }

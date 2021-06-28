@@ -75,7 +75,7 @@ class _MyAppState extends State<NumeroGetIos> {
                     height: 0.01529 * deviceSize.height,
                   ),
                   Text(
-                    Languages.of(context).selectnumber,
+                    Languages.of(context).savenumber,
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 18,

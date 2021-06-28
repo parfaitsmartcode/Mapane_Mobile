@@ -18,7 +18,7 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.slug != "S.O.S" && i.category.slug != "Police").toList();
+      return schools.where((i) => i.category.slug != "S.O.S").toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
@@ -27,7 +27,7 @@ class AlertService {
 
   Future<List<Alert>> getAlertByUser(id) async {
     try {
-      final String uri = locator<Di>().apiUrl + "/alerts/"+id;
+      final String uri = locator<Di>().apiUrl + "/alerts/" + id;
       Response response = await locator<Di>().dio.get(
             uri,
             options: Options(headers: {"content-type": "application/json"}),
@@ -37,7 +37,27 @@ class AlertService {
       List<Alert> schools = items.map<Alert>((json) {
         return Alert.fromJson(json);
       }).toList();
-      return schools.where((i) => i.category.slug != "S.O.S" && i.category.slug != "Police").toList();
+      return schools.where((i) => i.category.slug != "S.O.S").toList();
+    } on DioError catch (e) {
+      throw new NException(e);
+    }
+  }
+
+  Future<List<Alert>> getAlertByUserReal(id,addr) async {
+    try {
+      final String uri = locator<Di>().apiUrl + "/alerts-user/" + id;
+      Response response = await locator<Di>().dio.get(
+            uri,
+            options: Options(headers: {"content-type": "application/json"}),
+          );
+      final items = response.data["alerts"].cast<Map<String, dynamic>>();
+      print(response.data);
+      List<Alert> schools = items.map<Alert>((json) {
+        return Alert.fromJson(json);
+      }).toList();
+      return schools.where((i) => i.category.slug != "S.O.S" &&
+              i.address.split(",")[2] + "," + i.address.split(",")[3] ==
+                  " " + addr).toList();
     } on DioError catch (e) {
       throw new NException(e);
     }
@@ -47,9 +67,9 @@ class AlertService {
     try {
       final String uri = locator<Di>().apiUrl + "/alerts/" + id;
       Response response = await locator<Di>().dio.get(
-        uri,
-        options: Options(headers: {"content-type": "application/json"}),
-      );
+            uri,
+            options: Options(headers: {"content-type": "application/json"}),
+          );
       print(response.data["alerts"]);
       final items = response.data["alerts"].cast<Map<String, dynamic>>();
       List<Alert> schools = items.map<Alert>((json) {
@@ -57,23 +77,28 @@ class AlertService {
         return Alert.fromJson(json);
         // }
       }).toList();
-      return schools.where((i) => i.category.slug == cat && i.address.split(",")[2] == " "+addr).toList();
+      print("adresse envoyée");
+      print(addr);
+      print(cat);
+      return schools
+          .where((i) =>
+              i.category.slug == cat &&
+              i.address.split(",")[2] + "," + i.address.split(",")[3] ==
+                  " " + addr)
+          .toList();
     } on DioError catch (e) {
       print(e.message);
       throw new NException(e);
     }
   }
 
-
   Future<Category> getCategoriesId(String name) async {
-    try{
+    try {
       final String uri = locator<Di>().apiUrl + "/categories";
-      Response response = await locator<Di>().dio.get(
-        uri,
-        options: Options(headers: {"content-type": "application/json"})
-      );
-      final items = response.data["categories"].cast<Map<String,dynamic>>();
-      List<Category> categories = items.map<Category>((json){
+      Response response = await locator<Di>().dio.get(uri,
+          options: Options(headers: {"content-type": "application/json"}));
+      final items = response.data["categories"].cast<Map<String, dynamic>>();
+      List<Category> categories = items.map<Category>((json) {
         return Category.fromJson(json);
       }).toList();
       return categories.where((c) => c.name.contains(name)).first;
@@ -81,29 +106,53 @@ class AlertService {
       throw new NException(e);
     }
   }
-  Future<dynamic> createAlert(double lat, double lon, String description,String userId,String slug,String address) async{
+
+  Future<dynamic> deleteAlert(String id) async {
+    try {
+      final String uri = locator<Di>().apiUrl + "/delete_alert/" + id;
+      Response response = await locator<Di>().dio.get(uri,
+          options: Options(headers: {"content-type": "application/json"}));
+      print("resultat api delete");
+      print(response.data);
+      print(response);
+      return response.data;
+    } on DioError catch (e) {
+      print("erreur de création");
+      print(e.message);
+      throw new NException(e);
+    }
+  }
+
+  Future<dynamic> createAlert(double lat, double lon, String description,
+      String userId, String slug, String address) async {
     print("Envoie api");
+    print(lat);
+    print(lon);
+    print(description);
+    print(userId);
     print(slug);
-    try{
+    print("Santa Lucia, Douala V, Littoral, Cameroun");
+    print("Envoie api ended");
+    try {
       final String uri = locator<Di>().apiUrl + "/create-alert";
-      Response response = await locator<Di>().dio.post(
-          uri,
+      Response response = await locator<Di>().dio.post(uri,
           data: {
             "lat": lat,
             "long": lon,
             "desc": description,
             "postedBy": userId,
             "category": slug,
-            "address": address
+            "address": "Santa Lucia, Douala V, Littoral, Cameroun"
           },
-          options: Options(headers:{"Content-Type": "application/json"})
-      );
+          options: Options(headers: {"Content-Type": "application/json"}));
       print("resultat api");
       print(response.data);
       print(response);
       return response.data;
     } on DioError catch (e) {
-      print(e);
+      print("erreur de création");
+      print(e.response.statusMessage);
+      print(e.response.data);
       throw new NException(e);
     }
   }

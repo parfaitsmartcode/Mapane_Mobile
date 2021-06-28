@@ -44,6 +44,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:audioplayer/audioplayer.dart';
+import 'package:mapane/screens/swipe_detector.dart';
 import 'package:mapane/networking/services/alert_service.dart';
 import 'package:mapane/localization/language/languages.dart';
 
@@ -367,7 +368,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  sendAlertPopup(category, address, posted, latlon) {
+  sendAlertPopup(category, address, posted, latlon, typealert) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -383,8 +384,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               children: [
                 Container(
                   width: getSize(303, "width", context),
-                  // height: getSize(256, "height", context),
-                  // padding: EdgeInsets.all(getSize(0,"height",context)),
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
                     borderRadius:
@@ -411,14 +410,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           children: <Widget>[
                             RichText(
                               text: TextSpan(
-                                  text: Languages.of(context).positionexc,
+                                  text: Languages.of(context).positionexc +
+                                      typealert +
+                                      " ?",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: getSize(18, "height", context),
                                       color: Colors.black)),
                             ),
+                            RichText(
+                              text: TextSpan(
+                                  text: "\n" +
+                                      Languages.of(context)
+                                          .positionexcsoustitle,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: getSize(16, "height", context),
+                                      color: Colors.black)),
+                            ),
                             SizedBox(
-                              height: getSize(29, "height", context),
+                              height: getSize(9, "height", context),
                             ),
                             Row(
                               children: <Widget>[
@@ -473,7 +484,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               ],
                             ),
                             SizedBox(
-                              height: getSize(16, "height", context),
+                              height: getSize(29, "height", context),
                             ),
                             Row(
                                 mainAxisAlignment:
@@ -482,7 +493,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   SizedBox(
                                     child: Container(
                                       height: getSize(40, "height", context),
-                                      width: getSize(162, "width", context),
+                                      width: getSize(91, "width", context),
                                       child: FlatButton(
                                         onPressed: () {
                                           Navigator.pop(context);
@@ -495,73 +506,73 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                               latlon,
                                               customAddress);
                                         },
-                                        color: Color(0x162C306F),
-                                        padding: EdgeInsets.fromLTRB(
-                                            0,
-                                            getSize(5, "height", context),
-                                            0,
-                                            getSize(5, "height", context)),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            Languages.of(context).notks,
-                                            style: TextStyle(
-                                              fontSize: getSize(
-                                                  18, "height", context),
-                                              fontWeight: FontWeight.w400,
+                                        textColor: Colors.white,
+                                        color: Colors.transparent,
+                                        padding: EdgeInsets.all(0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            gradient: LinearGradient(
+                                              colors: <Color>[
+                                                Color(0xFFA7BACB),
+                                                Color(0xFF25296A),
+                                              ],
                                             ),
                                           ),
+                                          padding: EdgeInsets.fromLTRB(
+                                              0,
+                                              getSize(5, "height", context),
+                                              0,
+                                              getSize(5, "height", context)),
+                                          child: Center(
+                                              child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                Languages.of(context).yes,
+                                                style: TextStyle(
+                                                  fontSize: getSize(
+                                                      18, "height", context),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          )),
                                         ),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     height: getSize(40, "height", context),
-                                    width: getSize(91, "width", context),
+                                    width: getSize(162, "width", context),
                                     child: FlatButton(
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        loaderPopup();
-                                        sendAlert("default", category, address,
-                                            posted, latlon, customAddress);
+                                        // loaderPopup();
+                                        // sendAlert("default", category, address,
+                                        //     posted, latlon, customAddress);
                                       },
-                                      textColor: Colors.white,
-                                      color: Colors.transparent,
-                                      padding: EdgeInsets.all(0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xFFA7BACB),
-                                              Color(0xFF25296A),
-                                            ],
+                                      color: Color(0x162C306F),
+                                      padding: EdgeInsets.fromLTRB(
+                                          0,
+                                          getSize(5, "height", context),
+                                          0,
+                                          getSize(5, "height", context)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          Languages.of(context).notks,
+                                          style: TextStyle(
+                                            fontSize:
+                                                getSize(18, "height", context),
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                        padding: EdgeInsets.fromLTRB(
-                                            0,
-                                            getSize(5, "height", context),
-                                            0,
-                                            getSize(5, "height", context)),
-                                        child: Center(
-                                            child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              Languages.of(context).yes,
-                                              style: TextStyle(
-                                                fontSize: getSize(
-                                                    18, "height", context),
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
-                                        )),
                                       ),
                                     ),
                                   ),
@@ -1488,8 +1499,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     });
     return SafeArea(
+        maintainBottomViewPadding: true,
         bottom: false,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomPadding: false,
           backgroundColor: Colors.white.withOpacity(0.5),
           extendBody: true,
           body: Stack(
@@ -2047,605 +2061,647 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: SizeConfig.blockSizeVertical * 7.27),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedContainer(
-                    alignment: Alignment.topCenter,
-                    height: alertHeight,
-                    width: SizeConfig.screenWidth,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(isExpanded ? 35 : 0),
-                            topRight: Radius.circular(isExpanded ? 35 : 0)),
-                        color: isExpanded
-                            ? Colors.white
-                            : Colors.white.withOpacity(0.3),
-                        boxShadow: [
-                          isExpanded
-                              ? BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
-                                )
-                              : BoxShadow(
-                                  color: Colors.transparent,
-                                )
-                        ]),
-                    duration: Duration(milliseconds: 500),
-                    child: Stack(
-                      overflow: Overflow.visible,
-                      children: [
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 500),
-                          bottom: bottomPadding,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: getSize(375, "width", context),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (isExpanded) {
-                                    isExpanded = false;
-                                    alertHeight =
-                                        getSize(30, "height", context);
-                                    print(getSize(17, "height", context));
-                                    bottomPadding =
-                                        getSize(17, "height", context);
-                                  } else {
-                                    isExpanded = true;
-                                    alertHeight =
-                                        getSize(300, "height", context);
-                                    bottomPadding =
-                                        getSize(285, "height", context);
-                                  }
-                                });
-                              },
+              SwipeDetectorExample(
+                onSwipeUp: () {
+                  setState(() {
+                    isExpanded = true;
+                    alertHeight = getSize(300, "height", context);
+                    bottomPadding = getSize(285, "height", context);
+                  });
+                },
+                onSwipeDown: () {
+                  setState(() {
+                    isExpanded = false;
+                    alertHeight = getSize(30, "height", context);
+                    print(getSize(17, "height", context));
+                    bottomPadding = getSize(17, "height", context);
+                  });
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.blockSizeVertical * 7.40),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      alignment: Alignment.topCenter,
+                      height: alertHeight,
+                      width: SizeConfig.screenWidth,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(isExpanded ? 35 : 0),
+                              topRight: Radius.circular(isExpanded ? 35 : 0)),
+                          color: isExpanded
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.3),
+                          boxShadow: [
+                            isExpanded
+                                ? BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  )
+                                : BoxShadow(
+                                    color: Colors.transparent,
+                                  )
+                          ]),
+                      duration: Duration(milliseconds: 500),
+                      child: Stack(
+                        overflow: Overflow.visible,
+                        children: [
+                          AnimatedPositioned(
+                            duration: Duration(milliseconds: 500),
+                            bottom: bottomPadding,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: getSize(375, "width", context),
                               child: swiperIcon,
                             ),
                           ),
-                        ),
-                        isExpanded
-                            ? Padding(
-                                padding: const EdgeInsets.all(28.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Embouteillage",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/embouteillage.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          Languages.of(context)
-                                                              .embou,
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Route-barree",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/routebarree-copie.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          Languages.of(context)
-                                                              .routebarre,
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Route-en-chantier",
-                                                addresse,
-                                                userId,
-                                                /*LatLng(currentLocation.latitude,
-                                                    currentLocation.longitude)*/
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/chantier-copie.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          Languages.of(context)
-                                                              .routechantier,
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Zone-dangereuse",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/zone-dangereuse.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(30,
-                                                            "height", context),
-                                                        child: Text(
-                                                          Languages.of(context)
-                                                              .zonedanger,
-                                                          maxLines: 2,
-                                                          softWrap: true,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                        height: getSize(30, "height", context)),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "Accident-de-circulation",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/accident.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(42,
-                                                            "height", context),
-                                                        child: Text(
-                                                          Languages.of(context)
-                                                              .accidentdecircu,
-                                                          maxLines: 3,
-                                                          softWrap: true,
-                                                          overflow:
-                                                              TextOverflow.clip,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        // GestureDetector(
-                                        //   onTap: () {
-                                        //     sendAlertPopup(
-                                        //         "Police",
-                                        //         addresse,
-                                        //         userId,
-                                        //         LatLng(currentPosition.latitude,
-                                        //             currentPosition.longitude));
-                                        //   },
-                                        //   child: Container(
-                                        //       width:
-                                        //           getSize(75, "width", context),
-                                        //       child: Column(
-                                        //         children: [
-                                        //           Row(
-                                        //             children: [
-                                        //               SizedBox(
-                                        //                 width: getSize(75,
-                                        //                     "width", context),
-                                        //                 child: Image.asset(
-                                        //                     'assets/images/controle-routier.png',
-                                        //                     height: getSize(
-                                        //                         56,
-                                        //                         "height",
-                                        //                         context)),
-                                        //               )
-                                        //             ],
-                                        //           ),
-                                        //           SizedBox(
-                                        //               height: getSize(15,
-                                        //                   "height", context)),
-                                        //           Row(
-                                        //             children: [
-                                        //               SizedBox(
-                                        //                 width: getSize(75,
-                                        //                     "width", context),
-                                        //                 height: getSize(42,
-                                        //                     "height", context),
-                                        //                 child: Text(
-                                        //                   "Police",
-                                        //                   maxLines: 3,
-                                        //                   softWrap: true,
-                                        //                   overflow:
-                                        //                       TextOverflow.clip,
-                                        //                   textAlign:
-                                        //                       TextAlign.center,
-                                        //                   style: TextStyle(
-                                        //                       color: Colors
-                                        //                           .black
-                                        //                           .withOpacity(
-                                        //                               .5),
-                                        //                       fontSize: getSize(
-                                        //                           11,
-                                        //                           "height",
-                                        //                           context)),
-                                        //                 ),
-                                        //               ),
-                                        //             ],
-                                        //           ),
-                                        //         ],
-                                        //       )),
-                                        // ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            sendAlertPopup(
-                                                "S.O.S",
-                                                addresse,
-                                                userId,
-                                                LatLng(currentPosition.latitude,
-                                                    currentPosition.longitude));
-                                          },
-                                          child: Container(
-                                              width:
-                                                  getSize(75, "width", context),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        child: Image.asset(
-                                                            'assets/images/new-icon-alerts/test/sos.png',
-                                                            height: getSize(
-                                                                56,
-                                                                "height",
-                                                                context)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      height: getSize(15,
-                                                          "height", context)),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: getSize(75,
-                                                            "width", context),
-                                                        height: getSize(42,
-                                                            "height", context),
-                                                        child: Text(
-                                                          "SOS",
-                                                          maxLines: 3,
-                                                          softWrap: true,
-                                                          overflow:
-                                                              TextOverflow.clip,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .5),
-                                                              fontSize: getSize(
-                                                                  11,
-                                                                  "height",
-                                                                  context)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        Container(
-                                            width:
-                                                getSize(75, "width", context),
-                                            child: Column(
-                                              children: [
-                                                Row(
+                          isExpanded
+                              ? Padding(
+                                  padding: const EdgeInsets.all(28.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "Embouteillage",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "Embouteillage");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
                                                   children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/embouteillage.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
                                                     SizedBox(
-                                                      width: getSize(
-                                                          75, "width", context),
-                                                      child: Image.asset(
-                                                          'assets/images/publierposition.png',
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
                                                           height: getSize(
-                                                              56,
+                                                              30,
                                                               "height",
-                                                              context)),
-                                                    )
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                    height: getSize(
-                                                        15, "height", context)),
-                                                Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: getSize(
-                                                          75, "width", context),
-                                                      height: getSize(40,
-                                                          "height", context),
-                                                      child: Text(
-                                                        Languages.of(context)
-                                                            .pubposition,
-                                                        maxLines: 2,
-                                                        softWrap: true,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    .5),
-                                                            fontSize: getSize(
-                                                                12,
-                                                                "height",
-                                                                context)),
-                                                      ),
+                                                              context),
+                                                          child: Text(
+                                                            Languages.of(
+                                                                    context)
+                                                                .embou,
+                                                            maxLines: 2,
+                                                            softWrap: true,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
-                                                ),
-                                              ],
-                                            )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container()
-                      ],
+                                                )),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "Route-barree",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "Route barrée");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/routebarree-copie.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          height: getSize(
+                                                              30,
+                                                              "height",
+                                                              context),
+                                                          child: Text(
+                                                            Languages.of(
+                                                                    context)
+                                                                .routebarre,
+                                                            maxLines: 2,
+                                                            softWrap: true,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "Route-en-chantier",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "Route en chantier");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/chantier-copie.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          height: getSize(
+                                                              30,
+                                                              "height",
+                                                              context),
+                                                          child: Text(
+                                                            Languages.of(
+                                                                    context)
+                                                                .routechantier,
+                                                            maxLines: 2,
+                                                            softWrap: true,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "Zone-dangereuse",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "Zône dangereuse");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/zone-dangereuse.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          height: getSize(
+                                                              30,
+                                                              "height",
+                                                              context),
+                                                          child: Text(
+                                                            Languages.of(
+                                                                    context)
+                                                                .zonedanger,
+                                                            maxLines: 2,
+                                                            softWrap: true,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                          height:
+                                              getSize(30, "height", context)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "Accident-de-circulation",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "Accident de circulation");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/accident.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          height: getSize(
+                                                              42,
+                                                              "height",
+                                                              context),
+                                                          child: Text(
+                                                            Languages.of(
+                                                                    context)
+                                                                .accidentdecircu,
+                                                            maxLines: 3,
+                                                            softWrap: true,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                          // GestureDetector(
+                                          //   onTap: () {
+                                          //     sendAlertPopup(
+                                          //         "Police",
+                                          //         addresse,
+                                          //         userId,
+                                          //         /*LatLng(currentLocation.latitude,
+                                          //             currentLocation.longitude)*/
+                                          //         LatLng(
+                                          //             currentPosition.latitude,
+                                          //             currentPosition
+                                          //                 .longitude),
+                                          //         "Police");
+                                          //   },
+                                          //   child: Container(
+                                          //       width: getSize(
+                                          //           75, "width", context),
+                                          //       child: Column(
+                                          //         children: [
+                                          //           Row(
+                                          //             children: [
+                                          //               SizedBox(
+                                          //                 width: getSize(75,
+                                          //                     "width", context),
+                                          //                 child: Image.asset(
+                                          //                     'assets/images/controle-routier.png',
+                                          //                     height: getSize(
+                                          //                         56,
+                                          //                         "height",
+                                          //                         context)),
+                                          //               )
+                                          //             ],
+                                          //           ),
+                                          //           SizedBox(
+                                          //               height: getSize(15,
+                                          //                   "height", context)),
+                                          //           Row(
+                                          //             children: [
+                                          //               SizedBox(
+                                          //                 width: getSize(75,
+                                          //                     "width", context),
+                                          //                 height: getSize(
+                                          //                     42,
+                                          //                     "height",
+                                          //                     context),
+                                          //                 child: Text(
+                                          //                   "Police",
+                                          //                   maxLines: 3,
+                                          //                   softWrap: true,
+                                          //                   overflow:
+                                          //                       TextOverflow
+                                          //                           .clip,
+                                          //                   textAlign: TextAlign
+                                          //                       .center,
+                                          //                   style: TextStyle(
+                                          //                       color: Colors
+                                          //                           .black
+                                          //                           .withOpacity(
+                                          //                               .5),
+                                          //                       fontSize: getSize(
+                                          //                           11,
+                                          //                           "height",
+                                          //                           context)),
+                                          //                 ),
+                                          //               ),
+                                          //             ],
+                                          //           ),
+                                          //         ],
+                                          //       )),
+                                          // ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendAlertPopup(
+                                                  "S.O.S",
+                                                  addresse,
+                                                  userId,
+                                                  LatLng(
+                                                      currentPosition.latitude,
+                                                      currentPosition
+                                                          .longitude),
+                                                  "S.O.S");
+                                            },
+                                            child: Container(
+                                                width: getSize(
+                                                    75, "width", context),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          child: Image.asset(
+                                                              'assets/images/new-icon-alerts/test/sos.png',
+                                                              height: getSize(
+                                                                  56,
+                                                                  "height",
+                                                                  context)),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: getSize(15,
+                                                            "height", context)),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: getSize(75,
+                                                              "width", context),
+                                                          height: getSize(
+                                                              42,
+                                                              "height",
+                                                              context),
+                                                          child: Text(
+                                                            "SOS",
+                                                            maxLines: 3,
+                                                            softWrap: true,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        .5),
+                                                                fontSize: getSize(
+                                                                    11,
+                                                                    "height",
+                                                                    context)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                          Container(
+                                              width:
+                                                  getSize(75, "width", context),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        child: Image.asset(
+                                                            'assets/images/publierposition.png',
+                                                            height: getSize(
+                                                                56,
+                                                                "height",
+                                                                context)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      height: getSize(15,
+                                                          "height", context)),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: getSize(75,
+                                                            "width", context),
+                                                        height: getSize(40,
+                                                            "height", context),
+                                                        child: Text(
+                                                          Languages.of(context)
+                                                              .pubposition,
+                                                          maxLines: 2,
+                                                          softWrap: true,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      .5),
+                                                              fontSize: getSize(
+                                                                  12,
+                                                                  "height",
+                                                                  context)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container()
+                        ],
+                      ),
+                      onEnd: () {
+                        setState(() {
+                          if (!isExpanded) {
+                            swiperIcon = Container(
+                              child: SvgPicture.asset(
+                                Assets.arrowUpIcon,
+                              ),
+                              height: 32.0,
+                              width: 32.0,
+                            );
+                            context
+                                .read<BottomBarProvider>()
+                                .modifyColor(Colors.white.withOpacity(0.3));
+                          } else {
+                            context
+                                .read<BottomBarProvider>()
+                                .modifyColor(Colors.white);
+                            swiperIcon = Container(
+                              child: SvgPicture.asset(
+                                Assets.arrowDownIcon,
+                              ),
+                              height: 32.0,
+                              width: 32.0,
+                            );
+                          }
+                        });
+                      },
                     ),
-                    onEnd: () {
-                      setState(() {
-                        if (!isExpanded) {
-                          swiperIcon = Container(
-                            child: SvgPicture.asset(
-                              Assets.arrowUpIcon,
-                            ),
-                            height: 32.0,
-                            width: 32.0,
-                          );
-                          context
-                              .read<BottomBarProvider>()
-                              .modifyColor(Colors.white.withOpacity(0.3));
-                        } else {
-                          context
-                              .read<BottomBarProvider>()
-                              .modifyColor(Colors.white);
-                          swiperIcon = Container(
-                            child: SvgPicture.asset(
-                              Assets.arrowDownIcon,
-                            ),
-                            height: 32.0,
-                            width: 32.0,
-                          );
-                        }
-                      });
-                    },
                   ),
                 ),
               )
@@ -2844,8 +2900,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             address,
                                             posted,
                                             latlon,
-                                            customAddress == "" ||
-                                                    customAddress == null
+                                            customAddress == null ||
+                                                    customAddress == "null"
                                                 ? "test"
                                                 : customAddress);
                                       },

@@ -5,7 +5,6 @@ import '../../di.dart';
 import '../../service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapane/utils/shared_preference_helper.dart';
-import 'dart:convert';
 
 class UserService {
   Future<dynamic> getSchools() async {
@@ -35,6 +34,8 @@ class UserService {
       "type": "user",
       "password": "12345678",
     };
+    print("url de api");
+    print(locator<Di>().apiUrl);
     try {
       Response response =
           await locator<Di>().dio.post(locator<Di>().apiUrl + "/signup",
@@ -81,7 +82,7 @@ class UserService {
     String userId = await _preferences.get('user_info');
     String userPhone = await _preferences.get('user_phone');
     String userDomicile = await _preferences.get('user_domicile');
-    userDomicile = userDomicile == null ? '':userDomicile;
+    userDomicile = userDomicile == null ? '' : userDomicile;
     var data = {};
     if (phone == 0) {
       data = {
@@ -96,27 +97,32 @@ class UserService {
     }
     // print(data);
     try {
-      Response response =
-          phone == 0 ? await locator<Di>().dio.put(locator<Di>().apiUrl + "/residence/"+userId,
-              options: Options(headers: {
-                'Content-Type': "application/json",
-              }),
-              data: data) : await locator<Di>().dio.put(locator<Di>().apiUrl + "/edit/"+userId,
-              options: Options(headers: {
-                'Content-Type': "application/json",
-              }),
-              data: data);
+      Response response = phone == 0
+          ? await locator<Di>()
+              .dio
+              .put(locator<Di>().apiUrl + "/residence/" + userId,
+                  options: Options(headers: {
+                    'Content-Type': "application/json",
+                  }),
+                  data: data)
+          : await locator<Di>()
+              .dio
+              .put(locator<Di>().apiUrl + "/edit/" + userId,
+                  options: Options(headers: {
+                    'Content-Type': "application/json",
+                  }),
+                  data: data);
 
       if (response.statusCode == 200) {
         Future<SharedPreferences> instance = SharedPreferences.getInstance();
         if (phone == 0) {
-          SharedPreferenceHelper(instance)
-              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
+          SharedPreferenceHelper(instance).storeData("user_domicile",
+              domicile == 0 ? userDomicile : domicile, "string");
         } else {
-          SharedPreferenceHelper(instance)
-              .storeData("user_domicile", domicile == 0 ? userDomicile : domicile, "string");
-          SharedPreferenceHelper(instance)
-              .storeData("user_phone", phone == '' ? phonewrite : phone, "string");
+          SharedPreferenceHelper(instance).storeData("user_domicile",
+              domicile == 0 ? userDomicile : domicile, "string");
+          SharedPreferenceHelper(instance).storeData(
+              "user_phone", phone == '' ? phonewrite : phone, "string");
         }
         return response.data["message"];
       } else {

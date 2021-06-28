@@ -50,7 +50,7 @@ class LanguageEn extends Languages {
   String get completetocreatealert => "Complete the information to create this alert";
   String get cat => "Category";
   String get enterpositionexact => "Enter the exact position";
-  String get notks => "No, thank you.";
+  String get notks => "No, cancel.";
   String get noresult => "No results for this search";
   String get msgsearchbefore => "With Mapane, search for places of your choice and be informed in real time in case of an alert.";
   String get searchlieu => "Search for a location";
@@ -59,7 +59,8 @@ class LanguageEn extends Languages {
   String get alertsent => "Alert sent";
   String get alertsuccess => "Your alert has been sent to all Mapane users.";
   String get at => "at";
-  String get positionexc => "Do you want to fill in the name of your exact location?";
+  String get positionexc => "Are you sure you want to create an alert ";
+  String get positionexcsoustitle => "You can enter your exact location (optional)";
   String get enterexactposition => "Enter the exact position";
   String get infolegale => "Legal informations";
   String get selectnumber => "Select a number";
@@ -73,4 +74,12 @@ class LanguageEn extends Languages {
   String get amoins => " within ";
   String get metrepos => " meters from your position";
   String get errornumber => "Please enter a valid phone number";
+  String get privacy => "Privacy policy";
+  String get acceptcondterm => "By clicking on the Continue button, you agree to the ";
+  String get deleteconfirm => "Are you sure you want to delete this alert ?";
+  String get alertdeleted => "Alert deleted successfully";
+  String get mes_alertes => "My alerts";
+  String get toutes_alertes => "All alerts";
+  String get or => "Or";
+  String get savenumber => "Enter your number";
 }
