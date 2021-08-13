@@ -9,7 +9,7 @@ class BottomBarProvider extends ChangeNotifier{
   BottomBarProvider(){
     this.bottomBarColor = Colors.white;
     this.widgetToDisplay = false;
-    currentIndex = 1;
+    currentIndex = 1; 
   }
   modifyIndex(int index){
     currentIndex = index;
