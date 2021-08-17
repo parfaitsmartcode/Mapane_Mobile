@@ -122,13 +122,54 @@ class _ProfileGameState extends State<ProfileGame> {
                         builder: (context) => SingleChildScrollView(
                           controller: ModalScrollController.of(context),
                           child: Container(
-                            height: SizeConfig.blockSizeVertical * 50,
+                            height: getSize(560, "height", context),
                             width: SizeConfig.screenWidth,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getSize(28, "width", context),
+                                vertical: getSize(15, "height", context)),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(35),
                                   topRight: Radius.circular(35)),
+                            ),
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: Container(
+                                      margin: EdgeInsets.only(
+                                          bottom:
+                                              getSize(15, "height", context)),
+                                      height: getSize(5, "height", context),
+                                      width: getSize(55, "width", context),
+                                      color: Colors.black.withOpacity(0.1)),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getSize(14, "height", context)),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              right: getSize(
+                                                  34, "width", context)),
+                                          child: Image.asset(
+                                            'assets/images/newIcons/Tracé 267.png',
+                                            height:
+                                                getSize(26, "height", context),
+                                          ),
+                                        ),
+                                        Text("Nord"),
+                                        new Image.asset(
+                                          'assets/images/newIcons/checkicon.png',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),

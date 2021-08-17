@@ -20,13 +20,16 @@ class topCustomBar extends StatelessWidget {
         Container(
           child: Row(
             children: [
-              IconButton(
-                  padding: EdgeInsets.only(left: 0),
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
+              InkWell(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(right: getSize(13, "width", context)),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
                   ),
-                  onPressed: () {
+                  onTap: () {
                     context.read<BottomBarProvider>().setWidget(false);
                   }),
               Padding(

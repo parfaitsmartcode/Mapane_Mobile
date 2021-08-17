@@ -135,25 +135,25 @@ class _MyAppState extends State<NumeroGet> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _simCard.where((i) => i.number != "").toList().length != 0
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                select_number = true;
-                              });
-                            },
-                            child: Text(
-                              Languages.of(context).selectnumber,
-                              style: TextStyle(
-                                  fontWeight: select_number
-                                      ? FontWeight.w900
-                                      : FontWeight.w400,
-                                  fontSize: 15,
-                                  color: select_number
-                                      ? Color(0xFF25296A)
-                                      : Colors.black),
-                            ),
-                          )
-                        : Row(),
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  select_number = true;
+                                });
+                              },
+                              child: Text(
+                                Languages.of(context).selectnumber,
+                                style: TextStyle(
+                                    fontWeight: select_number
+                                        ? FontWeight.w900
+                                        : FontWeight.w400,
+                                    fontSize: 15,
+                                    color: select_number
+                                        ? Color(0xFF25296A)
+                                        : Colors.black),
+                              ),
+                            )
+                          : Row(),
                       SizedBox(
                         width: 0.01177 * deviceSize.width,
                       ),
