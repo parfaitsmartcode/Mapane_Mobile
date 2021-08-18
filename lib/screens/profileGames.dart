@@ -66,7 +66,9 @@ class _ProfileGameState extends State<ProfileGame> {
                 horizontal: getSize(22.5, "width", context)),
             child: Column(
               children: [
-                topCustomBar(),
+                topCustomBar(
+                  text: "Espace jeu",
+                ),
                 Container(
                   padding:
                       EdgeInsets.only(bottom: getSize(20, "height", context)),
@@ -80,7 +82,7 @@ class _ProfileGameState extends State<ProfileGame> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: getSize(76, "width", context),
+                        width: getSize((90), "width", context),
                         child: Text(
                           "Mon score",
                           style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -98,7 +100,7 @@ class _ProfileGameState extends State<ProfileGame> {
                             color: Colors.white),
                       ),
                       SizedBox(
-                        width: getSize(76, "width", context),
+                        width: getSize(90, "width", context),
                         child: Text(
                           "Points",
                           textAlign: TextAlign.right,
@@ -144,30 +146,112 @@ class _ProfileGameState extends State<ProfileGame> {
                                       width: getSize(55, "width", context),
                                       color: Colors.black.withOpacity(0.1)),
                                 ),
-                                Container(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getSize(14, "height", context)),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              right: getSize(
-                                                  34, "width", context)),
-                                          child: Image.asset(
-                                            'assets/images/newIcons/Tracé 267.png',
-                                            height:
-                                                getSize(26, "height", context),
-                                          ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                getSize(14, "height", context)),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: getSize(
+                                                      34, "width", context)),
+                                              child: new Image.asset(
+                                                'assets/images/markerother.png',
+                                                height: getSize(
+                                                    26, "height", context),
+                                              ),
+                                            ),
+                                            Expanded(
+                                                child: Text("Nord",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                    ))),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: getSize(
+                                                      10, "width", context)),
+                                              child: new Image.asset(
+                                                'assets/images/checkicon.png',
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text("Nord"),
-                                        new Image.asset(
-                                          'assets/images/newIcons/checkicon.png',
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    Container(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                getSize(14, "height", context)),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: getSize(
+                                                      34, "width", context)),
+                                              child: new Image.asset(
+                                                'assets/images/markerother.png',
+                                                height: getSize(
+                                                    26, "height", context),
+                                              ),
+                                            ),
+                                            Expanded(
+                                                child: Text("Nord Ouest",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                    ))),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: getSize(
+                                                      10, "width", context)),
+                                              child: new Image.asset(
+                                                  'assets/images/checkicon.png',
+                                                  width: 0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                getSize(14, "height", context)),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: getSize(
+                                                      34, "width", context)),
+                                              child: new Image.asset(
+                                                'assets/images/markerother.png',
+                                                height: getSize(
+                                                    26, "height", context),
+                                              ),
+                                            ),
+                                            Expanded(
+                                                child: Text("Nord Ouest",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                    ))),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: getSize(
+                                                      10, "width", context)),
+                                              child: new Image.asset(
+                                                'assets/images/checkicon.png',
+                                                width: 0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
@@ -209,8 +293,8 @@ class _ProfileGameState extends State<ProfileGame> {
                         child: Column(
                           children: [
                             Container(
-                              width: getSize(80, "height", context),
-                              height: getSize(80, "height", context),
+                              width: getSize(80, "width", context),
+                              height: getSize(80, "width", context),
                               decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(
@@ -284,8 +368,8 @@ class _ProfileGameState extends State<ProfileGame> {
                             ),
                             AnimatedContainer(
                               duration: _duration,
-                              width: getSize(130, "height", context),
-                              height: getSize(130, "height", context),
+                              width: getSize(130, "width", context),
+                              height: getSize(130, "width", context),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     begin: Alignment.topRight,
@@ -366,8 +450,8 @@ class _ProfileGameState extends State<ProfileGame> {
                         child: Column(
                           children: [
                             Container(
-                              width: getSize(80, "height", context),
-                              height: getSize(80, "height", context),
+                              width: getSize(80, "width", context),
+                              height: getSize(80, "width", context),
                               decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(

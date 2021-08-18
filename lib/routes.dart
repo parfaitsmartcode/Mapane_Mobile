@@ -8,7 +8,8 @@ import 'package:mapane/screens/splash_welcome.dart';
 import 'package:mapane/screens/welcome_map.dart';
 import 'package:mapane/screens/settings.dart';
 import 'package:mapane/screens/tabs_page.dart';
-
+import 'package:mapane/screens/profile_my_entreprise.dart';
+import 'package:mapane/screens/profile_edit_entreprise.dart';
 
 class Routes {
   Routes._();
@@ -23,6 +24,8 @@ class Routes {
   static const String settings = '/settings';
   static const String map = '/map';
   static const String network = '/network';
+  static const String profile_my_entreprise = '/profile_my_entreprise';
+  static const String profile_edit_entreprise = '/profile_edit_entreprise';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -33,10 +36,8 @@ class Routes {
     welcome_map: (BuildContext context) => WelcomeMap(),
     settings: (BuildContext context) => Settings(),
     map: (BuildContext context) => TabsPage(),
-    network: (BuildContext context) => LostConnexion()
-
+    network: (BuildContext context) => LostConnexion(),
+    profile_my_entreprise: (BuildContext context) => ProfileMyEntreprise(),
+    profile_edit_entreprise: (BuildContext context) => ProfileEditEntreprise()
   };
 }
-
-
-

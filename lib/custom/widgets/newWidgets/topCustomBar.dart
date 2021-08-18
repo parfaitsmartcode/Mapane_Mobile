@@ -5,15 +5,15 @@ import 'package:provider/provider.dart';
 import './topBar.dart';
 
 class topCustomBar extends StatelessWidget {
-  const topCustomBar({
-    Key key,
-  }) : super(key: key);
+  final String type;
+  final String text;
+  const topCustomBar({Key key, this.type, this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        topBar(),
+        type == "black" ? topBar() : topBar(type: "black"),
         SizedBox(
           height: getSize(20, "height", context),
         ),
@@ -26,7 +26,7 @@ class topCustomBar extends StatelessWidget {
                         EdgeInsets.only(right: getSize(13, "width", context)),
                     child: Icon(
                       Icons.arrow_back,
-                      color: Colors.white,
+                      color: type == "black" ? Colors.black : Colors.white,
                     ),
                   ),
                   onTap: () {
@@ -36,11 +36,11 @@ class topCustomBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: getSize(5, "width", context), vertical: 0),
                 child: Text(
-                  "Espace jeu",
+                  text,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 18,
-                      color: Colors.white),
+                      color: type == "black" ? Colors.black : Colors.white),
                 ),
               )
             ],

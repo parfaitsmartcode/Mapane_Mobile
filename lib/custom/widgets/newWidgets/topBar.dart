@@ -4,9 +4,8 @@ import 'package:mapane/state/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 class topBar extends StatelessWidget {
-  const topBar({
-    Key key,
-  }) : super(key: key);
+  final String type;
+  const topBar({Key key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,9 @@ class topBar extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: getSize(17, "height", context)),
           child: Image.asset(
-            'assets/images/Logo-long-blanc.png',
+            type == "black"
+                ? 'assets/images/Logo-long-blanc.png'
+                : 'assets/images/Logo-long-edited.png',
             height: getSize(39, "height", context),
           ),
         ),
