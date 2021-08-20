@@ -72,3 +72,4 @@ getGradientType(int type) {
 
   return LinearGradient(colors: colorGradient);
 }
+

@@ -41,3 +41,4 @@ class Routes {
     profile_edit_entreprise: (BuildContext context) => ProfileEditEntreprise()
   };
 }
+

@@ -513,3 +513,4 @@ class _ProfileGameState extends State<ProfileGame> {
     );
   }
 }
+
