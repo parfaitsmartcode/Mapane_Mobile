@@ -87,14 +87,14 @@ class _MyAppState extends State<MyApp> {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       routes: Routes.routes,
-      home: ProfileGame(),
+      home: ProfileEditEntreprise(),
       debugShowCheckedModeBanner: false,
       locale: _locale,
       supportedLocales: [
         Locale('fr', ''),
         Locale('en', ''),
       ],
-      localizationsDelegates: [
+      localizationsDelegates: [ 
         AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

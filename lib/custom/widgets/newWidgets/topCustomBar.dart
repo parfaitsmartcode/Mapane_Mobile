@@ -39,7 +39,11 @@ class topCustomBar extends StatelessWidget {
                   text,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 18,
+                      fontSize: getSize(
+                        18,
+                        "height",
+                        context,
+                      ),
                       color: type == "black" ? Colors.black : Colors.white),
                 ),
               )

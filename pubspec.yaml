@@ -66,6 +66,8 @@ dependencies:
   firebase_messaging: ^7.0.3
   screen: ^0.0.5
   url_launcher: ^5.7.10
+  image_picker: ^0.6.7+22
+  flutter_typeahead: ^2.0.0
 
 
 

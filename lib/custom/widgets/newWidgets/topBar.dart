@@ -24,7 +24,7 @@ class topBar extends StatelessWidget {
         ),
         Container(
           // height: getSize(0, "height", context),
-          width: getSize(103, "width", context),
+          width: getSize(112, "width", context),
           padding: EdgeInsets.symmetric(
               vertical: getSize(9, "height", context),
               horizontal: getSize(30, "width", context)),
@@ -55,7 +55,7 @@ class topBar extends StatelessWidget {
               ),
               InkWell(
                 child: Text(
-                  "|",
+                  " | ",
                   style: Theme.of(context).textTheme.bodyText1.copyWith(
                       fontSize: getSize(16, "height", context),
                       fontWeight: FontWeight.normal,
